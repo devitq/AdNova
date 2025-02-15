@@ -1,0 +1,5 @@
+# Custom evnironment files
+.env
+
+# Password files
+password
