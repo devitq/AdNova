@@ -22,4 +22,4 @@ def advance_time(
 ) -> tuple[status, schemas.CurrentDate]:
     cache.set("current_date", new_date.current_date)
 
-    return status.OK, schemas.CurrentDate(current_date=new_date.current_date)
+    return status.OK, new_date
