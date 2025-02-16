@@ -1,4 +1,5 @@
-from typing import Any
+from typing import Any, Literal
+from uuid import UUID
 
 from ninja import Schema
 
@@ -9,6 +10,14 @@ class GenerateAdTextIn(Schema):
 
 
 class Promise(Schema):
-    task_id: str
-    status: str
+    task_id: UUID
+    status: Literal[
+        "PENDING",
+        "RECEIVED",
+        "STARTED",
+        "SUCCESS",
+        "FAILURE",
+        "RETRY",
+        "REVOKED",
+    ]
     result: Any
