@@ -48,29 +48,27 @@ uv sync --no-dev
 
 #### Running
 
-##### In dev mode
-
-Apply migrations:
+##### Apply migrations
 
 ```bash
 uv run python manage.py migrate
 ```
 
-Start project:
+##### Start celery worker
+
+```bash
+celery -A config worker -l INFO
+```
+
+##### Start server
+
+In dev mode:
 
 ```bash
 uv run python manage.py runserver
 ```
 
-##### In prod mode
-
-Apply migrations:
-
-```bash
-uv run python manage.py migrate
-```
-
-Start project:
+In prod mode:
 
 ```bash
 uv run gunicorn config.wsgi
@@ -102,8 +100,48 @@ Customize environment with `docker run` command (or bind .env file to container)
 
 ### Run docker image
 
+#### Backend
+
 ```bash
 docker run -p 8080:8080 --name adnova-backend adnova-backend
 ```
 
+#### Celery worker
+
+```bash
+docker run --name adnova-celery-worker adnova-backend celery -A config worker -l INFO
+```
+
 Backend will be available on localhost:8080.
+
+## Testing
+
+### Clone the project
+
+```bash
+git clone https://gitlab.prodcontest.ru/2025-final-projects-back/devitq.git
+```
+
+### Go to the project directory
+
+```bash
+cd devitq/solution/services/backend
+```
+
+### Install dependencies
+
+```bash
+uv sync --all-extras
+```
+
+### Run tests
+
+```bash
+uv run coverage run --source="." manage.py test
+```
+
+### Check coverage
+
+```bash
+uv run coverage report
+```
