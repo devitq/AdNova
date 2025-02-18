@@ -39,7 +39,7 @@ def get_campaign_statistics(
 )
 def get_daily_campaign_statistics(
     request: HttpRequest, campaign_id: UUID
-) -> tuple[status, dict[str, Any]]:
+) -> tuple[status, list[dict[str, Any]]]:
     campaign = get_object_or_404(Campaign, id=campaign_id)
 
     return status.OK, campaign.get_daily_statistics()
