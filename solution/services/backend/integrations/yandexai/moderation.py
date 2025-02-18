@@ -36,7 +36,7 @@ class YandexAIModerator:
                 self.sdk.models.completions(
                     "yandexgpt-lite", model_version="latest"
                 )
-                .configure(max_tokens=200, temperature=0.1)
+                .configure(max_tokens=500, temperature=0.1)
                 .run_deferred(
                     [
                         {"role": "system", "text": MODERATION_PROMPT},
