@@ -1,0 +1,388 @@
+name: adnova
+
+services:
+  backend:
+    build:
+      context: ./services/backend
+      dockerfile: Dockerfile
+    depends_on:
+      backend-initdb:
+        restart: false
+        condition: service_completed_successfully
+        required: true
+      postgres:
+        restart: false
+        condition: service_healthy
+        required: true
+      redis:
+        restart: false
+        condition: service_healthy
+        required: true
+      minio:
+        restart: false
+        condition: service_healthy
+        required: true
+    env_file:
+      - path: ./infrastructure/backend/.env.template
+        required: true
+      - path: ./infrastructure/backend/.env
+        required: false
+    ports:
+      - name: web
+        target: 8080
+        published: 8080
+        host_ip: 127.0.0.1
+        protocol: tcp
+    restart: unless-stopped
+
+  backend-initdb:
+    build:
+      context: ./services/backend
+      dockerfile: Dockerfile
+    command: ./scripts/initdb
+    depends_on:
+      postgres:
+        restart: false
+        condition: service_healthy
+        required: true
+      redis:
+        restart: false
+        condition: service_healthy
+        required: true
+      minio:
+        restart: false
+        condition: service_healthy
+        required: true
+    env_file:
+      - path: ./infrastructure/backend/.env.template
+        required: true
+      - path: ./infrastructure/backend/.env
+        required: false
+
+  backend-staticfiles:
+    build:
+      context: ./services/backend
+      dockerfile: Dockerfile.staticfiles
+    depends_on:
+      backend-initdb:
+        restart: false
+        condition: service_completed_successfully
+        required: true
+    env_file:
+      - path: ./infrastructure/backend/.env.template
+        required: true
+      - path: ./infrastructure/backend/.env
+        required: false
+    healthcheck:
+      test: ["CMD", "service", "nginx", "status", "||", " exit 1"]
+      interval: 1m30s
+      timeout: 5s
+      start_period: 5s
+      start_interval: 2s
+      retries: 5
+    ports:
+      - name: web
+        target: 80
+        published: 13241
+        host_ip: 127.0.0.1
+        protocol: tcp
+    restart: unless-stopped
+
+  backend-celery-worker:
+    build:
+      context: ./services/backend
+      dockerfile: Dockerfile
+    command: celery -A config worker -l INFO
+    depends_on:
+      redis:
+        restart: false
+        condition: service_healthy
+        required: true
+    env_file:
+      - path: ./infrastructure/backend/.env.template
+        required: true
+      - path: ./infrastructure/backend/.env
+        required: false
+    healthcheck:
+      test: ["CMD", "celery", "-A", "config", "inspect", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+      start_interval: 2s
+    restart: unless-stopped
+
+  celery-exporter:
+    image: docker.io/danihodovic/celery-exporter:0.11.1
+    depends_on:
+      redis:
+        restart: false
+        condition: service_healthy
+        required: true
+    env_file:
+      - path: ./infrastructure/celery-exporter/.env.template
+        required: true
+      - path: ./infrastructure/celery-exporter/.env
+        required: false
+    restart: unless-stopped
+
+  telegram_bot:
+    build:
+      context: ./services/telegram_bot
+      dockerfile: Dockerfile
+      tags:
+        - adnova-telegram_bot:latest
+    depends_on:
+      backend:
+        restart: false
+        condition: service_healthy
+        required: true
+      redis:
+        restart: false
+        condition: service_healthy
+        required: true
+    env_file:
+      - path: ./infrastructure/telegram_bot/.env.template
+        required: true
+      - path: ./infrastructure/telegram_bot/.env
+        required: false
+    restart: unless-stopped
+
+  redis:
+    image: docker.io/redis:7-alpine3.21
+    command: redis-server /usr/local/etc/redis/redis.conf
+    configs:
+      - source: redis_config
+        target: /usr/local/etc/redis/redis.conf
+    env_file:
+      - path: ./infrastructure/redis/.env.template
+        required: true
+      - path: ./infrastructure/redis/.env
+        required: false
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 1m30s
+      timeout: 5s
+      start_period: 5s
+      start_interval: 2s
+      retries: 5
+    restart: unless-stopped
+    shm_size: 4mb
+    volumes:
+      - type: volume
+        source: redis_data
+        target: /data
+
+  redis-exporter:
+    image: docker.io/oliver006/redis_exporter:v1.67.0-alpine
+    depends_on:
+      redis:
+        restart: false
+        condition: service_healthy
+        required: true
+    env_file:
+      - path: ./infrastructure/redis-exporter/.env.template
+        required: true
+      - path: ./infrastructure/redis-exporter/.env
+        required: false
+    restart: unless-stopped
+    shm_size: 4mb
+
+  postgres:
+    image: docker.io/postgres:17-alpine3.21
+    configs:
+      - source: postgres_config
+        target: /etc/postgresql/postgresql.conf
+    env_file:
+      - path: ./infrastructure/postgres/.env.template
+        required: true
+      - path: ./infrastructure/postgres/.env
+        required: false
+    healthcheck:
+      test: ["CMD", "pg_isready"]
+      interval: 1m30s
+      timeout: 5s
+      start_period: 5s
+      start_interval: 2s
+      retries: 5
+    oom_kill_disable: true
+    restart: unless-stopped
+    secrets:
+      - source: postgres_password
+        target: /run/secrets/postgres_password
+    shm_size: 128mb
+    volumes:
+      - type: volume
+        source: postgres_data
+        target: /var/lib/postgresql/data
+
+  postgres-exporter:
+    image: quay.io/prometheuscommunity/postgres-exporter:v0.16.0
+    depends_on:
+      postgres:
+        restart: false
+        condition: service_healthy
+        required: true
+    env_file:
+      - path: ./infrastructure/postgres-exporter/.env.template
+        required: true
+      - path: ./infrastructure/postgres-exporter/.env
+        required: false
+    restart: unless-stopped
+    shm_size: 4mb
+
+  pgadmin:
+    image: docker.io/dpage/pgadmin4:9
+    configs:
+      - source: pgadmin_servers
+        target: /pgadmin4/servers.json
+    depends_on:
+      postgres:
+        restart: false
+        condition: service_healthy
+        required: true
+    env_file:
+      - path: ./infrastructure/pgadmin/.env.template
+        required: true
+      - path: ./infrastructure/pgadmin/.env
+        required: false
+    healthcheck:
+      test: ["CMD", "wget", "-O", "-", "http://localhost:80/misc/ping"]
+      interval: 1m30s
+      timeout: 5s
+      start_period: 5s
+      start_interval: 2s
+      retries: 5
+    ports:
+      - name: web
+        target: 80
+        published: 13242
+        host_ip: 127.0.0.1
+        protocol: tcp
+    restart: unless-stopped
+    secrets:
+      - source: pgadmin_password
+        target: /run/secrets/pgadmin_password
+    shm_size: 4mb
+    volumes:
+      - type: volume
+        source: pgadmin_data
+        target: /var/lib/pgadmin
+
+  grafana:
+    image: docker.io/grafana/grafana-oss:11.5.0
+    configs:
+      - source: grafana_config
+        target: /usr/share/grafana/conf/defaults.ini
+    entrypoint: ["/etc/grafana/scripts/entrypoint.sh"]
+    healthcheck:
+      test: ["CMD", "wget", "-O", "-", "http://localhost:3000/api/health"]
+      interval: 1m30s
+      timeout: 5s
+      start_period: 5s
+      start_interval: 2s
+      retries: 5
+    ports:
+      - name: web
+        target: 3000
+        published: 13243
+        host_ip: 127.0.0.1
+        protocol: tcp
+    restart: unless-stopped
+    shm_size: 4mb
+    volumes:
+      - type: volume
+        source: grafana_data
+        target: /var/lib/grafana
+      - type: bind
+        source: ./infrastructure/grafana/provisioning
+        target: /etc/grafana/provisioning
+      - type: bind
+        source: ./infrastructure/grafana/scripts
+        target: /etc/grafana/scripts
+
+  prometheus:
+    image: docker.io/prom/prometheus:v3.1.0
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yaml"
+    configs:
+      - source: prometheus_config
+        target: /etc/prometheus/prometheus.yaml
+    healthcheck:
+      test: ["CMD", "wget", "-O", "-", "http://localhost:9090/-/healthy"]
+      interval: 1m30s
+      timeout: 5s
+      start_period: 5s
+      start_interval: 2s
+      retries: 5
+    ports:
+      - name: web
+        target: 9090
+        published: 13244
+        host_ip: 127.0.0.1
+        protocol: tcp
+    restart: unless-stopped
+    shm_size: 4mb
+    volumes:
+      - type: volume
+        source: prometheus_data
+        target: /prometheus
+
+  minio:
+    command: server --console-address ":9001"
+    image: docker.io/minio/minio:RELEASE.2025-02-03T21-03-04Z
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 1m30s
+      timeout: 5s
+      start_period: 5s
+      start_interval: 2s
+      retries: 5
+    env_file:
+      - path: ./infrastructure/minio/.env.template
+        required: true
+      - path: ./infrastructure/minio/.env
+        required: false
+    ports:
+      - name: api
+        target: 9000
+        published: 13245
+        host_ip: 127.0.0.1
+        protocol: tcp
+      - name: console
+        target: 9001
+        published: 13246
+        host_ip: 127.0.0.1
+        protocol: tcp
+    restart: unless-stopped
+    volumes:
+      - type: volume
+        source: minio_data
+        target: /data
+
+
+volumes:
+  redis_data:
+  postgres_data:
+  pgadmin_data:
+  grafana_data:
+  prometheus_data:
+  minio_data:
+
+configs:
+  redis_config:
+    file: ./infrastructure/redis/redis.conf
+  postgres_config:
+    file: ./infrastructure/postgres/postgresql.conf
+  pgadmin_servers:
+    file: ./infrastructure/pgadmin/servers.json
+  grafana_config:
+    file: ./infrastructure/grafana/grafana.ini
+  prometheus_config:
+    file: ./infrastructure/prometheus/prometheus.yaml
+
+secrets:
+  postgres_password:
+    file: ./infrastructure/postgres/password
+  pgadmin_password:
+    file: ./infrastructure/pgadmin/password
