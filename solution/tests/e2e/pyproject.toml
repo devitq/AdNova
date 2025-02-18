@@ -1,0 +1,110 @@
+[project]
+name = "adnova-e2e-tests"
+version = "0.1.0"
+readme = "README.md"
+requires-python = ">=3.10,<3.12"
+dependencies = [
+    "httpx>=0.28.1",
+    "pytest>=8.3.4",
+    "python-dotenv>=1.0.1",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.9.6",
+]
+
+[tool.ruff]
+builtins = []
+cache-dir = ".ruff_cache"
+exclude = [
+ ".bzr",
+ ".direnv",
+ ".eggs",
+ ".git",
+ ".git-rewrite",
+ ".hg",
+ ".mypy_cache",
+ ".nox",
+ ".pants.d",
+ ".pytype",
+ ".ruff_cache",
+ ".svn",
+ ".tox",
+ ".venv",
+ "__pypackages__",
+ "_build",
+ "buck-out",
+ "dist",
+ "migrations",
+ "node_modules",
+ "venv",
+]
+extend-exclude = []
+extend-include = []
+fix = false
+fix-only = false
+force-exclude = true
+include = ["*.py", "*.pyi", "*.ipynb", "**/pyproject.toml"]
+indent-width = 4
+line-length = 79
+namespace-packages = []
+output-format = "full"
+preview = false
+required-version = ">=0.8.4"
+respect-gitignore = true
+show-fixes = true
+src = [".", "src"]
+target-version = "py310"
+unsafe-fixes = false
+
+[tool.ruff.analyze]
+detect-string-imports = true
+direction = "Dependencies"
+exclude = []
+include-dependencies = {}
+preview = false
+
+[tool.ruff.format]
+docstring-code-format = true
+docstring-code-line-length = 79
+exclude = []
+indent-style = "space"
+line-ending = "lf"
+preview = false
+quote-style  = "double"
+skip-magic-trailing-comma = false
+
+[tool.ruff.lint]
+allowed-confusables = ["ℹ"]
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+exclude = ["tests.py"]
+explicit-preview-rules = false
+extend-fixable = []
+extend-per-file-ignores = {}
+extend-safe-fixes = []
+extend-select = []
+extend-unsafe-fixes = []
+external = []
+fixable = ["ALL"]
+ignore = [
+    "ARG",
+    "D",
+    "ANN401",
+    "COM812",
+    "FBT001",
+    "FBT002",
+    "N813",
+    "S101",
+]
+logger-objects = []
+per-file-ignores = {}
+preview = false
+select = ["ALL"]
+task-tags = ["TODO", "FIXME", "HACK", "WORKOUT"]
+typing-modules = []
+unfixable = []
+
+[tool.ruff.lint.pylint]
+max-args = 6
+
