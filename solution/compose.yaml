@@ -63,11 +63,6 @@ services:
     build:
       context: ./services/backend
       dockerfile: Dockerfile.staticfiles
-    depends_on:
-      backend-initdb:
-        restart: false
-        condition: service_completed_successfully
-        required: true
     env_file:
       - path: ./infrastructure/backend/.env.template
         required: true
