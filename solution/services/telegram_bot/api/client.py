@@ -56,7 +56,7 @@ class AdNovaClient:
         return schemas.CampaignOut.model_validate(response.json())
 
     async def list_campaigns(
-        self, advertiser_id: str, page: int = 1, size: int = 100
+        self, advertiser_id: str, page: int = 1, size: int = 1000
     ) -> list[schemas.CampaignOut]:
         params = {"page": page, "size": size}
         response = await self.client.get(
@@ -103,7 +103,7 @@ class AdNovaClient:
     ) -> schemas.CampaignOut:
         files = {"ad_image": file}
         response = await self.client.post(
-            f"/advertisers/{advertiser_id}/campaigns/{campaign_id}/ad_image/upload",
+            f"/advertisers/{advertiser_id}/campaigns/{campaign_id}/ad_image",
             files=files,
         )
         self._handle_response(response)
@@ -113,7 +113,7 @@ class AdNovaClient:
         self, advertiser_id: str, campaign_id: str
     ) -> None:
         response = await self.client.delete(
-            f"/advertisers/{advertiser_id}/campaigns/{campaign_id}/ad_image/delete"
+            f"/advertisers/{advertiser_id}/campaigns/{campaign_id}/ad_image"
         )
         self._handle_response(response)
 
