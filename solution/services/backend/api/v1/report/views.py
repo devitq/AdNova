@@ -29,7 +29,7 @@ def submit_report(
     request: HttpRequest, campaign_id: UUID, report: schemas.SubmitReportIn
 ) -> tuple[status, schemas.SubmitReportOut]:
     campaign = get_object_or_404(Campaign, id=campaign_id)
-    client = get_object_or_404(Client, id=report.client)
+    client = get_object_or_404(Client, id=report.client_id)
 
     try:
         CampaignImpression.objects.get(campaign=campaign, client=client)

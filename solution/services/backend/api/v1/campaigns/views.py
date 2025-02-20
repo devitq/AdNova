@@ -150,7 +150,7 @@ def delete_campaign(
 
 
 @router.post(
-    "/{advertiser_id}/campaigns/{campaign_id}/ad_image/upload",
+    "/{advertiser_id}/campaigns/{campaign_id}/ad_image",
     response={
         status.OK: schemas.CampaignOut,
         status.BAD_REQUEST: global_schemas.BadRequestError,
@@ -187,7 +187,7 @@ def upload_ad_image(
 
 
 @router.delete(
-    "/{advertiser_id}/campaigns/{campaign_id}/ad_image/delete",
+    "/{advertiser_id}/campaigns/{campaign_id}/ad_image",
     response={
         status.NO_CONTENT: None,
         status.BAD_REQUEST: global_schemas.BadRequestError,

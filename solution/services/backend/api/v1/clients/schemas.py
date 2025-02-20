@@ -1,4 +1,4 @@
-import typing
+from typing import ClassVar
 from uuid import UUID
 
 from ninja import ModelSchema
@@ -11,4 +11,4 @@ class Client(ModelSchema):
 
     class Meta:
         model = ClientModel
-        exclude: typing.ClassVar[tuple[str]] = (ClientModel.id.field.name,)
+        exclude: ClassVar[tuple[str]] = (ClientModel.id.field.name,)

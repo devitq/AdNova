@@ -1,4 +1,4 @@
-import typing
+from typing import ClassVar
 from uuid import UUID
 
 from ninja import ModelSchema
@@ -12,10 +12,10 @@ class Advertiser(ModelSchema):
 
     class Meta:
         model = AdvertiserModel
-        exclude: typing.ClassVar[tuple[str]] = (AdvertiserModel.id.field.name,)
+        exclude: ClassVar[tuple[str]] = (AdvertiserModel.id.field.name,)
 
 
 class Mlscore(ModelSchema):
     class Meta:
         model = MlscoreModel
-        exclude: typing.ClassVar[tuple[str]] = (MlscoreModel.id.field.name,)
+        exclude: ClassVar[tuple[str]] = (MlscoreModel.id.field.name,)

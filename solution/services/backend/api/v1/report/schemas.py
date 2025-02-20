@@ -1,4 +1,5 @@
-import typing
+from typing import ClassVar
+from uuid import UUID
 
 from ninja import ModelSchema, Schema
 
@@ -6,12 +7,11 @@ from apps.campaign.models import CampaignReport
 
 
 class SubmitReportIn(ModelSchema):
+    client_id: UUID
+
     class Meta:
         model = CampaignReport
-        fields: typing.ClassVar[tuple[str]] = (
-            CampaignReport.client.field.name,
-            CampaignReport.message.field.name,
-        )
+        fields: ClassVar[tuple[str]] = (CampaignReport.message.field.name,)
 
 
 class SubmitReportOut(Schema):

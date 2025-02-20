@@ -1,4 +1,4 @@
-import typing
+from typing import ClassVar
 from typing import Any
 from uuid import UUID
 
@@ -12,7 +12,7 @@ from apps.campaign.models import Campaign
 class CampaignTargeting(ModelSchema):
     class Meta:
         model = Campaign
-        fields: typing.ClassVar[tuple[str]] = (
+        fields: ClassVar[tuple[str]] = (
             Campaign.gender.field.name,
             Campaign.age_from.field.name,
             Campaign.age_to.field.name,
@@ -28,7 +28,7 @@ class CampaignOut(ModelSchema):
 
     class Meta:
         model = Campaign
-        fields: typing.ClassVar[tuple[str]] = (
+        fields: ClassVar[tuple[str]] = (
             Campaign.ad_title.field.name,
             Campaign.ad_text.field.name,
             Campaign.ad_image.field.name,
@@ -46,7 +46,7 @@ class CampaignCreateIn(ModelSchema):
 
     class Meta:
         model = Campaign
-        fields: typing.ClassVar[tuple[str]] = (
+        fields: ClassVar[tuple[str]] = (
             Campaign.ad_title.field.name,
             Campaign.ad_text.field.name,
             Campaign.impressions_limit.field.name,
@@ -59,7 +59,7 @@ class CampaignCreateIn(ModelSchema):
 
     @field_validator("targeting", mode="before")
     @classmethod
-    def validate_target(cls, value: Any) -> Any:
+    def validate_targeting(cls, value: Any) -> Any:
         if (
             not isinstance(value, dict)
             and not isinstance(
@@ -78,7 +78,7 @@ class CampaignUpdateIn(ModelSchema):
 
     class Meta:
         model = Campaign
-        fields: typing.ClassVar[tuple[str]] = (
+        fields: ClassVar[tuple[str]] = (
             Campaign.impressions_limit.field.name,
             Campaign.clicks_limit.field.name,
             Campaign.ad_title.field.name,
@@ -91,7 +91,7 @@ class CampaignUpdateIn(ModelSchema):
 
     @field_validator("targeting", mode="before")
     @classmethod
-    def validate_target(cls, value: Any) -> Any:
+    def validate_targeting(cls, value: Any) -> Any:
         if (
             not isinstance(value, dict)
             and not isinstance(
