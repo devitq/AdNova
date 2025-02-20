@@ -1,7 +1,7 @@
 from aiogram.fsm.state import State, StatesGroup
 
 
-class CampaignState(StatesGroup):
+class CampaignDialogState(StatesGroup):
     ad_title = State()
     ad_text = State()
     impressions_limit = State()
@@ -14,3 +14,4 @@ class CampaignState(StatesGroup):
     age_from = State()
     age_to = State()
     location = State()
+    delete_ad_image = State()
