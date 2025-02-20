@@ -7,10 +7,10 @@ from aiogram_dialog import DialogManager
 from api.client import AdNovaClient
 from filters.auth import AuthenticatedFilter
 
-stats_router = Router()
+statistics_router = Router()
 
 
-@stats_router.message(Command("stats"), AuthenticatedFilter())
+@statistics_router.message(Command("statistics"), AuthenticatedFilter())
 async def stats_command(
     message: Message, dialog_manager: DialogManager, state: FSMContext
 ) -> None:

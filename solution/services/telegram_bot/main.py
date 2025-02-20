@@ -10,7 +10,7 @@ import config
 from commands.campaigns import campaigns_router
 from commands.logout import logout_router
 from commands.start import start_router
-from commands.stats import stats_router
+from commands.stats import statistics_router
 from dialogs.campaigns import campaigns_dialog
 from dialogs.start import start_dialog
 from middlewares.auth import AuthMiddleware
@@ -45,7 +45,7 @@ async def main() -> None:
     dp.include_routers(
         start_router,
         campaigns_router,
-        stats_router,
+        statistics_router,
         logout_router,
     )
     dp.include_routers(start_dialog, campaigns_dialog)

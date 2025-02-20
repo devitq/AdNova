@@ -18,7 +18,8 @@ async def start_command(
     if state_data["authenticated"]:
         await message.answer(
             "Already authenticated as"
-            f" <code>{state_data['advertiser']['name']}</code>"
+            f" <code>{state_data['advertiser']['name']}</code> "
+            f"(<code>{state_data['advertiser']['advertiser_id']}</code>)"
         )
         return
 
