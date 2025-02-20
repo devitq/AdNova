@@ -8,6 +8,15 @@ logger = logging.getLogger(__name__)
 
 
 def test_healthcheck(client: Client) -> None:
+    """
+    Checks that backend can use theese services:
+    - redis
+    - celery
+    - postgres
+    - minio
+    - yandexgpt
+    """
+
     response = client.get("/health?format=json")
     assert response.status_code == status.OK
 
