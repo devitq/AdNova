@@ -122,6 +122,10 @@ services:
         restart: false
         condition: service_healthy
         required: true
+      minio:
+        restart: false
+        condition: service_healthy
+        required: true
     env_file:
       - path: ./infrastructure/telegram_bot/.env.template
         required: true
