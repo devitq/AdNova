@@ -435,6 +435,8 @@ INSTALLED_APPS = [
     "health_check.cache",
     "health_check.storage",
     "health_check.contrib.migrations",
+    "health_check.contrib.celery",
+    "health_check.contrib.celery_ping",
     # Third-party apps
     "corsheaders",
     "django_extensions",
