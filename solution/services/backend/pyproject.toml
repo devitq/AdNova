@@ -141,3 +141,18 @@ no_implicit_optional = false
 [tool.django-stubs]
 django_settings_module = "config.settings"
 strict_settings = false
+
+[tool.coverage.run]
+omit = [
+    "manage.py",
+    "config/wsgi.py",
+    "config/asgi.py",
+    "config/urls.py",
+    "config/settings.py",
+    "config/handlers.py",
+    "config/errors.py",
+    "integrations/yandexai/*"
+]
+
+[tool.coverage.report]
+skip_covered = true
