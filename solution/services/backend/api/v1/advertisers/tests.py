@@ -19,7 +19,7 @@ class TestMlscoreEndpoint(TestCase):
             gender=ClientModel.GenderChoices.FEMALE,
         )
 
-        self.url = "/advertisers/ml-scores"
+        self.url = "/ml-scores"
 
     def test_create_mlscore_success(self):
         data = {
