@@ -105,7 +105,7 @@ class Campaign(BaseModel):
             original = Campaign.objects.get(id=self.id or "")
             if (
                 original.start_date != self.start_date
-                and self.start_date <= current_date
+                and self.start_date < current_date
             ):
                 raise ValidationError(err)
         except Campaign.DoesNotExist:
