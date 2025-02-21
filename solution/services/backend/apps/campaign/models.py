@@ -1,4 +1,5 @@
 import contextlib
+from decimal import ROUND_HALF_UP, Decimal
 from typing import Any, Self
 from uuid import UUID
 
@@ -10,7 +11,6 @@ from django.core.validators import (
     MinValueValidator,
 )
 from django.db import models
-from decimal import Decimal, ROUND_HALF_UP
 
 from apps.advertiser.models import Advertiser
 from apps.campaign.validators import (
@@ -22,6 +22,7 @@ from apps.campaign.validators import (
 )
 from apps.client.models import Client
 from apps.core.models import BaseModel
+from apps.mlscore.models import Mlscore
 from config.errors import ConflictError, ForbiddenError
 
 
@@ -110,7 +111,7 @@ class Campaign(BaseModel):
                 raise ValidationError(err)
         except Campaign.DoesNotExist:
             if self.start_date < current_date:
-                raise ValidationError(err)
+                raise ValidationError(err) from None
 
     @property
     def ad_id(self) -> UUID:
@@ -277,101 +278,114 @@ class Campaign(BaseModel):
             | models.Q(age_from__isnull=True)
         ) & (models.Q(age_to__gte=client.age) | models.Q(age_to__isnull=True))
 
-        queryset = (
+        return (
             cls.objects.filter(
                 date_filter,
                 location_filter,
                 gender_filter,
                 age_filter,
             )
-            .prefetch_related("clicks", "impressions")
             .select_related("advertiser")
+            .prefetch_related("clicks", "impressions", "advertiser__mlscores")
         )
-
-        return queryset
 
     @classmethod
-    def suggest(cls, client: Client) -> None | Self:
-        available_campaigns = Campaign.get_available_campaigns(client)
-        if not available_campaigns or available_campaigns == []:
+    def suggest(cls, client: Client) -> Self:
+        base_campaigns = cls.get_available_campaigns(client)
+        if not base_campaigns or base_campaigns == []:
             return None
 
-        campaign_ids = [c.id for c in available_campaigns]
-
-        impressions_counts = (
-            CampaignImpression.objects.filter(campaign_id__in=campaign_ids)
-            .values("campaign_id")
-            .annotate(total=models.Count("id"))
-        )
-        impressions_dict = {
-            item["campaign_id"]: item["total"] for item in impressions_counts
-        }
-
-        clicks_counts = (
-            CampaignClick.objects.filter(campaign_id__in=campaign_ids)
-            .values("campaign_id")
-            .annotate(total=models.Count("id"))
-        )
-        clicks_dict = {
-            item["campaign_id"]: item["total"] for item in clicks_counts
-        }
-
-        existing_impressions = CampaignImpression.objects.filter(
-            client=client, campaign_id__in=campaign_ids
-        ).values_list("campaign_id", flat=True)
-        existing_impressions_set = set(existing_impressions)
-
-        advertisers = {c.advertiser_id for c in available_campaigns}
-        ml_scores = models.Mlscore.objects.filter(
-            client=client, advertiser_id__in=advertisers
+        advertiser_ids = list({c.advertiser_id for c in base_campaigns})
+        ml_scores = Mlscore.objects.filter(
+            client=client, advertiser_id__in=advertiser_ids
         ).values("advertiser_id", "score")
-        ml_score_dict = {ms["advertiser_id"]: ms["score"] for ms in ml_scores}
-        max_ml = max(ml_score_dict.values(), default=0)
+        ml_dict = {m["advertiser_id"]: m["score"] for m in ml_scores}
 
-        valid_campaigns = []
-        for campaign in available_campaigns:
-            current_impressions = impressions_dict.get(campaign.id, 0)
-            if current_impressions >= campaign.impressions_limit:
-                continue
-            if campaign.id in existing_impressions_set:
-                continue
-            valid_campaigns.append(campaign)
+        campaigns = list(
+            base_campaigns.annotate(
+                impressions_count=models.Count("impressions"),
+                clicks_count=models.Count("clicks"),
+            )
+        )
+        campaign_ids = [c.id for c in campaigns]
+
+        client_impressions = set(
+            CampaignImpression.objects.filter(
+                client=client, campaign_id__in=campaign_ids
+            ).values_list("campaign_id", flat=True)
+        )
+        client_clicks = set(
+            CampaignClick.objects.filter(
+                client=client, campaign_id__in=campaign_ids
+            ).values_list("campaign_id", flat=True)
+        )
 
         prioritized = []
-        for campaign in valid_campaigns:
-            ml_score = ml_score_dict.get(campaign.advertiser_id, 0)
+        ml_values = []
+        profit_values = []
 
-            remaining_impressions = (
-                campaign.impressions_limit
-                - impressions_dict.get(campaign.id, 0)
-            )
-            weight_imp = (
-                remaining_impressions / campaign.impressions_limit
-                if campaign.impressions_limit > 0
-                else 1.0
-            )
+        for campaign in campaigns:
+            if campaign.impressions_count >= campaign.impressions_limit:
+                continue
 
-            current_clicks = clicks_dict.get(campaign.id, 0)
-            remaining_clicks = campaign.clicks_limit - current_clicks
-            if remaining_clicks <= 0:
-                cpc_contribution = 0.0
+            ml_score = ml_dict.get(campaign.advertiser_id, 0)
+            ml_values.append(ml_score)
+
+            has_impression = campaign.id in client_impressions
+            has_click = campaign.id in client_clicks
+
+            if has_impression:
+                profit = campaign.cost_per_click if not has_click else 0
             else:
-                click_availability = (
-                    (remaining_clicks / campaign.clicks_limit)
-                    if campaign.clicks_limit > 0
-                    else 1.0
-                )
-                prob_click = (ml_score / max_ml) if max_ml != 0 else 0.0
-                cpc_contribution = (
-                    campaign.cost_per_click * prob_click * click_availability
-                )
+                profit = campaign.cost_per_impression + campaign.cost_per_click
+            print(profit)
+            if profit <= 0:
+                continue
 
-            expected_profit = campaign.cost_per_impression + cpc_contribution
-            priority = ml_score * expected_profit * weight_imp
-            prioritized.append((campaign, priority))
+            profit_values.append(profit)
 
-        prioritized.sort(key=lambda x: -x[1])
-        return prioritized[0]
+            remaining_imp = (
+                campaign.impressions_limit - campaign.impressions_count
+            )
+            capacity_ratio = (
+                remaining_imp / campaign.impressions_limit
+                if campaign.impressions_limit > 0
+                else 1
+            )
+
+            prioritized.append(
+                (
+                    campaign,
+                    {
+                        "profit": profit,
+                        "ml": ml_score,
+                        "capacity": 1 - capacity_ratio,
+                    },
+                )
+            )
+
+        max_ml = max(ml_values) if ml_values else 1
+        max_profit = max(profit_values) if profit_values else 1
+        min_profit = min(profit_values) if profit_values else 0
+        profit_range = (
+            max_profit - min_profit if max_profit != min_profit else 1
+        )
+
+        print(prioritized, max_ml, max_profit, min_profit, profit_range)
+
+        final_list = []
+        for campaign, metrics in prioritized:
+            norm_profit = (metrics["profit"] - min_profit) / profit_range
+            norm_ml = metrics["ml"] / max_ml if max_ml > 0 else 0
+
+            priority = (
+                0.5 * norm_profit + 0.25 * norm_ml + 0.15 * metrics["capacity"]
+            )
+
+            final_list.append((campaign, priority))
+
+        final_list.sort(key=lambda x: -x[1])
+        return final_list[0][0] if len(final_list) >= 1 else None
 
 
 class CampaignImpression(BaseModel):
