@@ -43,6 +43,7 @@ test:
   after_script:
     - cd solution && docker compose logs > ../compose.log && docker compose down
   artifacts:
+    when: always
     paths:
       - total_stats.json
       - compose.log
