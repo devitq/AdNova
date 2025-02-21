@@ -300,6 +300,26 @@ USE_X_FORWARDED_PORT = False
 WSGI_APPLICATION = "config.wsgi.application"
 
 
+# Notifiers
+
+# Telegram
+
+NOTIFIER_TELEGRAM_BOT_TOKEN = env(
+    "DJANGO_NOTIFIER_TELEGRAM_BOT_TOKEN",
+    default=None,
+)
+
+NOTIFIER_TELEGRAM_CHAT_ID = env(
+    "DJANGO_NOTIFIER_TELEGRAM_CHAT_ID",
+    default=None,
+)
+
+NOTIFIER_TELEGRAM_THREAD_ID = env(
+    "DJANGO_NOTIFIER_TELEGRAM_THREAD_ID",
+    default=None,
+)
+
+
 # Logging
 
 LOGGER_NAME = "adnova"
@@ -413,6 +433,24 @@ LOGGING = {
 }
 
 LOGGING_CONFIG = "logging.config.dictConfig"
+
+
+if NOTIFIER_TELEGRAM_BOT_TOKEN and NOTIFIER_TELEGRAM_CHAT_ID:
+    LOGGING_HANDLERS["telegram"] = {
+        "class": "config.notifiers.telegram.LoggingHandler",
+        "level": "INFO",
+        "filters": ["require_debug_false"],
+        "token": NOTIFIER_TELEGRAM_BOT_TOKEN,
+        "chat_id": NOTIFIER_TELEGRAM_CHAT_ID,
+        "thread_id": NOTIFIER_TELEGRAM_THREAD_ID,
+        "retries": 5,
+        "delay": 2,
+        "timeout": 5,
+    }
+    LOGGING_LOGGERS["django"]["handlers"].append("telegram")
+    LOGGING_LOGGERS["django.request"]["handlers"].append("telegram")
+    LOGGING_LOGGERS["health-check"]["handlers"].append("telegram")
+    LOGGING_LOGGERS[LOGGER_NAME]["handlers"].append("telegram")
 
 
 # Models
