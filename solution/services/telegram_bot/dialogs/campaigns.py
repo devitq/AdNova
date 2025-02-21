@@ -17,7 +17,6 @@ from aiogram_dialog.widgets.text import Const, Format
 import config
 from api.client import AdNovaClient
 from states.campaigns import CampaignsDailogState
-from states.campaign import CampaignDialogState
 
 
 async def campaigns(**kwargs: dict[Any]) -> dict[str, Any]:
@@ -204,8 +203,8 @@ campaigns_dialog = Dialog(
         Start(
             Const("⬆️ Upload image"),
             id="upload_ad_image",
-            state=CampaignDialogState.delete_ad_image,
-            data=
+            state=CampaignsDailogState.campaign_upload_ad_image,
+            data=None,
             when=campaign_has_not_ad_image,
         ),
         Button(
