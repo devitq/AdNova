@@ -25,7 +25,7 @@ router.add_router(
     clients_router,
 )
 router.add_router(
-    "advertisers",
+    "",
     advertisers_router,
 )
 router.add_router(

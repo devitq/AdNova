@@ -35,7 +35,7 @@ def create_or_update_mlscore(
 
 
 @router.post(
-    "/bulk",
+    "/advertisers/bulk",
     response={
         status.CREATED: list[schemas.Advertiser],
         status.BAD_REQUEST: global_schemas.BadRequestError,
@@ -74,7 +74,7 @@ def bulk_create_or_update(
 
 
 @router.get(
-    "/{advertiser_id}",
+    "/advertisers/{advertiser_id}",
     response={
         status.OK: schemas.Advertiser,
         status.BAD_REQUEST: global_schemas.BadRequestError,
