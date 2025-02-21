@@ -48,32 +48,36 @@ class Campaign(BaseModel):
     ad_text = models.TextField()
     ad_image = models.ImageField(
         max_length=256,
-        null=True,
         blank=True,
+        null=True,
         upload_to=ad_image_directory_path,
     )
-    start_date = models.PositiveIntegerField()
-    end_date = models.PositiveIntegerField()
+    start_date = models.PositiveIntegerField(db_index=True)
+    end_date = models.PositiveIntegerField(db_index=True)
 
     gender = models.CharField(
         max_length=6,
-        null=True,
         blank=True,
+        null=True,
+        db_index=True,
         choices=GenderChoices,
     )
     age_from = models.PositiveSmallIntegerField(
-        null=True,
         blank=True,
+        null=True,
+        db_index=True,
         validators=[MaxValueValidator(100)],
     )
     age_to = models.PositiveSmallIntegerField(
-        null=True,
         blank=True,
+        null=True,
+        db_index=True,
         validators=[MaxValueValidator(100)],
     )
     location = models.TextField(
-        null=True,
         blank=True,
+        null=True,
+        db_index=True,
         validators=[MinLengthValidator(1)],
     )
 
@@ -273,19 +277,101 @@ class Campaign(BaseModel):
             | models.Q(age_from__isnull=True)
         ) & (models.Q(age_to__gte=client.age) | models.Q(age_to__isnull=True))
 
-        queryset = cls.objects.filter(
-            date_filter,
-            location_filter,
-            gender_filter,
-            age_filter,
-        ).prefetch_related("clicks", "impressions")
+        queryset = (
+            cls.objects.filter(
+                date_filter,
+                location_filter,
+                gender_filter,
+                age_filter,
+            )
+            .prefetch_related("clicks", "impressions")
+            .select_related("advertiser")
+        )
 
         return queryset
 
     @classmethod
-    def suggest(cls, client: Client) -> Self:
-        aboba = cls.get_revelant(client).all()
-        return aboba[0]
+    def suggest(cls, client: Client) -> None | Self:
+        available_campaigns = Campaign.get_available_campaigns(client)
+        if not available_campaigns or available_campaigns == []:
+            return None
+
+        campaign_ids = [c.id for c in available_campaigns]
+
+        impressions_counts = (
+            CampaignImpression.objects.filter(campaign_id__in=campaign_ids)
+            .values("campaign_id")
+            .annotate(total=models.Count("id"))
+        )
+        impressions_dict = {
+            item["campaign_id"]: item["total"] for item in impressions_counts
+        }
+
+        clicks_counts = (
+            CampaignClick.objects.filter(campaign_id__in=campaign_ids)
+            .values("campaign_id")
+            .annotate(total=models.Count("id"))
+        )
+        clicks_dict = {
+            item["campaign_id"]: item["total"] for item in clicks_counts
+        }
+
+        existing_impressions = CampaignImpression.objects.filter(
+            client=client, campaign_id__in=campaign_ids
+        ).values_list("campaign_id", flat=True)
+        existing_impressions_set = set(existing_impressions)
+
+        advertisers = {c.advertiser_id for c in available_campaigns}
+        ml_scores = models.Mlscore.objects.filter(
+            client=client, advertiser_id__in=advertisers
+        ).values("advertiser_id", "score")
+        ml_score_dict = {ms["advertiser_id"]: ms["score"] for ms in ml_scores}
+        max_ml = max(ml_score_dict.values(), default=0)
+
+        valid_campaigns = []
+        for campaign in available_campaigns:
+            current_impressions = impressions_dict.get(campaign.id, 0)
+            if current_impressions >= campaign.impressions_limit:
+                continue
+            if campaign.id in existing_impressions_set:
+                continue
+            valid_campaigns.append(campaign)
+
+        prioritized = []
+        for campaign in valid_campaigns:
+            ml_score = ml_score_dict.get(campaign.advertiser_id, 0)
+
+            remaining_impressions = (
+                campaign.impressions_limit
+                - impressions_dict.get(campaign.id, 0)
+            )
+            weight_imp = (
+                remaining_impressions / campaign.impressions_limit
+                if campaign.impressions_limit > 0
+                else 1.0
+            )
+
+            current_clicks = clicks_dict.get(campaign.id, 0)
+            remaining_clicks = campaign.clicks_limit - current_clicks
+            if remaining_clicks <= 0:
+                cpc_contribution = 0.0
+            else:
+                click_availability = (
+                    (remaining_clicks / campaign.clicks_limit)
+                    if campaign.clicks_limit > 0
+                    else 1.0
+                )
+                prob_click = (ml_score / max_ml) if max_ml != 0 else 0.0
+                cpc_contribution = (
+                    campaign.cost_per_click * prob_click * click_availability
+                )
+
+            expected_profit = campaign.cost_per_impression + cpc_contribution
+            priority = ml_score * expected_profit * weight_imp
+            prioritized.append((campaign, priority))
+
+        prioritized.sort(key=lambda x: -x[1])
+        return prioritized[0]
 
 
 class CampaignImpression(BaseModel):
@@ -300,7 +386,7 @@ class CampaignImpression(BaseModel):
         related_name="impressions",
     )
     price = models.FloatField()
-    date = models.PositiveIntegerField()
+    date = models.PositiveIntegerField(db_index=True)
 
     def __str__(self) -> str:
         return f"{self.client.login} > {self.campaign.ad_title}"
@@ -324,7 +410,7 @@ class CampaignClick(BaseModel):
         related_name="clicks",
     )
     price = models.FloatField()
-    date = models.PositiveIntegerField()
+    date = models.PositiveIntegerField(db_index=True)
 
     def __str__(self) -> str:
         return f"{self.client.login} > {self.campaign.ad_title}"
