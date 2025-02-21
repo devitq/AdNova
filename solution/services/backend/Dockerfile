@@ -39,4 +39,4 @@ EXPOSE 8080
 HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --start-interval=2s --retries=3 \
     CMD wget --no-verbose --tries=1 --spider http://127.0.0.1:8080/health?format=json || exit 1
 
-CMD gunicorn config.wsgi -b 0.0.0.0:8080 --access-logfile - --error-logfile -
+CMD gunicorn config.wsgi --workers=4 -b 0.0.0.0:8080 --access-logfile - --error-logfile -
