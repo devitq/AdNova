@@ -1,7 +1,7 @@
 from http import HTTPStatus as status
 from uuid import UUID
 
-from django.http import HttpRequest
+from django.http import HttpRequest, Http404
 from django.shortcuts import get_object_or_404
 from ninja import Router
 
@@ -27,6 +27,9 @@ def get_advertisment(
     client = get_object_or_404(Client, id=client_id)
 
     campaign = Campaign.suggest(client)
+
+    if not campaign:
+        raise Http404
 
     campaign.view(client)
 
