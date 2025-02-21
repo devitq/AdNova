@@ -1,6 +1,6 @@
+from decimal import ROUND_HALF_UP, Decimal
 from uuid import UUID
 
-from decimal import Decimal, ROUND_HALF_UP
 from django.core.cache import cache
 from django.db import models
 
@@ -120,30 +120,32 @@ class Advertiser(BaseModel):
                 else Decimal("0")
             )
 
-            daily_stats.append({
-                "date": date,
-                "impressions_count": metrics["impressions_count"],
-                "clicks_count": metrics["clicks_count"],
-                "conversion": float(
-                    conversion.quantize(
-                        Decimal("0.01"), rounding=ROUND_HALF_UP
-                    )
-                ),
-                "spent_impressions": float(
-                    metrics["spent_impressions"].quantize(
-                        Decimal("0.0000000001"), rounding=ROUND_HALF_UP
-                    )
-                ),
-                "spent_clicks": float(
-                    metrics["spent_clicks"].quantize(
-                        Decimal("0.0000000001"), rounding=ROUND_HALF_UP
-                    )
-                ),
-                "spent_total": float(
-                    total_spent.quantize(
-                        Decimal("0.0000000001"), rounding=ROUND_HALF_UP
-                    )
-                ),
-            })
+            daily_stats.append(
+                {
+                    "date": date,
+                    "impressions_count": metrics["impressions_count"],
+                    "clicks_count": metrics["clicks_count"],
+                    "conversion": float(
+                        conversion.quantize(
+                            Decimal("0.01"), rounding=ROUND_HALF_UP
+                        )
+                    ),
+                    "spent_impressions": float(
+                        metrics["spent_impressions"].quantize(
+                            Decimal("0.0000000001"), rounding=ROUND_HALF_UP
+                        )
+                    ),
+                    "spent_clicks": float(
+                        metrics["spent_clicks"].quantize(
+                            Decimal("0.0000000001"), rounding=ROUND_HALF_UP
+                        )
+                    ),
+                    "spent_total": float(
+                        total_spent.quantize(
+                            Decimal("0.0000000001"), rounding=ROUND_HALF_UP
+                        )
+                    ),
+                }
+            )
 
         return sorted(daily_stats, key=lambda item: item["date"])

@@ -1,8 +1,10 @@
-from django.test import TestCase, override_settings
 from django.core.cache import cache
+from django.test import TestCase, override_settings
+
 from apps.advertiser.models import Advertiser
 from apps.campaign.models import Campaign, CampaignClick
 from apps.client.models import Client
+from config.errors import ConflictError
 
 
 class CampaignClickModelTest(TestCase):
@@ -14,7 +16,7 @@ class CampaignClickModelTest(TestCase):
             }
         }
     )
-    def setUpTestData(cls):
+    def setUpTestData(cls) -> None:
         cache.set("current_date", 1)
 
         cls.advertiser = Advertiser.objects.create(name="Test Advertiser")
@@ -29,25 +31,25 @@ class CampaignClickModelTest(TestCase):
             start_date=1,
             end_date=10,
         )
-        cls.client = Client.objects.create(
+        cls.client_instance = Client.objects.create(
             login="test_client", age=15, location="Moscow", gender="FEMALE"
         )
         cls.click = CampaignClick.objects.create(
             campaign=cls.campaign,
-            client=cls.client,
+            client=cls.client_instance,
             price=0.10,
             date=1,
         )
 
-    def test_campaign_click_creation(self):
+    def test_campaign_click_creation(self) -> None:
         self.assertIsInstance(self.click, CampaignClick)
         self.assertEqual(self.click.price, 0.10)
 
-    def test_unique_together_constraint(self):
-        with self.assertRaises(Exception):
+    def test_unique_together_constraint(self) -> None:
+        with self.assertRaises(ConflictError):
             CampaignClick.objects.create(
                 campaign=self.campaign,
-                client=self.client,
+                client=self.client_instance,
                 price=0.10,
                 date=1,
             )

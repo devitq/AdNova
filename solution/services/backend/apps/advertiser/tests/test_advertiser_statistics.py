@@ -1,7 +1,8 @@
 from django.core.cache import cache
 from django.test import TestCase, override_settings
+
 from apps.advertiser.models import Advertiser
-from apps.campaign.models import Campaign, CampaignImpression, CampaignClick
+from apps.campaign.models import Campaign, CampaignClick, CampaignImpression
 from apps.client.models import Client
 
 
@@ -14,7 +15,7 @@ class AdvertiserStatisticsTest(TestCase):
             }
         }
     )
-    def setUpTestData(cls):
+    def setUpTestData(cls) -> None:
         cache.set("current_date", 1)
 
         cls.advertiser = Advertiser.objects.create(name="Test Advertiser")
@@ -54,7 +55,7 @@ class AdvertiserStatisticsTest(TestCase):
             }
         }
     )
-    def setUp(self):
+    def setUp(self) -> None:
         cache.clear()
         cache.set("current_date", 5)
 
@@ -65,7 +66,7 @@ class AdvertiserStatisticsTest(TestCase):
             }
         }
     )
-    def test_get_statistics_no_data(self):
+    def test_get_statistics_no_data(self) -> None:
         stats = self.advertiser.get_statistics()
         expected_stats = {
             "impressions_count": 0,
@@ -85,7 +86,7 @@ class AdvertiserStatisticsTest(TestCase):
             }
         }
     )
-    def test_get_statistics_with_data(self):
+    def test_get_statistics_with_data(self) -> None:
         CampaignImpression.objects.create(
             campaign=self.campaign1,
             client=self.client_instance,
@@ -124,7 +125,7 @@ class AdvertiserStatisticsTest(TestCase):
             }
         }
     )
-    def test_get_daily_statistics_no_data(self):
+    def test_get_daily_statistics_no_data(self) -> None:
         daily_stats = self.advertiser.get_daily_statistics()
         expected_stats = [
             {
@@ -148,7 +149,7 @@ class AdvertiserStatisticsTest(TestCase):
             }
         }
     )
-    def test_get_daily_statistics_with_data(self):
+    def test_get_daily_statistics_with_data(self) -> None:
         CampaignImpression.objects.create(
             campaign=self.campaign1,
             client=self.client_instance,

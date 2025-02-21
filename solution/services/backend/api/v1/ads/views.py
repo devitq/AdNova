@@ -1,7 +1,7 @@
 from http import HTTPStatus as status
 from uuid import UUID
 
-from django.http import HttpRequest, Http404
+from django.http import Http404, HttpRequest
 from django.shortcuts import get_object_or_404
 from ninja import Router
 

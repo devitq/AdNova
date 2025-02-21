@@ -1,7 +1,9 @@
 from uuid import uuid4
+
 from django.core.cache import cache
 from django.core.exceptions import ValidationError
 from django.test import TestCase, override_settings
+
 from apps.advertiser.models import Advertiser
 from apps.campaign.models import Campaign
 from apps.client.models import Client
@@ -16,7 +18,7 @@ class CampaignModelTest(TestCase):
             }
         }
     )
-    def setUpTestData(cls):
+    def setUpTestData(cls) -> None:
         cls.advertiser = Advertiser.objects.create(name="Test Advertiser")
         cls.campaign = Campaign.objects.create(
             advertiser=cls.advertiser,
@@ -30,20 +32,20 @@ class CampaignModelTest(TestCase):
             end_date=10,
         )
 
-    def test_campaign_creation(self):
+    def test_campaign_creation(self) -> None:
         self.assertIsInstance(self.campaign, Campaign)
         self.assertEqual(self.campaign.ad_title, "Test Campaign")
 
-    def test_campaign_str_method(self):
+    def test_campaign_str_method(self) -> None:
         self.assertEqual(str(self.campaign), "Test Campaign")
 
-    def test_campaign_id_property(self):
+    def test_campaign_id_property(self) -> None:
         self.assertEqual(self.campaign.campaign_id, self.campaign.id)
         new_id = uuid4()
         self.campaign.campaign_id = new_id
         self.assertEqual(self.campaign.id, new_id)
 
-    def test_ad_id_property(self):
+    def test_ad_id_property(self) -> None:
         self.assertEqual(self.campaign.ad_id, self.campaign.id)
 
     @override_settings(
@@ -53,7 +55,7 @@ class CampaignModelTest(TestCase):
             }
         }
     )
-    def test_started_property(self):
+    def test_started_property(self) -> None:
         cache.set("current_date", 5)
         self.assertTrue(self.campaign.started)
         cache.set("current_date", 0)
@@ -66,7 +68,7 @@ class CampaignModelTest(TestCase):
             }
         }
     )
-    def test_active_property(self):
+    def test_active_property(self) -> None:
         cache.set("current_date", 5)
         self.assertTrue(self.campaign.active)
         cache.set("current_date", 11)
@@ -80,7 +82,7 @@ class CampaignModelTest(TestCase):
             }
         }
     )
-    def test_clean_method(self):
+    def test_clean_method(self) -> None:
         self.campaign.start_date = -1
 
         with self.assertRaises(ValidationError):
@@ -93,7 +95,7 @@ class CampaignModelTest(TestCase):
             }
         }
     )
-    def test_view_method(self):
+    def test_view_method(self) -> None:
         client = Client.objects.create(
             login="test_client", age=15, location="Moscow", gender="FEMALE"
         )
@@ -108,7 +110,7 @@ class CampaignModelTest(TestCase):
             }
         }
     )
-    def test_click_method(self):
+    def test_click_method(self) -> None:
         client = Client.objects.create(
             login="test_client", age=15, location="Moscow", gender="FEMALE"
         )

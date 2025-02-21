@@ -1,6 +1,7 @@
 from uuid import uuid4
+
 from django.test import TestCase, override_settings
-from django.core.cache import cache
+
 from apps.advertiser.models import Advertiser
 from apps.campaign.models import Campaign
 
@@ -9,14 +10,14 @@ class AdvertiserModelTest(TestCase):
     def setUp(self) -> None:
         self.advertiser = Advertiser.objects.create(name="Test Advertiser")
 
-    def test_advertiser_creation(self):
+    def test_advertiser_creation(self) -> None:
         self.assertIsInstance(self.advertiser, Advertiser)
         self.assertEqual(self.advertiser.name, "Test Advertiser")
 
-    def test_advertiser_str_method(self):
+    def test_advertiser_str_method(self) -> None:
         self.assertEqual(str(self.advertiser), "Test Advertiser")
 
-    def test_advertiser_id_property(self):
+    def test_advertiser_id_property(self) -> None:
         self.assertEqual(self.advertiser.advertiser_id, self.advertiser.id)
 
         new_id = uuid4()
@@ -30,9 +31,7 @@ class AdvertiserModelTest(TestCase):
             }
         }
     )
-    def test_advertiser_campaigns_relationship(self):
-        loll = cache.get("current_date", 0)
-
+    def test_advertiser_campaigns_relationship(self) -> None:
         campaign = Campaign.objects.create(
             advertiser=self.advertiser,
             impressions_limit=0,

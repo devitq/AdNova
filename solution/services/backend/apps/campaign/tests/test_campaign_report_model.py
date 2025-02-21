@@ -1,7 +1,9 @@
 from django.test import TestCase, override_settings
+
 from apps.advertiser.models import Advertiser
 from apps.campaign.models import Campaign, CampaignReport
 from apps.client.models import Client
+from config.errors import ConflictError
 
 
 class CampaignReportModelTest(TestCase):
@@ -13,7 +15,7 @@ class CampaignReportModelTest(TestCase):
             }
         }
     )
-    def setUpTestData(cls):
+    def setUpTestData(cls) -> None:
         cls.advertiser = Advertiser.objects.create(name="Test Advertiser")
         cls.campaign = Campaign.objects.create(
             advertiser=cls.advertiser,
@@ -33,7 +35,7 @@ class CampaignReportModelTest(TestCase):
             location="Test Location",
         )
 
-    def test_campaign_report_creation(self):
+    def test_campaign_report_creation(self) -> None:
         report = CampaignReport.objects.create(
             campaign=self.campaign,
             client=self.client_instance,
@@ -49,15 +51,14 @@ class CampaignReportModelTest(TestCase):
         self.assertEqual(report.message, "Inappropriate content")
         self.assertTrue(report.flagged_by_llm)
 
-
-    def test_campaign_report_unique_together_constraint(self):
+    def test_campaign_report_unique_together_constraint(self) -> None:
         CampaignReport.objects.create(
             campaign=self.campaign,
             client=self.client_instance,
             state=CampaignReport.CampaignReportState.SENT,
         )
 
-        with self.assertRaises(Exception):
+        with self.assertRaises(ConflictError):
             CampaignReport.objects.create(
                 campaign=self.campaign,
                 client=self.client_instance,

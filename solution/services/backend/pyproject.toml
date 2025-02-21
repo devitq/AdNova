@@ -118,6 +118,9 @@ ignore = [
     "FBT001",
     "FBT002",
     "N813",
+    "PLR2004",
+    "PT009",
+    "PT027",
     "RUF001",
 ]
 logger-objects = []

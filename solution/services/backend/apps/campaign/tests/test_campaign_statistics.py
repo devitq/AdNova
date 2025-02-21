@@ -1,5 +1,6 @@
 from django.core.cache import cache
 from django.test import TestCase, override_settings
+
 from apps.advertiser.models import Advertiser
 from apps.campaign.models import Campaign, CampaignClick, CampaignImpression
 from apps.client.models import Client
@@ -14,7 +15,7 @@ class CampaignStatisticsTest(TestCase):
             }
         }
     )
-    def setUpTestData(cls):
+    def setUpTestData(cls) -> None:
         cls.advertiser = Advertiser.objects.create(name="Test Advertiser")
         cls.campaign = Campaign.objects.create(
             advertiser=cls.advertiser,
@@ -41,11 +42,11 @@ class CampaignStatisticsTest(TestCase):
             }
         }
     )
-    def setUp(self):
+    def setUp(self) -> None:
         cache.clear()
         cache.set("current_date", 5)
 
-    def test_get_statistics_no_data(self):
+    def test_get_statistics_no_data(self) -> None:
         stats = self.campaign.get_statistics()
         expected_stats = {
             "impressions_count": 0,
@@ -58,7 +59,7 @@ class CampaignStatisticsTest(TestCase):
 
         self.assertEqual(stats, expected_stats)
 
-    def test_get_statistics_with_data(self):
+    def test_get_statistics_with_data(self) -> None:
         CampaignImpression.objects.create(
             campaign=self.campaign,
             client=self.client_instance,
@@ -90,7 +91,7 @@ class CampaignStatisticsTest(TestCase):
             }
         }
     )
-    def test_get_daily_statistics_no_data(self):
+    def test_get_daily_statistics_no_data(self) -> None:
         daily_stats = self.campaign.get_daily_statistics()
         expected_stats = [
             {
@@ -116,7 +117,7 @@ class CampaignStatisticsTest(TestCase):
             }
         }
     )
-    def test_get_daily_statistics_with_data(self):
+    def test_get_daily_statistics_with_data(self) -> None:
         CampaignImpression.objects.create(
             campaign=self.campaign,
             client=self.client_instance,
