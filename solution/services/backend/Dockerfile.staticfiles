@@ -19,7 +19,7 @@ COPY . .
 
 RUN uv run python manage.py collectstatic --noinput
 
-# Stage 2: Start nginx to serve staticfiles
+# Stage 2: Start nginx and serve staticfiles
 FROM docker.io/nginx:latest
 
 COPY --from=builder /app/static /usr/share/nginx/html

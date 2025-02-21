@@ -1,6 +1,6 @@
 # AdNova Tests
 
-There is `unit` tests and `e2e` tests available, unit tests are placed all around `backend` serivce folder and `e2e` tests placed [here](./e2e/)
+There is `unit` and `e2e` tests available, unit tests are placed all around `backend` serivce folder and `e2e` tests placed [here](./e2e/)
 
 ## Running unit tests
 
@@ -12,7 +12,7 @@ See [services/backend/README.md](../services/backend/README.md#testing)
 
 ### Backend service
 
--image-
+![backend coverage](../assets/images/backend-coverage.png)
 
 ## Running e2e tests
 

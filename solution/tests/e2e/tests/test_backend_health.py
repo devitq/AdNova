@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 def test_healthcheck(client: Client) -> None:
     """
-    Checks that backend can use theese services:
+    Tests integration between:
     - redis
     - celery
     - postgres

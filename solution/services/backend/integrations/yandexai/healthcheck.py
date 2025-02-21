@@ -16,8 +16,10 @@ class YandexAIHealthCheck(BaseHealthCheckBackend):
             result = sdk.models.completions(
                 "yandexgpt-lite", model_version="latest"
             ).tokenize("ping")
+
             if not result:
                 self.add_error("YandexAI API is unaccessible")
+
         except YCloudMLError:
             self.add_error("YandexAI API is unaccessible")
 

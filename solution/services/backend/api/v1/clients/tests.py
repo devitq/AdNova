@@ -1,6 +1,5 @@
 from http import HTTPStatus as status
 from django.test import TestCase
-from django.urls import reverse
 import json
 from uuid import uuid4
 from apps.client.models import Client

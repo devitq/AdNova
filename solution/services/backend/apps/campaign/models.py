@@ -6,7 +6,6 @@ from uuid import UUID
 
 from django.conf import settings
 from django.core.cache import cache
-from django.core.exceptions import ValidationError
 from django.core.validators import (
     MaxValueValidator,
     MinLengthValidator,
@@ -20,6 +19,7 @@ from apps.campaign.validators import (
     CampaignDurationValidator,
     CampaignLimitsValidator,
     CampaignReportMessageValidator,
+    CampaignStartDateValidator,
     CampaignTargetingLocationValidator,
 )
 from apps.client.models import Client
@@ -100,21 +100,7 @@ class Campaign(BaseModel):
         CampaignAgeValidator()(self)
         CampaignDurationValidator()(self)
         CampaignLimitsValidator()(self)
-
-        current_date = cache.get("current_date", default=0)
-
-        err = "start_date must be greater than the current date."
-
-        try:
-            original = Campaign.objects.get(id=self.id or "")
-            if (
-                original.start_date != self.start_date
-                and self.start_date < current_date
-            ):
-                raise ValidationError(err)
-        except Campaign.DoesNotExist:
-            if self.start_date < current_date:
-                raise ValidationError(err) from None
+        CampaignStartDateValidator()(self)
 
     def save(self, *args: Any, **kwargs: Any) -> None:
         created = self.pk is None
@@ -133,6 +119,20 @@ class Campaign(BaseModel):
             f"campaign_{self.id}_impressions_count", self.impressions.count()
         )
         cache.set(f"campaign_{self.id}_clicks_count", self.clicks.count())
+
+    def inc_views(self) -> None:
+        try:
+            cache.incr(f"campaign_{self.id}_impressions_count", 1)
+        except ValueError:
+            self.setup_cache()
+            logger.warning("Seems that %s missing caches", self.campaign_id)
+
+    def inc_clicks(self) -> None:
+        try:
+            cache.incr(f"campaign_{self.id}_clicks_count", 1)
+        except ValueError:
+            self.setup_cache()
+            logger.warning("Seems that %s missing caches", self.campaign_id)
 
     @property
     def ad_id(self) -> UUID:
@@ -175,13 +175,7 @@ class Campaign(BaseModel):
                 price=self.cost_per_impression,
                 date=cache.get("current_date", default=0),
             )
-            try:
-                cache.incr(f"campaign_{self.id}_impressions_count", 1)
-            except ValueError:
-                self.setup_cache()
-                logger.warning(
-                    "Seems that %s missing caches", self.campaign_id
-                )
+            self.inc_views()
         except ConflictError:
             pass
 
@@ -198,13 +192,7 @@ class Campaign(BaseModel):
                 price=self.cost_per_click,
                 date=cache.get("current_date", default=0),
             )
-            try:
-                cache.incr(f"campaign_{self.id}_clicks_count", 1)
-            except ValueError:
-                self.setup_cache()
-                logger.warning(
-                    "Seems that %s missing caches", self.campaign_id
-                )
+            self.inc_clicks()
         except ConflictError:
             pass
 
@@ -235,7 +223,6 @@ class Campaign(BaseModel):
             total=models.Count("id"),
             spent=models.Sum("price", default=0.0),
         )
-
         clicks = self.clicks.values("date").annotate(
             total=models.Count("id"),
             spent=models.Sum("price", default=0.0),

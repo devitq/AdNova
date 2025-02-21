@@ -8,8 +8,15 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-# Tests integration between: backend, redis, yandexgpt and celery
 def test_generate_ad_text(client: Client) -> None:
+    """
+    Tests integration between:
+    - backend
+    - redis
+    - yandexgpt
+    - celery
+    """
+
     payload = {
         "advertiser_name": "Центральный Университет",
         "ad_title": "Всероссийский кейс-чемпионат DEADLINE",
@@ -25,10 +32,7 @@ def test_generate_ad_text(client: Client) -> None:
 
     while True:
         result_response = client.get(f"/generate/ad_text/{task_id}/result")
-        assert (
-            result_response.status_code == status.OK
-            or result_response.status_code == status.NOT_FOUND
-        )
+        assert result_response.status_code in (status.OK, status.NOT_FOUND)
         result_data = result_response.json()
 
         if (

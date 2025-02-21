@@ -22,6 +22,7 @@ class AdvertiserModelTest(TestCase):
 
         new_id = uuid4()
         self.advertiser.advertiser_id = new_id
+
         self.assertEqual(self.advertiser.id, new_id)
 
     @override_settings(

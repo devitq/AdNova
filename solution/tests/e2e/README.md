@@ -31,7 +31,7 @@ cd devitq/solution/tests/e2e
 uv sync --no-dev
 ```
 
-## Customize environment
+## Customize environment (optional)
 
 ```bash
 cp .env.template .env
