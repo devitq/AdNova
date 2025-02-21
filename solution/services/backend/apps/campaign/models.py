@@ -383,16 +383,14 @@ class Campaign(BaseModel):
                 else 1
             )
 
-            prioritized.append(
-                (
-                    campaign,
-                    {
-                        "profit": profit,
-                        "ml": ml_score,
-                        "capacity": 1 - capacity_ratio,
-                    },
-                )
-            )
+            prioritized.append((
+                campaign,
+                {
+                    "profit": profit,
+                    "ml": ml_score,
+                    "capacity": 1 - capacity_ratio,
+                },
+            ))
 
         if not ml_values or not profit_values:
             return None
@@ -410,7 +408,7 @@ class Campaign(BaseModel):
             norm_ml = metrics["ml"] / max_ml if max_ml > 0 else 0
 
             priority = (
-                0.7 * norm_profit + 0.25 * norm_ml + 0.15 * metrics["capacity"]
+                0.8 * norm_profit + 0.15 * norm_ml + 0.05 * metrics["capacity"]
             )
 
             final_list.append((campaign, priority))
