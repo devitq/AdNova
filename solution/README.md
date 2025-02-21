@@ -8,7 +8,7 @@ Service for advertisers to provide their ads and get profit!
 
 Not all tables inlcuded in this diagram (some django utility tables which makes no sense to business logic). On the left side there is default django models and on the right side there is developed models.
 
-Tables that are not mentioned in task (btw, you can see it on diagram):
+Tables that are not mentioned in task (btw, you can see them on diagram):
 
 Table Report:
 
@@ -30,7 +30,7 @@ Table Report:
 
 #### Warning
 
-Plese note that containers will use ports 13241 to 13245 and 8080, so there is must be no listeners on this ports range.
+Plese note that containers will use ports from 13241 to 13245 and 8080, so there is must be no listeners on this ports range.
 
 #### Configure
 
@@ -137,7 +137,7 @@ You may say: "For what we need a lot of complex technologies for now". I have an
 
 ### Restful API
 
-API Base endpoint when deployed with docker compose (by default): [127.0.0.1:8080](http://127.0.0.1:8080), also see [docs](#openapi-docs).
+API Base endpoint when deployed with default docker compose: [127.0.0.1:8080](http://127.0.0.1:8080), also see [docs](#openapi-docs).
 
 ### Admin panel
 
@@ -156,6 +156,10 @@ Basic commands:
 /statistics - See advertiser overall statistics (only after authentication)
 
 /logout - Logout of current advertiser account (only after authentication)
+
+### Grafana
+
+When deployed with default docker compose: [127.0.0.1:13243](http://127.0.0.1:13243). See more details about this [here](#grafana-dashboard).
 
 ## ✨ Additional features
 
@@ -195,7 +199,7 @@ Demonstration:
 
 ### Moderation
 
-Moderation implemented via report system. Client goes to `/report` ([see OpenAPI docs](#openapi-docs)) and submits a report, then llm ([YandexGPT-lite](https://yandex.cloud/en/services/yandexgpt)) in task mode (does stuff on the background with Celery) checks for potential violation and sets the `flagged_by_llm` to True or False and this just a little help to moderators to make more accurate decisions. Btw moderators can do anything they think they should do, for example make some changes, censor some content or even delete campaign.
+Moderation implemented via report system. Client goes to `/report` ([see OpenAPI docs](#openapi-docs)) and submits a report, then llm ([YandexGPT-lite](https://yandex.cloud/en/services/yandexgpt)) in task mode (does stuff on the background with Celery) checks for potential violation and sets the `flagged_by_llm` to True or False and this just a little help to moderators to make more accurate decisions. Btw, moderators can do anything they think they should do, for example make some changes, censor some content or even delete campaign.
 Also admin user (whoose creditionals specified lower) can add new staff members and even create a specified group for them (this is built-in django capabilities).
 Report has four states: Sent, Under review, Took action and Skipped. Admin panel has filtration by states and by flagged by llm status.
 
@@ -219,19 +223,21 @@ Prompt used for moderation:
 3. Дискриминация: расизм, сексизм, ксенофобия, гомофобия
 ```
 
-Btw if llm returns `В интернете есть много сайтов с информацией на эту тему. [Посмотрите, что нашлось в поиске](https://ya.ru)` it also means that text is unacceptable)
+Btw, if llm returns `В интернете есть много сайтов с информацией на эту тему. [Посмотрите, что нашлось в поиске](https://ya.ru)` it also means that text is unacceptable)
+
+Demonstration:
 
 ![moderation](./assets/gifs/moderation.gif)
 
-### Grafana dashboards
+### Grafana dashboard
 
-When deployed locally (by default): [localhost:13243](http://localhost:13243/)
-
-Analytics dashboard when deployed with docker compose (by default): [localhost:13243/d/adnova-statistics/statistics](http://localhost:13243/d/adnova-statistics/statistics?orgId=1&from=now&to=now&timezone=utc&var-advertiser_id=&var-campaign_id=$__all)
+When deployed with default docker compose: [localhost:13243](http://localhost:13243/)
 
 Default login: `admin`
 
 Default password: `proooooood`
+
+Analytics dashboard when deployed with default docker compose: [localhost:13243/d/adnova-statistics/statistics](http://localhost:13243/d/adnova-statisticss/statistics). You can enter advertiser id and get detailed advertiser statistics and also detailed statistics for each advertiser's campaign.
 
 Demonstration:
 
@@ -239,11 +245,11 @@ Demonstration:
 
 ### OpenAPI docs
 
-When deployed with docker compose (by default): [localhost:8080/docs](http://localhost:8080/docs)
+When deployed with default docker compose: [localhost:8080/docs](http://localhost:8080/docs)
 
 ### Healthcheck endpoint
 
-When deployed with docker compose (by default): [localhost:8080/health](http://localhost:8080/health)
+When deployed with default docker compose: [localhost:8080/health](http://localhost:8080/health)
 
 Lets developers easily understand and identify problem and users check services health.
 
@@ -251,7 +257,7 @@ Lets developers easily understand and identify problem and users check services 
 
 ### PgAdmin
 
-When deployed with docker compose (by default): [localhost:13242](http://localhost:13242)
+When deployed with default docker compose: [localhost:13242](http://localhost:13242)
 
 Default email: `admin@mail.com`
 

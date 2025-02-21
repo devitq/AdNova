@@ -112,7 +112,7 @@ docker run -p 8080:8080 --name adnova-backend adnova-backend
 docker run --name adnova-celery-worker adnova-backend celery -A config worker -l INFO
 ```
 
-Backend will be available on localhost:8080.
+Backend will be available on [127.0.0.1:8080](http://127.0.0.1:8080).
 
 ## Testing
 

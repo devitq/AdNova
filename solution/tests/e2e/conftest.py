@@ -21,7 +21,6 @@ def docker_compose() -> Generator[None]:
             "docker",
             "compose",
             "down",
-            "-v",
         ],
         check=True,
     )
