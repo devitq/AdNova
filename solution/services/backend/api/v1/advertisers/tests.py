@@ -2,7 +2,7 @@ import json
 import uuid
 from http import HTTPStatus as status
 
-from django.test import TestCase, Client
+from django.test import TestCase, Client, override_settings
 from apps.advertiser.models import Advertiser
 from apps.client.models import Client as ClientModel
 from apps.mlscore.models import Mlscore
@@ -21,6 +21,13 @@ class TestMlscoreEndpoint(TestCase):
 
         self.url = "/ml-scores"
 
+    @override_settings(
+        CACHES={
+            "default": {
+                "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+            }
+        }
+    )
     def test_create_mlscore_success(self):
         data = {
             "advertiser_id": str(self.advertiser.id),
@@ -35,6 +42,13 @@ class TestMlscoreEndpoint(TestCase):
         self.assertEqual(response.status_code, status.OK)
         self.assertEqual(mlscore.score, 90)
 
+    @override_settings(
+        CACHES={
+            "default": {
+                "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+            }
+        }
+    )
     def test_update_mlscore_success(self):
         mlscore = Mlscore.objects.create(
             advertiser=self.advertiser,
@@ -74,6 +88,13 @@ class TestMlscoreEndpoint(TestCase):
 
         self.assertEqual(response.status_code, status.BAD_REQUEST)
 
+    @override_settings(
+        CACHES={
+            "default": {
+                "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+            }
+        }
+    )
     def test_non_existing_client(self):
         data = {
             "advertiser_id": str(self.advertiser.id),

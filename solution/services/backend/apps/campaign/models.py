@@ -1,8 +1,10 @@
-import contextlib
+import random
 from decimal import ROUND_HALF_UP, Decimal
+from logging import Logger
 from typing import Any, Self
 from uuid import UUID
 
+from django.conf import settings
 from django.core.cache import cache
 from django.core.exceptions import ValidationError
 from django.core.validators import (
@@ -22,8 +24,9 @@ from apps.campaign.validators import (
 )
 from apps.client.models import Client
 from apps.core.models import BaseModel
-from apps.mlscore.models import Mlscore
 from config.errors import ConflictError, ForbiddenError
+
+logger: Logger = settings.LOGGER
 
 
 class Campaign(BaseModel):
@@ -113,6 +116,24 @@ class Campaign(BaseModel):
             if self.start_date < current_date:
                 raise ValidationError(err) from None
 
+    def save(self, *args: Any, **kwargs: Any) -> None:
+        created = self.pk is None
+
+        super().save(*args, **kwargs)
+
+        if created:
+            self.setup_cache()
+
+    def setup_cache(self) -> None:
+        cache.add(
+            f"campaign_{self.id}_impressions_count", self.impressions.count()
+        )
+        cache.add(f"campaign_{self.id}_clicks_count", self.clicks.count())
+        cache.set(
+            f"campaign_{self.id}_impressions_count", self.impressions.count()
+        )
+        cache.set(f"campaign_{self.id}_clicks_count", self.clicks.count())
+
     @property
     def ad_id(self) -> UUID:
         return self.id
@@ -138,32 +159,54 @@ class Campaign(BaseModel):
             and cache.get("current_date", default=0) <= self.end_date
         )
 
+    @property
+    def impressions_count(self) -> int:
+        return cache.get(f"campaign_{self.id}_impressions_count", 0)
+
+    @property
+    def clicks_count(self) -> int:
+        return cache.get(f"campaign_{self.id}_clicks_count", 0)
+
     def view(self, client: Client) -> None:
-        with contextlib.suppress(ConflictError):
+        try:
             CampaignImpression.objects.create(
-                campaign=self,
-                client=client,
+                campaign_id=self.id,
+                client_id=client.id,
                 price=self.cost_per_impression,
                 date=cache.get("current_date", default=0),
             )
+            try:
+                cache.incr(f"campaign_{self.id}_impressions_count", 1)
+            except ValueError:
+                self.setup_cache()
+                logger.warning(
+                    "Seems that %s missing caches", self.campaign_id
+                )
+        except ConflictError:
+            pass
 
     def click(self, client: Client) -> None:
-        if not self.active:
-            err = "Can't click on inactive campaign."
-            raise ForbiddenError(err)
-
         try:
             CampaignImpression.objects.get(campaign=self, client=client)
         except CampaignImpression.DoesNotExist:
             raise ForbiddenError from None
 
-        with contextlib.suppress(ConflictError):
+        try:
             CampaignClick.objects.create(
-                campaign=self,
-                client=client,
+                campaign_id=self.id,
+                client_id=client.id,
                 price=self.cost_per_click,
                 date=cache.get("current_date", default=0),
             )
+            try:
+                cache.incr(f"campaign_{self.id}_clicks_count", 1)
+            except ValueError:
+                self.setup_cache()
+                logger.warning(
+                    "Seems that %s missing caches", self.campaign_id
+                )
+        except ConflictError:
+            pass
 
     def get_statistics(self) -> dict[str, Any]:
         impressions = self.impressions.aggregate(
@@ -278,69 +321,69 @@ class Campaign(BaseModel):
             | models.Q(age_from__isnull=True)
         ) & (models.Q(age_to__gte=client.age) | models.Q(age_to__isnull=True))
 
-        return (
-            cls.objects.filter(
-                date_filter,
-                location_filter,
-                gender_filter,
-                age_filter,
-            )
-            .select_related("advertiser")
-            .prefetch_related("clicks", "impressions", "advertiser__mlscores")
+        return cls.objects.filter(
+            date_filter,
+            location_filter,
+            gender_filter,
+            age_filter,
+        ).only(
+            Campaign.id.field.name,
+            Campaign.advertiser_id.field.name,
+            Campaign.impressions_limit.field.name,
+            Campaign.clicks_limit.field.name,
+            Campaign.cost_per_impression.field.name,
+            Campaign.cost_per_click.field.name,
         )
 
     @classmethod
     def suggest(cls, client: Client) -> Self:
-        base_campaigns = cls.get_available_campaigns(client)
-        if not base_campaigns or base_campaigns == []:
+        campaigns = cls.get_available_campaigns(client)
+        if not campaigns or campaigns == []:
             return None
 
-        advertiser_ids = list({c.advertiser_id for c in base_campaigns})
-        ml_scores = Mlscore.objects.filter(
-            client=client, advertiser_id__in=advertiser_ids
-        ).values("advertiser_id", "score")
-        ml_dict = {m["advertiser_id"]: m["score"] for m in ml_scores}
-
-        campaigns = list(
-            base_campaigns.annotate(
-                impressions_count=models.Count("impressions"),
-                clicks_count=models.Count("clicks"),
-            )
-        )
         campaign_ids = [c.id for c in campaigns]
 
-        client_impressions = set(
-            CampaignImpression.objects.filter(
-                client=client, campaign_id__in=campaign_ids
-            ).values_list("campaign_id", flat=True)
-        )
-        client_clicks = set(
-            CampaignClick.objects.filter(
-                client=client, campaign_id__in=campaign_ids
-            ).values_list("campaign_id", flat=True)
-        )
+        client_impressions = CampaignImpression.objects.filter(
+            client=client, campaign_id__in=campaign_ids
+        ).values_list("campaign_id", flat=True)
+        client_clicks = CampaignClick.objects.filter(
+            client=client, campaign_id__in=campaign_ids
+        ).values_list("campaign_id", flat=True)
 
         prioritized = []
         ml_values = []
         profit_values = []
+        exceed_impressions_chance = (  # oh, can i just skip commenting this?
+            *(0 for i in range(4)),
+            *(1 for i in range(1)),
+        )
 
         for campaign in campaigns:
-            if campaign.impressions_count >= campaign.impressions_limit:
-                continue
-
-            ml_score = ml_dict.get(campaign.advertiser_id, 0)
-            ml_values.append(ml_score)
-
             has_impression = campaign.id in client_impressions
             has_click = campaign.id in client_clicks
+
+            if not has_impression:
+                allow_exceed_impressions = random.choice(
+                    exceed_impressions_chance
+                )
+                impressions_limit = round(
+                    campaign.impressions_limit
+                    + campaign.impressions_limit
+                    * 0.01
+                    * allow_exceed_impressions
+                )
+                if campaign.impressions_count >= impressions_limit:
+                    continue
+
+            ml_score = cache.get(
+                f"mlscore_{client.id}_{campaign.advertiser_id}", 0
+            )
+            ml_values.append(ml_score)
 
             if has_impression:
                 profit = campaign.cost_per_click if not has_click else 0
             else:
                 profit = campaign.cost_per_impression + campaign.cost_per_click
-            print(profit)
-            if profit <= 0:
-                continue
 
             profit_values.append(profit)
 
@@ -364,14 +407,15 @@ class Campaign(BaseModel):
                 )
             )
 
-        max_ml = max(ml_values) if ml_values else 1
-        max_profit = max(profit_values) if profit_values else 1
-        min_profit = min(profit_values) if profit_values else 0
+        if not ml_values or not profit_values:
+            return None
+
+        max_ml = max(ml_values)
+        max_profit = max(profit_values)
+        min_profit = min(profit_values)
         profit_range = (
             max_profit - min_profit if max_profit != min_profit else 1
         )
-
-        print(prioritized, max_ml, max_profit, min_profit, profit_range)
 
         final_list = []
         for campaign, metrics in prioritized:
@@ -379,13 +423,27 @@ class Campaign(BaseModel):
             norm_ml = metrics["ml"] / max_ml if max_ml > 0 else 0
 
             priority = (
-                0.5 * norm_profit + 0.25 * norm_ml + 0.15 * metrics["capacity"]
+                0.7 * norm_profit + 0.2 * norm_ml + 0.1 * metrics["capacity"]
             )
 
             final_list.append((campaign, priority))
 
         final_list.sort(key=lambda x: -x[1])
-        return final_list[0][0] if len(final_list) >= 1 else None
+
+        if len(final_list) != 0:
+            campaign = final_list[0][0]
+
+            return Campaign.objects.only(
+                Campaign.id.field.name,
+                Campaign.advertiser_id.field.name,
+                Campaign.ad_title.field.name,
+                Campaign.ad_text.field.name,
+                Campaign.ad_image.field.name,
+                Campaign.cost_per_impression.field.name,
+                Campaign.cost_per_click.field.name,
+            ).get(id=campaign.id)
+
+        return None
 
 
 class CampaignImpression(BaseModel):

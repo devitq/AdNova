@@ -1,5 +1,4 @@
-from django.test import TestCase
-from django.db.utils import IntegrityError
+from django.test import TestCase, override_settings
 from django.core.exceptions import ValidationError
 from config.errors import ConflictError
 from apps.advertiser.models import Advertiser
@@ -17,6 +16,13 @@ class MlscoreModelTest(TestCase):
             gender=Client.GenderChoices.MALE,
         )
 
+    @override_settings(
+        CACHES={
+            "default": {
+                "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+            }
+        }
+    )
     def test_create_mlscore(self):
         mlscore = Mlscore.objects.create(
             advertiser=self.advertiser,
@@ -27,6 +33,13 @@ class MlscoreModelTest(TestCase):
         self.assertEqual(mlscore.score, 95)
         self.assertEqual(str(mlscore), "Test Advertiser | test_client")
 
+    @override_settings(
+        CACHES={
+            "default": {
+                "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+            }
+        }
+    )
     def test_mlscore_unique_together_constraint(self):
         Mlscore.objects.create(
             advertiser=self.advertiser,
@@ -41,6 +54,13 @@ class MlscoreModelTest(TestCase):
                 score=85,
             )
 
+    @override_settings(
+        CACHES={
+            "default": {
+                "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+            }
+        }
+    )
     def test_delete_advertiser_cascades(self):
         mlscore = Mlscore.objects.create(
             advertiser=self.advertiser,
@@ -51,6 +71,13 @@ class MlscoreModelTest(TestCase):
 
         self.assertFalse(Mlscore.objects.filter(id=mlscore.id).exists())
 
+    @override_settings(
+        CACHES={
+            "default": {
+                "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+            }
+        }
+    )
     def test_delete_client_cascades(self):
         mlscore = Mlscore.objects.create(
             advertiser=self.advertiser,

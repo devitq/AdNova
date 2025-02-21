@@ -122,6 +122,7 @@ ignore = [
     "PT009",
     "PT027",
     "RUF001",
+    "S311",
 ]
 logger-objects = []
 per-file-ignores = {}
