@@ -343,8 +343,8 @@ class Campaign(BaseModel):
         ml_values = []
         profit_values = []
         exceed_impressions_chance = (  # oh, can i just skip commenting this?
-            *(0 for i in range(1)),
-            *(1 for i in range(4)),
+            *(0 for i in range(3)),
+            *(1 for i in range(1)),
         )
 
         for campaign in campaigns:
@@ -358,7 +358,7 @@ class Campaign(BaseModel):
                 impressions_limit = round(
                     campaign.impressions_limit
                     + campaign.impressions_limit
-                    * 0.5
+                    * 0.1
                     * allow_exceed_impressions
                 )
                 if campaign.impressions_count >= impressions_limit:
@@ -412,7 +412,7 @@ class Campaign(BaseModel):
             norm_ml = metrics["ml"] / max_ml if max_ml > 0 else 0
 
             priority = (
-                0.8 * norm_profit + 0.19 * norm_ml + 0.01 * metrics["capacity"]
+                0.8 * norm_profit + 0.2 * norm_ml + 0.1 * metrics["capacity"]
             )
 
             final_list.append((campaign, priority))
