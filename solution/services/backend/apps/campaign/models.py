@@ -413,7 +413,7 @@ class Campaign(BaseModel):
             norm_ml = metrics["ml"] / max_ml if max_ml > 0 else 0
 
             priority = (
-                0.8 * norm_profit + 0.25 * norm_ml + 0.05 * metrics["capacity"]
+                0.8 * norm_profit + 0.4 * norm_ml + 0.05 * metrics["capacity"]
             )
 
             final_list.append((campaign, priority))
