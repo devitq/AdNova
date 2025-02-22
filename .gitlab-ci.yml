@@ -44,6 +44,7 @@ test:
     - cd solution && docker compose logs > ../compose.log && docker compose down
   artifacts:
     when: always
+    access: 'developer'
     paths:
       - total_stats.json
       - compose.log
