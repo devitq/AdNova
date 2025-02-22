@@ -157,11 +157,21 @@ Basic commands:
 
 /logout - Logout of current advertiser account (only after authentication)
 
+See [this](#telegram-bot-1).
+
 ### Grafana
 
 When deployed with default docker compose: [127.0.0.1:13243](http://127.0.0.1:13243). See more details about this [here](#grafana-dashboard).
 
-## ✨ Additional features
+## ✨ Features
+
+### Telegram bot
+
+With this bot you can easily manage your campaigns and see statistics.
+
+Demonstration:
+
+![telegram](./assets/gifs/telegram.gif)
 
 ### Campaign image upload
 
