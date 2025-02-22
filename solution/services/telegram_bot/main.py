@@ -8,6 +8,7 @@ from aiogram_dialog import setup_dialogs
 
 import config
 from commands.campaigns import campaigns_router
+from commands.help import help_router
 from commands.logout import logout_router
 from commands.start import start_router
 from commands.stats import statistics_router
@@ -43,6 +44,7 @@ async def main() -> None:
     dp.message.outer_middleware(AuthMiddleware())
 
     dp.include_routers(
+        help_router,
         start_router,
         campaigns_router,
         statistics_router,

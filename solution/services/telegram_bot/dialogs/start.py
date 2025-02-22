@@ -45,7 +45,9 @@ async def advertiser_id_on_success(
     state_data["advertiser_id"] = message.text
     await state.set_data(state_data)
 
-    await message.answer(f"Successfully authenticated as {message.text}")
+    await message.answer(
+        f"Successfully authenticated as {message.text}. Get help: /help."
+    )
     await dialog_manager.mark_closed()
 
 

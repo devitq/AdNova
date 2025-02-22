@@ -18,10 +18,12 @@ class NotFoundError(BaseModel):
 
 class CampaignTargeting(BaseModel):
     gender: Literal["MALE", "FEMALE", "ALL"] | None = None
-    age_from: Annotated[NonNegativeInt, Field(strict=True, ls=100)] | None = (
+    age_from: Annotated[NonNegativeInt, Field(strict=False, ls=100)] | None = (
         None
     )
-    age_to: Annotated[NonNegativeInt, Field(strict=True, ls=100)] | None = None
+    age_to: Annotated[NonNegativeInt, Field(strict=False, ls=100)] | None = (
+        None
+    )
     location: str | None = None
 
 

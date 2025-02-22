@@ -26,8 +26,8 @@ async def stats_command(
         f"\t• Impressions: {stats.impressions_count}\n"
         f"\t• Clicks: {stats.clicks_count}\n"
         f"\t• Conversion: {stats.conversion:.2f}%\n"
-        f"\t• Spent on impressions: ${stats.spent_impressions:.2f}\n"
-        f"\t• Spent on clicks: ${stats.spent_clicks:.2f}\n"
-        f"\t• Spent total: ${stats.spent_total:.2f}"
+        f"\t• Spent on impressions: {stats.spent_impressions:.2f}\n"
+        f"\t• Spent on clicks: {stats.spent_clicks:.2f}\n"
+        f"\t• Spent total: {stats.spent_total:.2f}"
     )
     await message.answer(response)
