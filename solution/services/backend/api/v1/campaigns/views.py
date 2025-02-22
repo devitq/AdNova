@@ -173,9 +173,7 @@ def upload_ad_image(
         advertiser_id=advertiser_id,
     )
     if ad_image.size >= 10 * 1024 * 1024:
-        raise HttpError(
-            status.BAD_REQUEST, "File can't be bigger than 10MB."
-        )
+        raise HttpError(status.BAD_REQUEST, "File can't be bigger than 10MB.")
     try:
         Image.open(ad_image).verify()
     except (OSError, SyntaxError):

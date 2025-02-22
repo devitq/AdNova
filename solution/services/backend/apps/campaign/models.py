@@ -20,8 +20,8 @@ from apps.campaign.validators import (
     CampaignLimitsValidator,
     CampaignReportMessageValidator,
     CampaignStartDateValidator,
+    CampaignTargetingGenderValidator,
     CampaignTargetingLocationValidator,
-    CampaignTargetingGenderValidator
 )
 from apps.client.models import Client
 from apps.core.models import BaseModel
@@ -385,14 +385,16 @@ class Campaign(BaseModel):
                 else 1
             )
 
-            prioritized.append((
-                campaign,
-                {
-                    "profit": profit,
-                    "ml": ml_score,
-                    "capacity": 1 - capacity_ratio,
-                },
-            ))
+            prioritized.append(
+                (
+                    campaign,
+                    {
+                        "profit": profit,
+                        "ml": ml_score,
+                        "capacity": 1 - capacity_ratio,
+                    },
+                )
+            )
 
         if not ml_values or not profit_values:
             return None

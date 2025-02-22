@@ -2,7 +2,6 @@ from typing import TYPE_CHECKING
 
 from django.core.cache import cache
 from django.core.exceptions import ValidationError
-from django.db.models.fields import Field
 
 if TYPE_CHECKING:
     from apps.campaign.models import Campaign, CampaignReport
@@ -20,6 +19,7 @@ class CampaignTargetingGenderValidator:
         if instance.gender == "":
             err = "gender can't be blank."
             raise ValidationError(err)
+
 
 class CampaignAgeValidator:
     def __call__(self, instance: "Campaign") -> None:
