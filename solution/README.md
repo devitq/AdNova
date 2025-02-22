@@ -1,5 +1,7 @@
 # AdNova
 
+[![wakatime](https://wakatime.com/badge/user/cb406c1c-8eb4-4829-b9f9-816a0d284d7e/project/2b690440-fe32-49f5-87ea-b1def19de612.svg)](https://wakatime.com/badge/user/cb406c1c-8eb4-4829-b9f9-816a0d284d7e/project/2b690440-fe32-49f5-87ea-b1def19de612)
+
 Service for advertisers to provide their ads and get profit!
 
 ## 🗺️ ER diagram
@@ -107,7 +109,7 @@ aiogram is a modern and fully asynchronous framework for Telegram bot developmen
 
 ### [Redis](https://redis.io/)
 
-Redis is an in-memory data structure store often used as a database, cache, and message broker. It supports various data structures and offers high performance for read and write operations, making it suitable for caching and real-time analytics. Very popular and has big community for today. In project used as fsm for aiogram (to avoid data loss on restart), caches (current_date) for backend and as broker for Celery.
+Redis is an in-memory data structure store often used as a database, cache, and message broker. It supports various data structures and offers high performance for read and write operations, making it suitable for caching and real-time analytics. Very popular and has big community for today. In project used as fsm for aiogram (to avoid data loss on restart), caches (current_date, mlscores, clicks, views) for backend and as broker for Celery.
 
 ### [Postgres](https://www.postgresql.org/)
 
@@ -164,6 +166,27 @@ See [this](#telegram-bot-1).
 When deployed with default docker compose: [127.0.0.1:13243](http://127.0.0.1:13243). See more details about this [here](#grafana-dashboard).
 
 ## ✨ Features
+
+### Notes about basic features
+
+I cache every mlscore in redis (btw, on startup of docker compose i upload each cache in db for stability) and also i cache clicks and impressions count for campaigns. This increases perfomance of suggesting algorithm and increases clients satisfaction!_)
+
+### Clever suggesting algotithm
+
+Here is how suggesting algotitm looks like:
+
+1. Filter all campaigns and left only that currently active and matches user targeting.
+2. Filter all campaigns with exceeded impressions, but to make more money i let exceed limit by 10% with chance ~33%
+3. Creating metrics for each campaign
+   1. Profit: cost_per_impression (=0 if already viewed), cost_per_click (=0 if already clicked)
+   2. Mlscores: from cache
+   3. Capacity: 1 - ((impressions_limit - actual_impressions) / impressions_limit)
+4. Normalization
+   1. Normalizing profit from 0 to 1
+   2. Normalizing mlscores from 0 to 1
+   3. Capacity already normalized
+5. Scoring each campaign: `0.8 * normalized_profit + 0.2 * normalized_ml + 0.1 * capacity`
+6. Finding campaign with max score and returning it to user
 
 ### Telegram bot
 
