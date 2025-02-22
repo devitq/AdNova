@@ -344,7 +344,7 @@ class Campaign(BaseModel):
         profit_values = []
         exceed_impressions_chance = (  # oh, can i just skip commenting this?
             *(0 for i in range(3)),
-            *(1 for i in range(2)),
+            *(1 for i in range(1)),
         )
 
         for campaign in campaigns:

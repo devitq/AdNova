@@ -178,7 +178,7 @@ I cache every mlscore in redis (btw, on startup of docker compose i upload each 
 Here is how suggesting algotitm looks like:
 
 1. Filter all campaigns and left only that currently active and matches user targeting.
-2. Filter all campaigns with exceeded impressions, but to make more money i let exceed limit by 10% with chance 40%
+2. Filter all campaigns with exceeded impressions, but to make more money i let exceed limit by 10% with chance 25%
 3. Creating metrics for each campaign
    1. Profit: cost_per_impression (=0 if already viewed), cost_per_click (=0 if already clicked)
    2. Mlscores: from cache
