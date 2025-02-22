@@ -350,6 +350,7 @@ class Campaign(BaseModel):
         for campaign in campaigns:
             has_impression = campaign.id in client_impressions
             has_click = campaign.id in client_clicks
+            campaign_impressions_count = campaign.impressions_count
 
             if not has_impression:
                 allow_exceed_impressions = random.choice(
@@ -361,7 +362,7 @@ class Campaign(BaseModel):
                     * 0.1
                     * allow_exceed_impressions
                 )
-                if campaign.impressions_count >= impressions_limit:
+                if campaign_impressions_count >= impressions_limit:
                     continue
 
             ml_score = cache.get(
@@ -377,7 +378,7 @@ class Campaign(BaseModel):
             profit_values.append(profit)
 
             remaining_imp = (
-                campaign.impressions_limit - campaign.impressions_count
+                campaign.impressions_limit - campaign_impressions_count
             )
             capacity_ratio = (
                 remaining_imp / campaign.impressions_limit
