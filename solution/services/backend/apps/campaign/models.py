@@ -341,8 +341,8 @@ class Campaign(BaseModel):
         ml_values = []
         profit_values = []
         exceed_impressions_chance = (  # oh, can i just skip commenting this?
-            *(0 for i in range(4)),
-            *(1 for i in range(1)),
+            *(0 for i in range(1)),
+            *(1 for i in range(4)),
         )
 
         for campaign in campaigns:
@@ -356,7 +356,7 @@ class Campaign(BaseModel):
                 impressions_limit = round(
                     campaign.impressions_limit
                     + campaign.impressions_limit
-                    * 0.01
+                    * 0.5
                     * allow_exceed_impressions
                 )
                 if campaign.impressions_count >= impressions_limit:
