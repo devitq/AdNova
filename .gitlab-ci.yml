@@ -32,6 +32,7 @@ test:
         echo "Обрабатываем файл: $file"
         if ! grep -q "^ENV http_proxy" "$file"; then
           sed -i '/^FROM/ a ENV http_proxy=http:\/\/84.201.181.188:15000\nENV https_proxy=http:\/\/84.201.181.188:15000\nENV no_proxy=localhost' "$file"
+          echo -e "\nENV http_proxy=\nENV https_proxy=\nENV no_proxy=" >> "$file"
           echo "Добавлены прокси-переменные в $file"
         else
           echo "Прокси-переменные уже присутствуют в $file"
