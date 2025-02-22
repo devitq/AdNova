@@ -153,6 +153,8 @@ Basic commands:
 
 /start - Start the bot and authenticate as advertiser
 
+/help - Get list of all commands
+
 /campaigns - Manage advertiser campaigns (only after authentication)
 
 /statistics - See advertiser overall statistics (only after authentication)
@@ -176,7 +178,7 @@ I cache every mlscore in redis (btw, on startup of docker compose i upload each 
 Here is how suggesting algotitm looks like:
 
 1. Filter all campaigns and left only that currently active and matches user targeting.
-2. Filter all campaigns with exceeded impressions, but to make more money i let exceed limit by 10% with chance ~33%
+2. Filter all campaigns with exceeded impressions, but to make more money i let exceed limit by 10% with chance 40%
 3. Creating metrics for each campaign
    1. Profit: cost_per_impression (=0 if already viewed), cost_per_click (=0 if already clicked)
    2. Mlscores: from cache
@@ -185,7 +187,7 @@ Here is how suggesting algotitm looks like:
    1. Normalizing profit from 0 to 1
    2. Normalizing mlscores from 0 to 1
    3. Capacity already normalized
-5. Scoring each campaign: `0.8 * normalized_profit + 0.2 * normalized_ml + 0.1 * capacity`
+5. Scoring each campaign: `0.8 * normalized_profit + 0.4 * normalized_ml + 0.05 * capacity`
 6. Finding campaign with max score and returning it to user
 
 ### Telegram bot
