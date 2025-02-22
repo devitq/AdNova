@@ -21,6 +21,7 @@ from apps.campaign.validators import (
     CampaignReportMessageValidator,
     CampaignStartDateValidator,
     CampaignTargetingLocationValidator,
+    CampaignTargetingGenderValidator
 )
 from apps.client.models import Client
 from apps.core.models import BaseModel
@@ -96,6 +97,7 @@ class Campaign(BaseModel):
         return self.ad_title
 
     def clean(self) -> None:
+        CampaignTargetingGenderValidator()(self)
         CampaignTargetingLocationValidator()(self)
         CampaignAgeValidator()(self)
         CampaignDurationValidator()(self)

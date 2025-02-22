@@ -11,17 +11,15 @@ if TYPE_CHECKING:
 class CampaignTargetingLocationValidator:
     def __call__(self, instance: "Campaign") -> None:
         if instance.location == "":
-            err = {
-                "targeting": {
-                    type(
-                        instance
-                    ).location.field.name: Field.default_error_messages[
-                        "blank"
-                    ]
-                }
-            }
+            err = "targeting.location can't be blank."
             raise ValidationError(err)
 
+
+class CampaignTargetingGenderValidator:
+    def __call__(self, instance: "Campaign") -> None:
+        if instance.gender == "":
+            err = "gender can't be blank."
+            raise ValidationError(err)
 
 class CampaignAgeValidator:
     def __call__(self, instance: "Campaign") -> None:
@@ -75,9 +73,5 @@ class CampaignStartDateValidator:
 class CampaignReportMessageValidator:
     def __call__(self, instance: "CampaignReport") -> None:
         if instance.message == "":
-            err = {
-                instance.message.field.name: Field.default_error_messages[
-                    "blank"
-                ]
-            }
+            err = "message can't be blank."
             raise ValidationError(err)
