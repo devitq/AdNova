@@ -24,7 +24,7 @@ test:
   only:
     - master
   before_script:
-    - for try in {1..10}; do sleep 0.5; docker info && break ; done
+    - for try in {1..10}; do sleep 1; docker info && break ; done
     - echo "$DOCKER_DEPLOY_KEY" | docker login -u "backend" --password-stdin $CI_REGISTRY
     - docker compose version
     - |
