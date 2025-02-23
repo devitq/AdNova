@@ -41,7 +41,7 @@ test:
       done
     - cd solution && docker compose up -d
   script:
-    - docker run -v $CI_PROJECT_DIR:/app --network host gitlab.prodcontest.ru:5050/2025-final-indiv-repos/backend-checker:v2.0
+    - docker run -v $CI_PROJECT_DIR:/app --network host gitlab.prodcontest.ru:5050/2025-final-indiv-repos/backend-checker:v2.1
   after_script:
     - cd solution && docker compose logs > ../compose.log && docker compose down
   artifacts:
