@@ -175,7 +175,7 @@ I cache every mlscore in redis (btw, on startup of docker compose i upload each 
 
 ### Clever suggesting algotithm
 
-Here is how suggesting algotitm looks like:
+Here is how suggesting algotithm looks like:
 
 1. Filter all campaigns and left only that currently active and matches user targeting.
 2. Filter all campaigns with exceeded impressions, but to make more money i let exceed limit by 10% with chance 25%
