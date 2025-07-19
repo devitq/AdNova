@@ -11,7 +11,7 @@ Ensure you have the following installed on your system:
 
 ## Warning
 
-Please note that containers will use ports from 13241 to 13245 and 8080, so there is must be no listeners on this ports range.
+Please note that containers will use ports from 13241 to 13246 and 8080, so there is must be no listeners on this ports range.
 
 ## Setup
 

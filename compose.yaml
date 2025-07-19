@@ -107,6 +107,20 @@ services:
       start_interval: 2s
     restart: unless-stopped
 
+  celery-exporter:
+    image: docker.io/danihodovic/celery-exporter:0.11.1
+    depends_on:
+      redis:
+        restart: false
+        condition: service_healthy
+        required: true
+    env_file:
+      - path: ./infrastructure/celery-exporter/.env.template
+        required: true
+      - path: ./infrastructure/celery-exporter/.env
+        required: false
+    restart: unless-stopped
+
   telegram_bot:
     build:
       context: ./services/telegram_bot
@@ -158,6 +172,21 @@ services:
         source: redis_data
         target: /data
 
+  redis-exporter:
+    image: docker.io/oliver006/redis_exporter:v1.67.0-alpine
+    depends_on:
+      redis:
+        restart: false
+        condition: service_healthy
+        required: true
+    env_file:
+      - path: ./infrastructure/redis-exporter/.env.template
+        required: true
+      - path: ./infrastructure/redis-exporter/.env
+        required: false
+    restart: unless-stopped
+    shm_size: 4mb
+
   postgres:
     image: docker.io/postgres:17-alpine3.21
     configs:
@@ -185,6 +214,21 @@ services:
       - type: volume
         source: postgres_data
         target: /var/lib/postgresql/data
+
+  postgres-exporter:
+    image: quay.io/prometheuscommunity/postgres-exporter:v0.16.0
+    depends_on:
+      postgres:
+        restart: false
+        condition: service_healthy
+        required: true
+    env_file:
+      - path: ./infrastructure/postgres-exporter/.env.template
+        required: true
+      - path: ./infrastructure/postgres-exporter/.env
+        required: false
+    restart: unless-stopped
+    shm_size: 4mb
 
   pgadmin:
     image: docker.io/dpage/pgadmin4:9
@@ -256,6 +300,33 @@ services:
         source: ./infrastructure/grafana/scripts
         target: /etc/grafana/scripts
 
+  prometheus:
+    image: docker.io/prom/prometheus:v3.1.0
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yaml"
+    configs:
+      - source: prometheus_config
+        target: /etc/prometheus/prometheus.yaml
+    healthcheck:
+      test: ["CMD", "wget", "-O", "-", "http://localhost:9090/-/healthy"]
+      interval: 1m30s
+      timeout: 5s
+      start_period: 5s
+      start_interval: 2s
+      retries: 5
+    ports:
+      - name: web
+        target: 9090
+        published: 13244
+        host_ip: 127.0.0.1
+        protocol: tcp
+    restart: unless-stopped
+    shm_size: 4mb
+    volumes:
+      - type: volume
+        source: prometheus_data
+        target: /prometheus
+
   minio:
     command: server --console-address ":9001"
     image: docker.io/minio/minio:RELEASE.2025-02-03T21-03-04Z
@@ -274,12 +345,12 @@ services:
     ports:
       - name: api
         target: 9000
-        published: 13244
+        published: 13245
         host_ip: 127.0.0.1
         protocol: tcp
       - name: console
         target: 9001
-        published: 13245
+        published: 13246
         host_ip: 127.0.0.1
         protocol: tcp
     restart: unless-stopped
