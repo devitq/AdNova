@@ -13,4 +13,4 @@ API_ENDPOINT = os.getenv("AIOGRAM_BACKEND_URL", "http://localhost:8080")
 
 REDIS_URI = os.getenv("REDIS_URI", "redis://localhost:6379")
 
-MINIO_URL = f"http://{os.getenv('MINIO_ENDPOINT', 'localhost:9000')}"
+MINIO_URL = os.getenv('MINIO_ENDPOINT', 'http://localhost:9000')
