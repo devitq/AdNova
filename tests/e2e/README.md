@@ -11,27 +11,25 @@ Ensure you have the following installed on your system:
 
 ## Warning
 
-Plese note that containers will use ports from 13241 to 13245 and 8080, so there is must be no listeners on this ports range.
+Please note that containers will use ports from 13241 to 13245 and 8080, so there is must be no listeners on this ports range.
 
-## Clone the project
+## Setup
 
-```bash
-git clone https://gitlab.prodcontest.ru/2025-final-projects-back/devitq.git
-```
+### Clone the project
 
-## Go to the project directory
+### Go to the project directory
 
 ```bash
-cd devitq/solution/tests/e2e
+cd AdNova/tests/e2e
 ```
 
-## Install dependencies
+### Install dependencies
 
 ```bash
 uv sync --no-dev
 ```
 
-## Customize environment (optional)
+### Customize environment (optional)
 
 ```bash
 cp .env.template .env
@@ -39,12 +37,12 @@ cp .env.template .env
 
 And setup env vars according to your needs.
 
-## Run tests
+### Run tests
 
 ```bash
 uv run pytest .
 ```
 
-## Results
+### Results
 
 You will see something like `n passed in Ns`

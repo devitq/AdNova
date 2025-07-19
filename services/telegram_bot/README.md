@@ -14,14 +14,10 @@ Ensure you have the following installed on your system:
 
 #### Clone the project
 
-```bash
-git clone https://gitlab.prodcontest.ru/2025-final-projects-back/devitq.git
-```
-
 #### Go to the project directory
 
 ```bash
-cd devitq/solution/services/telegram_bot
+cd AdNova/services/telegram_bot
 ```
 
 #### Customize environment
@@ -56,14 +52,10 @@ uv run python main.py
 
 ### Clone the project
 
-```bash
-git clone https://gitlab.prodcontest.ru/2025-final-projects-back/devitq.git
-```
-
 ### Go to the project directory
 
 ```bash
-cd devitq/solution/services/telegram_bot
+cd AdNova/services/telegram_bot
 ```
 
 ### Build docker image

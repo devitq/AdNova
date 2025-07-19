@@ -8,7 +8,7 @@ Service for advertisers to provide their ads and get profit!
 
 ![ER diagram](./assets/images/er-diagram.png)
 
-Not all tables inlcuded in this diagram (some django utility tables which makes no sense to business logic). On the left side there is default django models and on the right side there is developed models.
+Not all tables included in this diagram (some django utility tables which makes no sense to business logic). On the left side there is default django models and on the right side there is developed models.
 
 Tables that are not mentioned in task (btw, you can see them on diagram):
 
@@ -32,7 +32,7 @@ Table Report:
 
 #### Warning
 
-Plese note that containers will use ports from 13241 to 13245 and 8080, so there is must be no listeners on this ports range.
+Please note that containers will use ports from 13241 to 13245 and 8080, so there is must be no listeners on this ports range.
 
 #### Configure
 
@@ -93,11 +93,11 @@ docker compose up -d --build
 
 ### [Python](https://www.python.org/)
 
-Python is a high-level programming language renowned for its readability and simplicity. Its extensive standard library and active community make it an ideal choice for rapid prototyping and development. It not so fast as Go or Java, but development speed is rather faster them and systax is very simple and intuitive. Also there is a lot of python developers available on market. Used and trusted by many companies around the world. In project used for `backend` and `telegram_bot` services.
+Python is a high-level programming language renowned for its readability and simplicity. Its extensive standard library and active community make it an ideal choice for rapid prototyping and development. It not so fast as Go or Java, but development speed is rather faster them and syntax is very simple and intuitive. Also there is a lot of python developers available on market. Used and trusted by many companies around the world. In project used for `backend` and `telegram_bot` services.
 
 ### [Django](https://www.djangoproject.com/)
 
-Django is a powerful web framework for Python that provides rapid development capabilities through built-in tools such as ORM, authentication, and administration systems. It promotes the creation of secure and scalable web appwill write here somethinglications. Used and trusted by many companies around the world. Lets write less boilerplate and more actual logic!). In project used for `backend` service.
+Django is a powerful web framework for Python that provides rapid development capabilities through built-in tools such as ORM, authentication, and administration systems. It promotes the creation of secure and scalable web applications. Used and trusted by many companies around the world. Lets write less boilerplate and more actual logic!). In project used for `backend` service.
 
 ### [Django Ninja](https://django-ninja.dev/)
 
@@ -121,7 +121,7 @@ Grafana is an open-source analytics and monitoring platform that allows for the 
 
 ### [MinIO](https://min.io/)
 
-MinIO is a high-performance, S3-compatible object storage system. It is designed for large-scale data infrastructures and is suitable for storing unstructured data such as photos, videos, log files, backups, and container images. Best open-source alternative to AWS S3 for now. In project used to store advertisments' images. Allows us to scale easily (very native replication feature) and soon we can store other things such as user avatars (if we countinue developing project), etc.
+MinIO is a high-performance, S3-compatible object storage system. It is designed for large-scale data infrastructures and is suitable for storing unstructured data such as photos, videos, log files, backups, and container images. Best open-source alternative to AWS S3 for now. In project used to store advertisements' images. Allows us to scale easily (very native replication feature) and soon we can store other things such as user avatars (if we continue developing project), etc.
 
 ### [Celery](https://github.com/celery/celery)
 
@@ -129,7 +129,7 @@ The most popular distributed task queue for Python. Task queues are used as a me
 
 ### [Docker & docker compose](https://www.docker.com/)
 
-Forced by organizators :)
+Forced by organizers :)
 
 ### Notes
 
@@ -151,15 +151,11 @@ Link: [t.me/adnova_bot](https://t.me/adnova_bot)
 
 Basic commands:
 
-/start - Start the bot and authenticate as advertiser
-
-/help - Get list of all commands
-
-/campaigns - Manage advertiser campaigns (only after authentication)
-
-/statistics - See advertiser overall statistics (only after authentication)
-
-/logout - Logout of current advertiser account (only after authentication)
+`/start` - Start the bot and authenticate as advertiser
+`/help` - Get list of all commands
+`/campaigns` - Manage advertiser campaigns (only after authentication)
+`/statistics` - See advertiser overall statistics (only after authentication)
+`/logout` - Logout of current advertiser account (only after authentication)
 
 See [this](#telegram-bot-1).
 
@@ -171,11 +167,11 @@ When deployed with default docker compose: [127.0.0.1:13243](http://127.0.0.1:13
 
 ### Notes about basic features
 
-I cache every mlscore in redis (btw, on startup of docker compose i upload each cache in db for stability) and also i cache clicks and impressions count for campaigns. This increases perfomance of suggesting algorithm and increases clients satisfaction!_)
+I cache every mlscore in redis (btw, on startup of docker compose i upload each cache in db for stability) and also i cache clicks and impressions count for campaigns. This increases performance of suggesting algorithm and increases clients satisfaction!_)
 
-### Clever suggesting algotithm
+### Clever suggesting algorithm
 
-Here is how suggesting algotithm looks like:
+Here is how suggesting algorithm looks like:
 
 1. Filter all campaigns and left only that currently active and matches user targeting.
 2. Filter all campaigns with exceeded impressions, but to make more money i let exceed limit by 10% with chance 25%
@@ -235,7 +231,7 @@ Demonstration:
 ### Moderation
 
 Moderation implemented via report system. Client goes to `/report` ([see OpenAPI docs](#openapi-docs)) and submits a report, then llm ([YandexGPT-lite](https://yandex.cloud/en/services/yandexgpt)) in task mode (does stuff on the background with Celery) checks for potential violation and sets the `flagged_by_llm` to True or False and this just a little help to moderators to make more accurate decisions. Btw, moderators can do anything they think they should do, for example make some changes, censor some content or even delete campaign.
-Also admin user (whoose creditionals specified lower) can add new staff members and even create a specified group for them (this is built-in django capabilities).
+Also admin user (whose credentials specified lower) can add new staff members and even create a specified group for them (this is built-in django capabilities).
 Report has four states: Sent, Under review, Took action and Skipped. Admin panel has filtration by states and by flagged by llm status.
 
 Admin panel when deployed with docker compose (by default): [localhost:8080/admin/](http://localhost:8080/admin/)
@@ -300,13 +296,13 @@ Default password: `password`
 
 Default password for existing postgres server: `postgres`
 
-Not enough of basic django admin? Here is pgadmin, which is the most powerfull instrument to manage and administrate your postgres instance. (btw, text is not gpt-generated as it could be seen at first glance).
+Not enough of basic django admin? Here is pgadmin, which is the most powerful instrument to manage and administrate your postgres instance. (btw, text is not gpt-generated as it could be seen at first glance).
 
 ![PgAdmin](./assets/images/pgadmin.png)
 
 ## Testing
 
-You can find out about project tests [here](./tests/README.md).
+You can find out about project tests in dedicated [README.md](./tests/README.md).
 
 ## Code quality
 

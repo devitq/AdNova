@@ -14,14 +14,10 @@ Ensure you have the following installed on your system:
 
 #### Clone the project
 
-```bash
-git clone https://gitlab.prodcontest.ru/2025-final-projects-back/devitq.git
-```
-
 #### Go to the project directory
 
 ```bash
-cd devitq/solution/services/backend
+cd AdNova/services/backend
 ```
 
 #### Customize environment
@@ -78,14 +74,10 @@ uv run gunicorn config.wsgi
 
 ### Clone the project
 
-```bash
-git clone https://gitlab.prodcontest.ru/2025-final-projects-back/devitq.git
-```
-
 ### Go to the project directory
 
 ```bash
-cd devitq/solution/services/backend
+cd AdNova/services/backend
 ```
 
 ### Build docker image
@@ -118,14 +110,10 @@ Backend will be available on [127.0.0.1:8080](http://127.0.0.1:8080).
 
 ### Clone the project
 
-```bash
-git clone https://gitlab.prodcontest.ru/2025-final-projects-back/devitq.git
-```
-
 ### Go to the project directory
 
 ```bash
-cd devitq/solution/services/backend
+cd AdNova/services/backend
 ```
 
 ### Install dependencies
