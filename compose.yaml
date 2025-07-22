@@ -33,6 +33,7 @@ services:
         published: 8080
         host_ip: 127.0.0.1
         protocol: tcp
+        app_protocol: http
     restart: unless-stopped
 
   backend-initdb:
@@ -81,6 +82,7 @@ services:
         published: 13241
         host_ip: 127.0.0.1
         protocol: tcp
+        app_protocol: http
     restart: unless-stopped
 
   backend-celery-worker:
@@ -108,7 +110,8 @@ services:
     restart: unless-stopped
 
   celery-exporter:
-    image: docker.io/danihodovic/celery-exporter:0.11.1
+    image: docker.io/danihodovic/celery-exporter:0.12.2
+    command: --retry-interval=5
     depends_on:
       redis:
         restart: false
@@ -173,7 +176,7 @@ services:
         target: /data
 
   redis-exporter:
-    image: docker.io/oliver006/redis_exporter:v1.67.0-alpine
+    image: docker.io/oliver006/redis_exporter:v1.74.0-alpine
     depends_on:
       redis:
         restart: false
@@ -188,7 +191,7 @@ services:
     shm_size: 4mb
 
   postgres:
-    image: docker.io/postgres:17-alpine3.21
+    image: docker.io/postgres:17-alpine3.22
     configs:
       - source: postgres_config
         target: /etc/postgresql/postgresql.conf
@@ -216,7 +219,7 @@ services:
         target: /var/lib/postgresql/data
 
   postgres-exporter:
-    image: quay.io/prometheuscommunity/postgres-exporter:v0.16.0
+    image: quay.io/prometheuscommunity/postgres-exporter:v0.17.1
     depends_on:
       postgres:
         restart: false
@@ -231,9 +234,9 @@ services:
     shm_size: 4mb
 
   pgadmin:
-    image: docker.io/dpage/pgadmin4:9
+    image: docker.io/dpage/pgadmin4:9.5
     configs:
-      - source: pgadmin_servers
+      - source: pgadmin_servers_config
         target: /pgadmin4/servers.json
     depends_on:
       postgres:
@@ -258,6 +261,7 @@ services:
         published: 13242
         host_ip: 127.0.0.1
         protocol: tcp
+        app_protocol: http
     restart: unless-stopped
     secrets:
       - source: pgadmin_password
@@ -269,7 +273,7 @@ services:
         target: /var/lib/pgadmin
 
   grafana:
-    image: docker.io/grafana/grafana-oss:11.5.0
+    image: docker.io/grafana/grafana-oss:12.0.2
     configs:
       - source: grafana_config
         target: /usr/share/grafana/conf/defaults.ini
@@ -287,6 +291,7 @@ services:
         published: 13243
         host_ip: 127.0.0.1
         protocol: tcp
+        app_protocol: http
     restart: unless-stopped
     shm_size: 4mb
     volumes:
@@ -301,9 +306,8 @@ services:
         target: /etc/grafana/scripts
 
   prometheus:
-    image: docker.io/prom/prometheus:v3.1.0
-    command:
-      - "--config.file=/etc/prometheus/prometheus.yaml"
+    image: docker.io/prom/prometheus:v3.5.0
+    command: --config.file=/etc/prometheus/prometheus.yaml
     configs:
       - source: prometheus_config
         target: /etc/prometheus/prometheus.yaml
@@ -320,6 +324,7 @@ services:
         published: 13244
         host_ip: 127.0.0.1
         protocol: tcp
+        app_protocol: http
     restart: unless-stopped
     shm_size: 4mb
     volumes:
@@ -328,8 +333,8 @@ services:
         target: /prometheus
 
   minio:
+    image: docker.io/minio/minio:RELEASE.2025-07-18T21-56-31Z
     command: server --console-address ":9001"
-    image: docker.io/minio/minio:RELEASE.2025-02-03T21-03-04Z
     healthcheck:
       test: ["CMD", "mc", "ready", "local"]
       interval: 1m30s
@@ -348,17 +353,18 @@ services:
         published: 13245
         host_ip: 127.0.0.1
         protocol: tcp
+        app_protocol: http
       - name: console
         target: 9001
         published: 13246
         host_ip: 127.0.0.1
         protocol: tcp
+        app_protocol: http
     restart: unless-stopped
     volumes:
       - type: volume
         source: minio_data
         target: /data
-
 
 volumes:
   redis_data:
@@ -373,7 +379,7 @@ configs:
     file: ./infrastructure/redis/redis.conf
   postgres_config:
     file: ./infrastructure/postgres/postgresql.conf
-  pgadmin_servers:
+  pgadmin_servers_config:
     file: ./infrastructure/pgadmin/servers.json
   grafana_config:
     file: ./infrastructure/grafana/grafana.ini
