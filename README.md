@@ -109,7 +109,7 @@ aiogram is a modern and fully asynchronous framework for Telegram bot developmen
 
 ### [Redis](https://redis.io/)
 
-Redis is an in-memory data structure store often used as a database, cache, and message broker. It supports various data structures and offers high performance for read and write operations, making it suitable for caching and real-time analytics. Very popular and has big community for today. In project used as fsm for aiogram (to avoid data loss on restart), caches (current_date, mlscores, clicks, views) for backend and as broker for Celery.
+Redis is an in-memory data structure store often used as a database, cache, and message broker. It supports various data structures and offers high performance for read and write operations, making it suitable for caching and real-time analytics. Very popular and has big community for today. In project used as fsm for aiogram (to avoid data loss on restart), caches (mlscores, clicks, views) for backend and as broker for Celery.
 
 ### [Postgres](https://www.postgresql.org/)
 
@@ -268,7 +268,7 @@ Default login: `admin`
 
 Default password: `proooooood`
 
-Analytics dashboard when deployed with default docker compose: [localhost:13243/d/adnova-statistics/statistics](http://localhost:13243/d/adnova-statisticss/statistics). You can enter advertiser id and get detailed advertiser statistics and also detailed statistics for each advertiser's campaign.
+Analytics dashboard when deployed with default docker compose: [localhost:13243/d/adnova-advertiser-statistics](http://localhost:13243/d/adnova-advertiser-statistics/statistics). You can enter advertiser id and get detailed advertiser statistics and also detailed statistics for each advertiser's campaign.
 
 Demonstration:
 

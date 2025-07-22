@@ -1,6 +1,6 @@
 # AdNova Tests
 
-There is `unit` and `e2e` tests available, unit tests are placed all around `backend` service folder and `e2e` tests placed [here](./e2e/).
+There is `unit` and `e2e` tests available, `unit` tests are placed all around `backend` service folder and `e2e` tests placed [here](./e2e/).
 
 ## Running unit tests
 

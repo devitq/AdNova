@@ -1,22 +1,19 @@
 [project]
-name = "adnova-telegram_bot"
-version = "0.1.0"
-readme = "README.md"
-requires-python = ">=3.10,<3.12"
 dependencies = [
-    "aiogram-dialog>=2.3.1",
-    "aiogram>=3.17.0",
-    "cachetools>=5.5.1",
-    "httpx>=0.28.1",
-    "openapi-python-client>=0.23.1",
-    "python-dotenv>=1.0.1",
-    "redis>=5.2.1",
+ "aiogram-dialog>=2.4.0,<3.0.0",
+ "aiogram>=3.17.0,<4.0.0",
+ "cachetools>=5.0.0,<6.0.0",
+ "httpx>=0.28.0,<0.29.0",
+ "python-dotenv>=1.1.0,<2.0.0",
+ "redis>=6.2.0,<7.0.0",
 ]
+name = "adnova-telegram_bot"
+readme = "README.md"
+requires-python = ">=3.10,<3.14"
+version = "0.1.0"
 
 [dependency-groups]
-dev = [
-    "ruff>=0.9.6",
-]
+dev = ["ruff"]
 
 [tool.ruff]
 builtins = []
@@ -49,7 +46,7 @@ extend-include = []
 fix = false
 fix-only = false
 force-exclude = true
-include = ["*.py", "*.pyi", "*.ipynb", "**/pyproject.toml"]
+include = ["**/pyproject.toml", "*.ipynb", "*.py", "*.pyi"]
 indent-width = 4
 line-length = 79
 namespace-packages = []
@@ -64,20 +61,20 @@ unsafe-fixes = false
 
 [tool.ruff.analyze]
 detect-string-imports = true
-direction = "Dependencies"
-exclude = []
-include-dependencies = {}
-preview = false
+direction             = "Dependencies"
+exclude               = []
+include-dependencies  = {}
+preview               = false
 
 [tool.ruff.format]
-docstring-code-format = true
+docstring-code-format      = true
 docstring-code-line-length = 79
-exclude = []
-indent-style = "space"
-line-ending = "lf"
-preview = false
-quote-style  = "double"
-skip-magic-trailing-comma = false
+exclude                    = []
+indent-style               = "space"
+line-ending                = "lf"
+preview                    = false
+quote-style                = "double"
+skip-magic-trailing-comma  = false
 
 [tool.ruff.lint]
 allowed-confusables = ["ℹ"]
@@ -92,23 +89,23 @@ extend-unsafe-fixes = []
 external = []
 fixable = ["ALL"]
 ignore = [
-    "ARG",
-    "D",
-    "ANN401",
-    "COM812",
-    "DJ001",
-    "FBT001",
-    "FBT002",
-    "N813",
-    "PLR2004",
-    "RUF001",
-    "TC002",
+ "ANN401",
+ "ARG",
+ "COM812",
+ "D",
+ "DJ001",
+ "FBT001",
+ "FBT002",
+ "N813",
+ "PLR2004",
+ "RUF001",
+ "TC002",
 ]
 logger-objects = []
 per-file-ignores = {}
 preview = false
 select = ["ALL"]
-task-tags = ["TODO", "FIXME", "HACK", "WORKOUT"]
+task-tags = ["FIXME", "HACK", "TODO", "WORKOUT"]
 typing-modules = []
 unfixable = []
 

@@ -1,7 +1,7 @@
 # Stage 1: Install dependencies
-FROM docker.io/python:3.11-alpine3.20 AS builder
+FROM docker.io/python:3.13-alpine3.22 AS builder
 
-COPY --from=ghcr.io/astral-sh/uv:0.4.30 /uv /uvx /bin/
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 WORKDIR /app
 
@@ -17,7 +17,7 @@ RUN uv sync --no-dev --no-install-project --no-cache
 
 
 # Stage 2: Start the application
-FROM docker.io/python:3.11-alpine3.20
+FROM docker.io/python:3.13-alpine3.22
 
 WORKDIR /app
 
@@ -34,4 +34,4 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONOPTIMIZE=2 \
     PATH="/opt/venv/bin:$PATH"
 
-CMD python main.py
+CMD [ "python", "main.py" ]

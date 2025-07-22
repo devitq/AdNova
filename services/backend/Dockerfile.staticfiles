@@ -1,7 +1,7 @@
 # Stage 1: Install dependencies and compile staticfiles
-FROM docker.io/python:3.11-alpine3.20 AS builder
+FROM docker.io/python:3.13-alpine3.22 AS builder
 
-COPY --from=ghcr.io/astral-sh/uv:0.4.30 /uv /uvx /bin/
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 WORKDIR /app
 
@@ -17,11 +17,12 @@ RUN uv sync --no-dev --no-install-project --no-cache
 
 COPY . .
 
-RUN uv run python manage.py collectstatic --noinput
+RUN uv run --no-dev python manage.py collectstatic --noinput
+
 
 # Stage 2: Start nginx and serve staticfiles
-FROM docker.io/nginx:latest
+FROM docker.io/nginx:1.29-alpine-slim
 
 COPY --from=builder /app/static /usr/share/nginx/html
 
-CMD ["nginx", "-g", "daemon off;"]
+CMD [ "nginx", "-g", "daemon off;" ]

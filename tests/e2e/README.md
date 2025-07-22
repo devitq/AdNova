@@ -4,10 +4,10 @@
 
 Ensure you have the following installed on your system:
 
-- [Python](https://www.python.org/) (>=3.10,<3.12)
-- [uv](https://docs.astral.sh/uv/)
-- [Docker](https://www.docker.com/)
-- [Docker compose](https://docs.docker.com/compose/) (latest versions)
+- [Python](https://www.python.org/) (>=3.10,<3.14)
+- [uv](https://docs.astral.sh/uv/) (latest version recommended)
+- [Docker](https://www.docker.com/) (latest version recommended)
+- [Docker compose](https://docs.docker.com/compose/) (latest version recommended)
 
 ## Warning
 

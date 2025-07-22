@@ -4,9 +4,9 @@
 
 Ensure you have the following installed on your system:
 
-- [Python](https://www.python.org/) (>=3.10,<3.12)
-- [uv](https://docs.astral.sh/uv/)
-- [Docker](https://www.docker.com/) (for containerized setup)
+- [Python](https://www.python.org/) (>=3.10,<3.14)
+- [uv](https://docs.astral.sh/uv/) (latest version recommended)
+- [Docker](https://www.docker.com/) (for containerized setup, latest version recommended)
 
 ## Basic setup
 
