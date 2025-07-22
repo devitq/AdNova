@@ -256,10 +256,10 @@ class Campaign(BaseModel):
             (
                 Decimal(str(clicks_count))
                 / Decimal(str(impressions_count))
-                * Decimal("100")
+                * Decimal(100)
             )
             if impressions_count > 0
-            else Decimal("0")
+            else Decimal(0)
         )
         spent_impressions = Decimal(str(impressions.get("spent", 0) or 0))
         spent_clicks = Decimal(str(clicks.get("spent", 0) or 0))

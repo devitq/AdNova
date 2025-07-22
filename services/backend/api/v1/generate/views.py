@@ -49,8 +49,12 @@ def get_generate_ad_text_result(
     if task_result.status == celery.states.PENDING:
         raise Http404
 
+    result = task_result.result
+    if task_result.status != celery.states.SUCCESS:
+        result = None
+
     return status.OK, schemas.Promise(
         task_id=task_result.task_id,
         status=task_result.status,
-        result=task_result.result,
+        result=result,
     )

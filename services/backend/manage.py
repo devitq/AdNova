@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# ruff: noqa: PLC0415
 """Django's command-line utility for administrative tasks."""
 
 import os

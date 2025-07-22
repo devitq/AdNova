@@ -41,10 +41,10 @@ class Advertiser(BaseModel):
             (
                 Decimal(str(total_clicks))
                 / Decimal(str(total_impressions))
-                * Decimal("100")
+                * Decimal(100)
             )
             if total_impressions > 0
-            else Decimal("0")
+            else Decimal(0)
         )
 
         return {
@@ -115,9 +115,9 @@ class Advertiser(BaseModel):
             conversion = (
                 Decimal(str(metrics["clicks_count"]))
                 / Decimal(str(metrics["impressions_count"]))
-                * Decimal("100")
+                * Decimal(100)
                 if metrics["impressions_count"] > 0
-                else Decimal("0")
+                else Decimal(0)
             )
 
             daily_stats.append(

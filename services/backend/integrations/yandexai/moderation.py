@@ -1,4 +1,4 @@
-# ruff: noqa: E501, W291
+# ruff: noqa: E501
 import logging
 
 from django.conf import settings
