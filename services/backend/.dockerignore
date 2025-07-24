@@ -183,3 +183,6 @@ Dockerfile.staticfiles
 
 # Collected static files
 static
+
+# Profile files
+*.prof
