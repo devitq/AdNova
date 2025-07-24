@@ -16,6 +16,8 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     # API urls
     path("", include("api.urls")),
+    # Prometheus urls
+    path("", include("django_prometheus.urls")),
 ]
 
 

@@ -53,7 +53,7 @@ REDIS_URI = env("REDIS_URI", default="redis://localhost:6379")
 
 CACHES = {
     "default": {
-        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "BACKEND": "django_prometheus.cache.backends.redis.RedisCache",
         "LOCATION": REDIS_URI,
         "TIMEOUT": None,
         "KEY_PREFIX": "backend",
@@ -80,6 +80,9 @@ CELERY_TASK_TRACK_STARTED = True
 # Database
 
 DB_URI = env.db_url("DJANGO_DB_URI", default="sqlite:///db.sqlite3")
+DB_URI["ENGINE"] = DB_URI["ENGINE"].replace(
+    "django.db.backends", "django_prometheus.db.backends"
+)
 
 DATABASES = {"default": {**DB_URI, "CONN_MAX_AGE": 50}}
 
@@ -284,12 +287,14 @@ INTERNAL_IPS = env(
 )
 
 MIDDLEWARE = [
+    "django_prometheus.middleware.PrometheusBeforeMiddleware",
     "django_guid.middleware.guid_middleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
+    "django_prometheus.middleware.PrometheusAfterMiddleware",
 ]
 
 SIGNING_BACKEND = "django.core.signing.TimestampSigner"
@@ -442,6 +447,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "django_extensions",
     "django_guid",
+    "django_prometheus",
     "ninja",
     "minio_storage",
     # Internal apps
@@ -594,3 +600,27 @@ DEBUG_TOOLBAR_CONFIG = {"SHOW_COLLAPSED": True, "UPDATE_ON_FETCH": True}
 if DEBUG and DEBUG_TOOLBAR_ENABLED:
     INSTALLED_APPS.append("debug_toolbar")
     MIDDLEWARE.append("debug_toolbar.middleware.DebugToolbarMiddleware")
+
+
+# Prometheus
+
+PROMETHEUS_LATENCY_BUCKETS = (
+    0.005,
+    0.01,
+    0.025,
+    0.05,
+    0.075,
+    0.1,
+    0.25,
+    0.5,
+    0.75,
+    1.0,
+    2.5,
+    5.0,
+    7.5,
+    10.0,
+    25.0,
+    50.0,
+    75.0,
+    float("inf"),
+)
