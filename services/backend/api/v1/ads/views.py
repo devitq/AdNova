@@ -4,6 +4,7 @@ from uuid import UUID
 from django.http import Http404, HttpRequest
 from django.shortcuts import get_object_or_404
 from ninja import Router
+from silk.profiling.profiler import silk_profile
 
 from api.v1 import schemas as global_schemas
 from api.v1.ads import schemas
@@ -21,6 +22,7 @@ router = Router(tags=["ads"])
         status.NOT_FOUND: global_schemas.NotFoundError,
     },
 )
+@silk_profile("Get Advertisment")
 def get_advertisment(
     request: HttpRequest, client_id: UUID
 ) -> tuple[status, Campaign]:

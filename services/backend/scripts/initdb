@@ -11,3 +11,4 @@ if [ "$DJANGO_CREATE_SUPERUSER" = "True" ]; then
 fi
 
 python manage.py init_cache
+python manage.py silk_clear_request_log

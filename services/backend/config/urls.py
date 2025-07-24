@@ -18,6 +18,8 @@ urlpatterns = [
     path("", include("api.urls")),
     # Prometheus urls
     path("", include("django_prometheus.urls")),
+    # Django-silk
+    path("silk/", include("silk.urls", namespace="silk")),
 ]
 
 

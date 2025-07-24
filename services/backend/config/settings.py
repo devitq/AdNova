@@ -4,6 +4,7 @@ import contextlib
 import logging
 from collections.abc import Callable
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 import django_stubs_ext
 import environ
@@ -11,6 +12,10 @@ from django.utils.translation import gettext_lazy as _
 from health_check.plugins import plugin_dir
 
 from integrations.yandexai.healthcheck import YandexAIHealthCheck
+
+if TYPE_CHECKING:
+    from django.contrib.auth.models import User
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -287,6 +292,7 @@ INTERNAL_IPS = env(
 )
 
 MIDDLEWARE = [
+    "silk.middleware.SilkyMiddleware",
     "django_prometheus.middleware.PrometheusBeforeMiddleware",
     "django_guid.middleware.guid_middleware",
     "corsheaders.middleware.CorsMiddleware",
@@ -450,6 +456,7 @@ INSTALLED_APPS = [
     "django_prometheus",
     "ninja",
     "minio_storage",
+    "silk",
     # Internal apps
     "apps.core",
     "apps.advertiser",
@@ -520,6 +527,13 @@ CSRF_USE_SESSIONS = False
 SECRET_KEY = env("DJANGO_SECRET_KEY", default="very_insecure_key")
 
 SECRET_KEY_FALLBACKS: list[str] = []
+
+
+# Auth
+
+LOGIN_REDIRECT_URL = "/admin/"
+
+LOGIN_URL = "/admin/"
 
 
 # Sessions
@@ -624,3 +638,39 @@ PROMETHEUS_LATENCY_BUCKETS = (
     75.0,
     float("inf"),
 )
+
+
+# django-silk
+
+SILKY_PYTHON_PROFILER = True
+
+SILKY_PYTHON_PROFILER_BINARY = True
+
+SILKY_PYTHON_PROFILER_RESULT_PATH = "./profiles"
+
+SILKY_PYTHON_PROFILER_EXTENDED_FILE_NAME = True
+
+SILKY_AUTHENTICATION = True
+
+SILKY_AUTHORISATION = True
+
+
+def is_allowed_to_use_profiling(user: "User") -> bool:
+    return user.is_staff
+
+
+SILKY_PERMISSIONS = is_allowed_to_use_profiling
+
+SILKY_MAX_RECORDED_REQUESTS = 10**3
+
+SILKY_MAX_RECORDED_REQUESTS_CHECK_PERCENT = 10
+
+SILKY_MAX_REQUEST_BODY_SIZE = 128
+
+SILKY_INTERCEPT_PERCENT = 25
+
+SILKY_META = True
+
+SILKY_DYNAMIC_PROFILING = [
+    {"module": "api.v1.ads.views", "function": "get_advertisment"}
+]
