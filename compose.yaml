@@ -366,6 +366,53 @@ services:
         source: minio_data
         target: /data
 
+  zipkin:
+    image: docker.io/openzipkin/zipkin:3
+    healthcheck:
+      test: ["CMD", "wget", "-O", "-", "http://localhost:9411/health"]
+      interval: 1m30s
+      timeout: 5s
+      start_period: 5s
+      start_interval: 2s
+      retries: 5
+    ports:
+      - name: web
+        target: 9411
+        published: 13247
+        host_ip: 127.0.0.1
+        protocol: tcp
+        app_protocol: http
+      - name: api
+        target: 9411
+        published: 13247
+        host_ip: 127.0.0.1
+        protocol: tcp
+        app_protocol: http
+    restart: unless-stopped
+
+  loadtest:
+    build:
+      context: ./services/loadtest
+      dockerfile: Dockerfile
+    depends_on:
+      backend:
+        restart: false
+        condition: service_healthy
+        required: true
+    env_file:
+      - path: ./infrastructure/loadtest/.env.template
+        required: true
+      - path: ./infrastructure/loadtest/.env
+        required: false
+    ports:
+      - name: web
+        target: 5001
+        published: 13248
+        host_ip: 127.0.0.1
+        protocol: tcp
+        app_protocol: http
+    restart: unless-stopped
+
 volumes:
   redis_data:
   postgres_data:
