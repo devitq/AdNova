@@ -1,0 +1,572 @@
+[
+    {
+        "advertiser_id": "addf3407-9265-44b8-8e7e-6b015f63c47d",
+        "campaign_data": {
+            "impressions_limit": 8,
+            "clicks_limit": 8,
+            "cost_per_impression": 1.5,
+            "cost_per_click": 2.5,
+            "ad_title": "Amazing Offer",
+            "ad_text": "Get great savings now!",
+            "start_date": 0,
+            "end_date": 15,
+            "targeting": {
+                "gender": "MALE",
+                "age_from": 25,
+                "age_to": 40,
+                "location": "Chicago"
+            }
+        }
+    },
+    {
+        "advertiser_id": "4d830921-f650-4f2f-869b-db48208dc952",
+        "campaign_data": {
+            "impressions_limit": 10,
+            "clicks_limit": 10,
+            "cost_per_impression": 1.2,
+            "cost_per_click": 2.8,
+            "ad_title": "Incredible Deal",
+            "ad_text": "Discover amazing quality!",
+            "start_date": 0,
+            "end_date": 20,
+            "targeting": {
+                "gender": "FEMALE",
+                "age_from": 30,
+                "age_to": 50,
+                "location": "New York"
+            }
+        }
+    },
+    {
+        "advertiser_id": "752ddcd3-e944-4eaf-b1de-5e49977354a7",
+        "campaign_data": {
+            "impressions_limit": 6,
+            "clicks_limit": 6,
+            "cost_per_impression": 1.8,
+            "cost_per_click": 2.2,
+            "ad_title": "Best Service",
+            "ad_text": "Buy unique advantages today!",
+            "start_date": 0,
+            "end_date": 22,
+            "targeting": {
+                "gender": "ALL",
+                "age_from": 18,
+                "age_to": 60,
+                "location": "Los Angeles"
+            }
+        }
+    },
+    {
+        "advertiser_id": "e04d35cd-e24b-4bfd-b5fa-6ac1c12ae8a0",
+        "campaign_data": {
+            "impressions_limit": 7,
+            "clicks_limit": 7,
+            "cost_per_impression": 1.1,
+            "cost_per_click": 2.9,
+            "ad_title": "Exclusive Opportunity",
+            "ad_text": "Try our new product now!",
+            "start_date": 0,
+            "end_date": 13,
+            "targeting": {
+                "gender": null,
+                "age_from": null,
+                "age_to": null,
+                "location": null
+            }
+        }
+    },
+    {
+        "advertiser_id": "8b7f547f-bab5-448d-9997-61cbbd6e3f1c",
+        "campaign_data": {
+            "impressions_limit": 9,
+            "clicks_limit": 9,
+            "cost_per_impression": 1.6,
+            "cost_per_click": 2.4,
+            "ad_title": "Special Features",
+            "ad_text": "Experience our service today!",
+            "start_date": 0,
+            "end_date": 11,
+            "targeting": {
+                "gender": null,
+                "age_from": null,
+                "age_to": null,
+                "location": null
+            }
+        }
+    },
+    {
+        "advertiser_id": "57dd000f-32fe-4a49-8dca-bfdc84fec7dd",
+        "campaign_data": {
+            "impressions_limit": 5,
+            "clicks_limit": 5,
+            "cost_per_impression": 1.3,
+            "cost_per_click": 2.1,
+            "ad_title": "Limited Time Offer",
+            "ad_text": "Get it before it's gone!",
+            "start_date": 0,
+            "end_date": 12,
+            "targeting": {
+                "gender": null,
+                "age_from": null,
+                "age_to": null,
+                "location": null
+            }
+        }
+    },
+    {
+        "advertiser_id": "22d28b06-32c5-434e-b05e-0654fa1cac09",
+        "campaign_data": {
+            "impressions_limit": 6,
+            "clicks_limit": 6,
+            "cost_per_impression": 1.7,
+            "cost_per_click": 2.6,
+            "ad_title": "New Arrival",
+            "ad_text": "Check out our latest product!",
+            "start_date": 0,
+            "end_date": 14,
+            "targeting": {
+                "gender": null,
+                "age_from": null,
+                "age_to": null,
+                "location": null
+            }
+        }
+    },
+    {
+        "advertiser_id": "7ba54148-4885-48da-97ba-6ecf7b3a300b",
+        "campaign_data": {
+            "impressions_limit": 8,
+            "clicks_limit": 8,
+            "cost_per_impression": 1.9,
+            "cost_per_click": 2.3,
+            "ad_title": "Discover More",
+            "ad_text": "Find out what we offer!",
+            "start_date": 0,
+            "end_date": 16,
+            "targeting": {
+                "gender": null,
+                "age_from": null,
+                "age_to": null,
+                "location": null
+            }
+        }
+    },
+    {
+        "advertiser_id": "00ac5657-1a1a-48f1-815a-2ffdb72b82b8",
+        "campaign_data": {
+            "impressions_limit": 7,
+            "clicks_limit": 7,
+            "cost_per_impression": 1.4,
+            "cost_per_click": 2.8,
+            "ad_title": "Best Quality",
+            "ad_text": "Experience the best quality!",
+            "start_date": 0,
+            "end_date": 18,
+            "targeting": {
+                "gender": null,
+                "age_from": null,
+                "age_to": null,
+                "location": null
+            }
+        }
+    },
+    {
+        "advertiser_id": "b9d5a8ce-ae23-4a93-946e-4bd85bddef5c",
+        "campaign_data": {
+            "impressions_limit": 9,
+            "clicks_limit": 9,
+            "cost_per_impression": 1.6,
+            "cost_per_click": 2.2,
+            "ad_title": "Limited Edition",
+            "ad_text": "Get it while it lasts!",
+            "start_date": 0,
+            "end_date": 15,
+            "targeting": {
+                "gender": null,
+                "age_from": null,
+                "age_to": null,
+                "location": null
+            }
+        }
+    },
+    {
+        "advertiser_id": "3696b94d-6591-4e15-86f3-8c46ee535e27",
+        "campaign_data": {
+            "impressions_limit": 10,
+            "clicks_limit": 10,
+            "cost_per_impression": 1.2,
+            "cost_per_click": 2.9,
+            "ad_title": "Exclusive Access",
+            "ad_text": "Join us for exclusive access!",
+            "start_date": 0,
+            "end_date": 13,
+            "targeting": {
+                "gender": null,
+                "age_from": null,
+                "age_to": null,
+                "location": null
+            }
+        }
+    },
+    {
+        "advertiser_id": "20024aab-2476-4d35-b96f-f47589f05474",
+        "campaign_data": {
+            "impressions_limit": 6,
+            "clicks_limit": 6,
+            "cost_per_impression": 1.8,
+            "cost_per_click": 2.5,
+            "ad_title": "Best Experience",
+            "ad_text": "Experience the best with us!",
+            "start_date": 0,
+            "end_date": 14,
+            "targeting": {
+                "gender": null,
+                "age_from": null,
+                "age_to": null,
+                "location": null
+            }
+        }
+    },
+    {
+        "advertiser_id": "a68ef7d6-c50f-40d1-b70f-a32d7cdcd036",
+        "campaign_data": {
+            "impressions_limit": 5,
+            "clicks_limit": 5,
+            "cost_per_impression": 1.5,
+            "cost_per_click": 2.7,
+            "ad_title": "Incredible Quality",
+            "ad_text": "Get the quality you deserve!",
+            "start_date": 0,
+            "end_date": 12,
+            "targeting": {
+                "gender": null,
+                "age_from": null,
+                "age_to": null,
+                "location": null
+            }
+        }
+    },
+    {
+        "advertiser_id": "960e2896-3f34-43a3-8aa1-d984bb92b96e",
+        "campaign_data": {
+            "impressions_limit": 7,
+            "clicks_limit": 7,
+            "cost_per_impression": 1.3,
+            "cost_per_click": 2.4,
+            "ad_title": "Best Value",
+            "ad_text": "Get the best value for your money!",
+            "start_date": 0,
+            "end_date": 11,
+            "targeting": {
+                "gender": null,
+                "age_from": null,
+                "age_to": null,
+                "location": null
+            }
+        }
+    },
+    {
+        "advertiser_id": "80a7f6a9-5939-4d74-9a7e-e455b9fa0fdd",
+        "campaign_data": {
+            "impressions_limit": 6,
+            "clicks_limit": 6,
+            "cost_per_impression": 1.9,
+            "cost_per_click": 2.6,
+            "ad_title": "Exclusive Offer",
+            "ad_text": "Don't miss out on this offer!",
+            "start_date": 0,
+            "end_date": 15,
+            "targeting": {
+                "gender": null,
+                "age_from": null,
+                "age_to": null,
+                "location": null
+            }
+        }
+    },
+    {
+        "advertiser_id": "6bb59511-360d-49dc-9626-be2f6b9b3a0a",
+        "campaign_data": {
+            "impressions_limit": 8,
+            "clicks_limit": 8,
+            "cost_per_impression": 1.7,
+            "cost_per_click": 2.3,
+            "ad_title": "Limited Time Deal",
+            "ad_text": "Act fast to get this deal!",
+            "start_date": 0,
+            "end_date": 13,
+            "targeting": {
+                "gender": null,
+                "age_from": null,
+                "age_to": null,
+                "location": null
+            }
+        }
+    },
+    {
+        "advertiser_id": "d7a27dc9-7d8d-4f25-bea4-2528f88238d1",
+        "campaign_data": {
+            "impressions_limit": 9,
+            "clicks_limit": 9,
+            "cost_per_impression": 1.2,
+            "cost_per_click": 2.9,
+            "ad_title": "Discover Our Services",
+            "ad_text": "Find out what we can do for you!",
+            "start_date": 0,
+            "end_date": 14,
+            "targeting": {
+                "gender": null,
+                "age_from": null,
+                "age_to": null,
+                "location": null
+            }
+        }
+    },
+    {
+        "advertiser_id": "e6cde283-ca4b-456c-b1fb-c2967918b5ef",
+        "campaign_data": {
+            "impressions_limit": 10,
+            "clicks_limit": 10,
+            "cost_per_impression": 1.5,
+            "cost_per_click": 2.8,
+            "ad_title": "Get Started Today",
+            "ad_text": "Join us and start saving!",
+            "start_date": 0,
+            "end_date": 12,
+            "targeting": {
+                "gender": null,
+                "age_from": null,
+                "age_to": null,
+                "location": null
+            }
+        }
+    },
+    {
+        "advertiser_id": "2a51ba38-bed3-43af-bbb4-99093b72e0d1",
+        "campaign_data": {
+            "impressions_limit": 6,
+            "clicks_limit": 6,
+            "cost_per_impression": 1.8,
+            "cost_per_click": 2.5,
+            "ad_title": "Best Choice",
+            "ad_text": "Choose the best for your needs!",
+            "start_date": 0,
+            "end_date": 11,
+            "targeting": {
+                "gender": null,
+                "age_from": null,
+                "age_to": null,
+                "location": null
+            }
+        }
+    },
+    {
+        "advertiser_id": "95a9a488-8fee-4aa6-9c21-458f8f5523ca",
+        "campaign_data": {
+            "impressions_limit": 7,
+            "clicks_limit": 7,
+            "cost_per_impression": 1.3,
+            "cost_per_click": 2.2,
+            "ad_title": "Exclusive Access",
+            "ad_text": "Get exclusive access to our services!",
+            "start_date": 0,
+            "end_date": 13,
+            "targeting": {
+                "gender": null,
+                "age_from": null,
+                "age_to": null,
+                "location": null
+            }
+        }
+    },
+    {
+        "advertiser_id": "2fb992b8-4441-47f5-9176-1da68526eafb",
+        "campaign_data": {
+            "impressions_limit": 8,
+            "clicks_limit": 8,
+            "cost_per_impression": 1.9,
+            "cost_per_click": 2.6,
+            "ad_title": "Best Quality",
+            "ad_text": "Experience the best quality!",
+            "start_date": 0,
+            "end_date": 15,
+            "targeting": {
+                "gender": null,
+                "age_from": null,
+                "age_to": null,
+                "location": null
+            }
+        }
+    },
+    {
+        "advertiser_id": "f0d160bd-18b4-4c88-917c-06b699abeeec",
+        "campaign_data": {
+            "impressions_limit": 9,
+            "clicks_limit": 9,
+            "cost_per_impression": 1.4,
+            "cost_per_click": 2.3,
+            "ad_title": "Incredible Quality",
+            "ad_text": "Get the quality you deserve!",
+            "start_date": 0,
+            "end_date": 12,
+            "targeting": {
+                "gender": null,
+                "age_from": null,
+                "age_to": null,
+                "location": null
+            }
+        }
+    },
+    {
+        "advertiser_id": "d8147d8c-2bcd-4ac8-bab5-82e420509a7f",
+        "campaign_data": {
+            "impressions_limit": 10,
+            "clicks_limit": 10,
+            "cost_per_impression": 1.6,
+            "cost_per_click": 2.8,
+            "ad_title": "Discover Our Services",
+            "ad_text": "Find out what we can do for you!",
+            "start_date": 0,
+            "end_date": 14,
+            "targeting": {
+                "gender": null,
+                "age_from": null,
+                "age_to": null,
+                "location": null
+            }
+        }
+    },
+    {
+        "advertiser_id": "94209720-2c10-4a55-bc37-c28838d08012",
+        "campaign_data": {
+            "impressions_limit": 6,
+            "clicks_limit": 6,
+            "cost_per_impression": 1.2,
+            "cost_per_click": 2.9,
+            "ad_title": "Best Value",
+            "ad_text": "Get the best value for your money!",
+            "start_date": 0,
+            "end_date": 11,
+            "targeting": {
+                "gender": null,
+                "age_from": null,
+                "age_to": null,
+                "location": null
+            }
+        }
+    },
+    {
+        "advertiser_id": "33fae4ce-d252-4b34-af2b-c11e770f65b5",
+        "campaign_data": {
+            "impressions_limit": 7,
+            "clicks_limit": 7,
+            "cost_per_impression": 1.3,
+            "cost_per_click": 2.4,
+            "ad_title": "Exclusive Offer",
+            "ad_text": "Don't miss out on this offer!",
+            "start_date": 0,
+            "end_date": 12,
+            "targeting": {
+                "gender": null,
+                "age_from": null,
+                "age_to": null,
+                "location": null
+            }
+        }
+    },
+    {
+        "advertiser_id": "2c0261ba-bd3c-4b19-a53c-44efa10819e5",
+        "campaign_data": {
+            "impressions_limit": 8,
+            "clicks_limit": 8,
+            "cost_per_impression": 1.9,
+            "cost_per_click": 2.6,
+            "ad_title": "Best Choice",
+            "ad_text": "Choose the best for your needs!",
+            "start_date": 0,
+            "end_date": 13,
+            "targeting": {
+                "gender": null,
+                "age_from": null,
+                "age_to": null,
+                "location": null
+            }
+        }
+    },
+    {
+        "advertiser_id": "0892fbb7-fbc6-45e9-b52f-494258a9c8f8",
+        "campaign_data": {
+            "impressions_limit": 9,
+            "clicks_limit": 9,
+            "cost_per_impression": 1.5,
+            "cost_per_click": 2.3,
+            "ad_title": "Incredible Quality",
+            "ad_text": "Get the quality you deserve!",
+            "start_date": 0,
+            "end_date": 14,
+            "targeting": {
+                "gender": null,
+                "age_from": null,
+                "age_to": null,
+                "location": null
+            }
+        }
+    },
+    {
+        "advertiser_id": "055af498-567a-4a4e-b25f-60a57b9b591c",
+        "campaign_data": {
+            "impressions_limit": 10,
+            "clicks_limit": 10,
+            "cost_per_impression": 1.6,
+            "cost_per_click": 2.8,
+            "ad_title": "Get Started Today",
+            "ad_text": "Join us and start saving!",
+            "start_date": 0,
+            "end_date": 12,
+            "targeting": {
+                "gender": null,
+                "age_from": null,
+                "age_to": null,
+                "location": null
+            }
+        }
+    },
+    {
+        "advertiser_id": "0dfd7246-4cfa-4721-899b-e6dd9c483626",
+        "campaign_data": {
+            "impressions_limit": 6,
+            "clicks_limit": 6,
+            "cost_per_impression": 1.2,
+            "cost_per_click": 2.9,
+            "ad_title": "Best Experience",
+            "ad_text": "Experience the best with us!",
+            "start_date": 0,
+            "end_date": 11,
+            "targeting": {
+                "gender": null,
+                "age_from": null,
+                "age_to": null,
+                "location": null
+            }
+        }
+    },
+    {
+        "advertiser_id": "32d75bc6-0779-4081-98b3-58273497c561",
+        "campaign_data": {
+            "impressions_limit": 7,
+            "clicks_limit": 7,
+            "cost_per_impression": 1.3,
+            "cost_per_click": 2.2,
+            "ad_title": "Discover Our Services",
+            "ad_text": "Find out what we can do for you!",
+            "start_date": 0,
+            "end_date": 13,
+            "targeting": {
+                "gender": null,
+                "age_from": null,
+                "age_to": null,
+                "location": null
+            }
+        }
+    }
+]

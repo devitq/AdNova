@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdNova Loadtest</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        .chart-container {
+            position: relative;
+            height: 250px;
+            width: 100%;
+        }
+
+        .status-dot {
+            height: 10px;
+            width: 10px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .tooltip {
+            visibility: hidden;
+        }
+
+        .has-tooltip:hover .tooltip {
+            visibility: visible;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-900 text-gray-300">
+    <div class="container mx-auto p-4 md:p-8">
+        <header class="mb-8">
+            <h1 class="text-4xl font-bold text-white tracking-tight">AdNova Loadtest</h1>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left Column: Controls -->
+            <div class="lg:col-span-1 flex flex-col gap-6">
+
+                <!-- Mock Data Management -->
+                <div class="bg-slate-800 rounded-lg p-6 shadow-lg">
+                    <h2 class="text-xl font-semibold text-white mb-4">1. Data Setup</h2>
+                    <button id="loadMocksBtn"
+                        class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-300 flex items-center justify-center">
+                        Load Mock Data
+                    </button>
+                    <div id="mockStatus" class="mt-4 space-y-2 text-sm">
+                        <div class="flex items-center justify-between"><span class="text-slate-300">Clients:</span><span
+                                id="clientsStatus" class="font-mono">Checking...</span></div>
+                        <div class="flex items-center justify-between"><span
+                                class="text-slate-300">Advertisers:</span><span id="advertisersStatus"
+                                class="font-mono">Checking...</span></div>
+                        <div class="flex items-center justify-between"><span
+                                class="text-slate-300">Campaigns:</span><span id="campaignsStatus"
+                                class="font-mono">Checking...</span></div>
+                        <div class="flex items-center justify-between"><span class="text-slate-300">ML
+                                Scores:</span><span id="mlScoresStatus" class="font-mono">Checking...</span></div>
+                    </div>
+                </div>
+
+                <!-- Test Configuration -->
+                <div id="config-panel" class="bg-slate-800 rounded-lg p-6 shadow-lg">
+                    <h2 class="text-xl font-semibold text-white mb-4">2. Test Configuration</h2>
+                    <div class="space-y-4">
+                        <div>
+                            <label for="loadProfile" class="block text-sm font-medium text-slate-300">Load
+                                Profile</label>
+                            <select id="loadProfile"
+                                class="mt-1 block w-full bg-slate-700 border border-slate-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                <option value="const">Constant</option>
+                                <option value="line">Line</option>
+                                <option value="step">Step</option>
+                                <option value="once">Once</option>
+                                <option value="unlimited">Unlimited</option>
+                            </select>
+                        </div>
+
+                        <!-- Profile Specific Options -->
+                        <div id="const-options">
+                            <label for="maxRps" class="block text-sm font-medium text-slate-300">Requests Per Second
+                                (RPS)</label>
+                            <input type="number" id="maxRps" value="100"
+                                class="mt-1 block w-full bg-slate-700 border border-slate-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        </div>
+                        <div id="line-options" class="hidden space-y-2">
+                            <input type="number" id="fromRps" placeholder="From RPS (e.g., 10)"
+                                class="block w-full bg-slate-700 border border-slate-600 rounded-md py-2 px-3 text-white">
+                            <input type="number" id="toRps" placeholder="To RPS (e.g., 100)"
+                                class="block w-full bg-slate-700 border border-slate-600 rounded-md py-2 px-3 text-white">
+                        </div>
+                        <div id="step-options" class="hidden space-y-2">
+                            <input type="number" id="stepFromRps" placeholder="From RPS"
+                                class="block w-full bg-slate-700 border border-slate-600 rounded-md py-2 px-3 text-white">
+                            <input type="number" id="stepToRps" placeholder="To RPS"
+                                class="block w-full bg-slate-700 border border-slate-600 rounded-md py-2 px-3 text-white">
+                            <input type="number" id="stepRps" placeholder="Step Size (RPS)"
+                                class="block w-full bg-slate-700 border border-slate-600 rounded-md py-2 px-3 text-white">
+                            <input type="number" id="stepDuration" placeholder="Step Duration (sec)"
+                                class="block w-full bg-slate-700 border border-slate-600 rounded-md py-2 px-3 text-white">
+                        </div>
+                        <div id="once-options" class="hidden">
+                            <input type="number" id="onceCount" placeholder="Number of Requests"
+                                class="block w-full bg-slate-700 border border-slate-600 rounded-md py-2 px-3 text-white">
+                        </div>
+                        <div id="unlimited-options"
+                            class="hidden p-2 bg-yellow-900/50 rounded-md text-yellow-300 text-xs">
+                            Warning: This profile sends requests as fast as possible and may exhaust system resources.
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Start/Stop Controls -->
+                <div class="bg-slate-800 rounded-lg p-6 shadow-lg">
+                    <h2 class="text-xl font-semibold text-white mb-4">3. Execute Test</h2>
+                    <button id="startStopBtn"
+                        class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-3 px-4 rounded-lg transition-colors duration-300 text-lg flex items-center justify-center">
+                        Start Test
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right Column: Stats & Charts -->
+            <div class="lg:col-span-2 flex flex-col gap-6">
+                <!-- Summary Stats -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-slate-800 p-4 rounded-lg shadow-lg text-center">
+                        <h3 class="text-sm font-medium text-slate-400">RPS</h3>
+                        <p id="rpsStat" class="text-3xl font-semibold text-white">0</p>
+                    </div>
+                    <div class="bg-slate-800 p-4 rounded-lg shadow-lg text-center">
+                        <h3 class="text-sm font-medium text-slate-400">Avg Latency (ms)</h3>
+                        <p id="latencyStat" class="text-3xl font-semibold text-white">0.00</p>
+                    </div>
+                    <div class="bg-slate-800 p-4 rounded-lg shadow-lg text-center">
+                        <h3 class="text-sm font-medium text-slate-400">Error Rate</h3>
+                        <p id="errorRateStat" class="text-3xl font-semibold text-white">0.00%</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-slate-800 p-4 rounded-lg shadow-lg text-center">
+                        <h3 class="text-sm font-medium text-slate-400">Total Requests</h3>
+                        <p id="totalReqsStat" class="text-2xl font-semibold text-white">0</p>
+                    </div>
+                    <div class="bg-slate-800 p-4 rounded-lg shadow-lg text-center">
+                        <h3 class="text-sm font-medium text-slate-400">Total Errors</h3>
+                        <p id="totalErrorsStat" class="text-2xl font-semibold text-white">0</p>
+                    </div>
+                </div>
+
+                <!-- Charts -->
+                <div class="bg-slate-800 p-4 rounded-lg shadow-lg">
+                    <h3 class="font-semibold text-white mb-2">Requests Per Second (RPS)</h3>
+                    <div class="chart-container"><canvas id="rpsChart"></canvas></div>
+                </div>
+                <div class="bg-slate-800 p-4 rounded-lg shadow-lg">
+                    <h3 class="font-semibold text-white mb-2">Average Latency (ms)</h3>
+                    <div class="chart-container"><canvas id="latencyChart"></canvas></div>
+                </div>
+                <div class="bg-slate-800 p-4 rounded-lg shadow-lg">
+                    <h3 class="font-semibold text-white mb-2">Error Rate (%)</h3>
+                    <div class="chart-container"><canvas id="errorRateChart"></canvas></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const loadProfileSelect = document.getElementById( 'loadProfile' )
+        const startStopBtn = document.getElementById( 'startStopBtn' )
+        const loadMocksBtn = document.getElementById( 'loadMocksBtn' )
+        const configPanel = document.getElementById( 'config-panel' )
+
+        const rpsStat = document.getElementById( 'rpsStat' )
+        const latencyStat = document.getElementById( 'latencyStat' )
+        const errorRateStat = document.getElementById( 'errorRateStat' )
+        const totalReqsStat = document.getElementById( 'totalReqsStat' )
+        const totalErrorsStat = document.getElementById( 'totalErrorsStat' )
+
+        let ws
+        let rpsChart, latencyChart, errorRateChart
+        let isRunning = false
+        const MAX_DATA_POINTS = 60
+
+        function createChart ( ctx, label, color )
+        {
+            return new Chart( ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [ {
+                        label: label,
+                        data: [],
+                        borderColor: color,
+                        backgroundColor: color + '33',
+                        borderWidth: 2,
+                        pointRadius: 0,
+                        tension: 0.4,
+                        fill: true,
+                    } ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            ticks: { color: '#94a3b8' },
+                            grid: { color: '#334155' }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            ticks: { color: '#94a3b8' },
+                            grid: { color: '#334155' }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            } )
+        }
+
+        function updateChart ( chart, label, newData )
+        {
+            chart.data.labels.push( label )
+            chart.data.datasets[ 0 ].data.push( newData )
+            if ( chart.data.labels.length > MAX_DATA_POINTS )
+            {
+                chart.data.labels.shift()
+                chart.data.datasets[ 0 ].data.shift()
+            }
+            chart.update( 'none' )
+        }
+
+        function resetCharts ()
+        {
+            const charts = [ rpsChart, latencyChart, errorRateChart ]
+            charts.forEach( chart =>
+            {
+                if ( chart )
+                {
+                    chart.data.labels = []
+                    chart.data.datasets[ 0 ].data = []
+                    chart.update()
+                }
+            } )
+            rpsStat.textContent = '0'
+            latencyStat.textContent = '0.00'
+            errorRateStat.textContent = '0.00%'
+            totalReqsStat.textContent = '0'
+            totalErrorsStat.textContent = '0'
+        }
+
+        function setupWebSocket ()
+        {
+            const wsUrl = 'ws://' + window.location.host + '/ws'
+            ws = new WebSocket( wsUrl )
+
+            ws.onopen = () => console.log( 'WebSocket connected' )
+            ws.onclose = () => console.log( 'WebSocket disconnected' )
+            ws.onerror = ( error ) => console.error( 'WebSocket error:', error )
+
+            ws.onmessage = ( event ) =>
+            {
+                const data = JSON.parse( event.data )
+
+                if ( typeof data.isRunning !== 'undefined' )
+                {
+                    if ( data.isRunning )
+                    {
+                        isRunning = true
+                        startStopBtn.textContent = 'Stop Test'
+                        startStopBtn.classList.remove( 'bg-green-600', 'hover:bg-green-500' )
+                        startStopBtn.classList.add( 'bg-red-600', 'hover:bg-red-500' )
+                        configPanel.querySelectorAll( 'input, select' ).forEach( el => el.disabled = true )
+                    }
+                }
+
+                if ( data.isRunning )
+                {
+                    const now = new Date().toLocaleTimeString()
+                    rpsStat.textContent = data.rps
+                    latencyStat.textContent = data.latency.toFixed( 2 )
+                    errorRateStat.textContent = data.errorRate.toFixed( 2 ) + '%'
+                    totalReqsStat.textContent = data.totalReqs
+                    totalErrorsStat.textContent = data.totalErrors
+
+                    updateChart( rpsChart, now, data.rps )
+                    updateChart( latencyChart, now, data.latency )
+                    updateChart( errorRateChart, now, data.errorRate )
+                } else
+                {
+                    totalReqsStat.textContent = data.totalReqs
+                    totalErrorsStat.textContent = data.totalErrors
+                }
+            }
+        }
+
+        function setRunningState ()
+        {
+            isRunning = true
+            startStopBtn.textContent = 'Stop Test'
+            startStopBtn.classList.remove( 'bg-green-600', 'hover:bg-green-500' )
+            startStopBtn.classList.add( 'bg-red-600', 'hover:bg-red-500' )
+            configPanel.querySelectorAll( 'input, select' ).forEach( el => el.disabled = true )
+            resetCharts()
+        }
+
+        function setStoppedState ()
+        {
+            isRunning = false
+            startStopBtn.textContent = 'Start Test'
+            startStopBtn.classList.remove( 'bg-red-600', 'hover:bg-red-500' )
+            startStopBtn.classList.add( 'bg-green-600', 'hover:bg-green-500' )
+            configPanel.querySelectorAll( 'input, select' ).forEach( el => el.disabled = false )
+        }
+
+        startStopBtn.addEventListener( 'click', () =>
+        {
+            if ( isRunning )
+            {
+                fetch( '/api/stop-test', { method: 'POST' } )
+                    .then( () => setStoppedState() )
+            } else
+            {
+                const config = {
+                    loadProfile: loadProfileSelect.value,
+                    maxRps: parseInt( document.getElementById( 'maxRps' ).value ) || 100,
+                    fromRps: parseInt( document.getElementById( 'fromRps' ).value ) || 0,
+                    toRps: parseInt( document.getElementById( 'toRps' ).value ) || 0,
+                    stepFromRps: parseInt( document.getElementById( 'stepFromRps' ).value ) || 0,
+                    stepToRps: parseInt( document.getElementById( 'stepToRps' ).value ) || 0,
+                    stepRps: parseInt( document.getElementById( 'stepRps' ).value ) || 0,
+                    stepDuration: parseInt( document.getElementById( 'stepDuration' ).value ) || 0,
+                    onceCount: parseInt( document.getElementById( 'onceCount' ).value ) || 0,
+                }
+
+                if ( config.loadProfile === 'step' )
+                {
+                    config.fromRps = config.stepFromRps
+                    config.toRps = config.stepToRps
+                }
+
+                fetch( '/api/start-test', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify( config )
+                } ).then( res =>
+                {
+                    if ( res.ok ) setRunningState()
+                    else alert( "Failed to start test. Check console for details." )
+                } ).catch( err =>
+                {
+                    console.error( "Error starting test:", err )
+                    alert( "Failed to start test. Network error or server unreachable." )
+                } )
+            }
+        } )
+
+        function updateMockStatus ( status )
+        {
+            const statuses = {
+                clients: document.getElementById( 'clientsStatus' ),
+                advertisers: document.getElementById( 'advertisersStatus' ),
+                campaigns: document.getElementById( 'campaignsStatus' ),
+                ml_scores: document.getElementById( 'mlScoresStatus' ),
+            }
+
+            for ( const key in status )
+            {
+                const el = statuses[ key ]
+                if ( el )
+                {
+                    if ( status[ key ] )
+                    {
+                        el.innerHTML = '<span class="status-dot bg-green-500 mr-2"></span>Loaded'
+                        el.classList.remove( 'text-red-400' )
+                        el.classList.add( 'text-green-400' )
+                    } else
+                    {
+                        el.innerHTML = '<span class="status-dot bg-red-500 mr-2"></span>Not Loaded'
+                        el.classList.remove( 'text-green-400' )
+                        el.classList.add( 'text-red-400' )
+                    }
+                }
+            }
+        }
+
+        function checkMocks ()
+        {
+            fetch( '/api/check-mocks' )
+                .then( res => res.json() )
+                .then( data => updateMockStatus( data ) )
+                .catch( err => console.error( "Failed to check mocks:", err ) )
+        }
+
+        loadMocksBtn.addEventListener( 'click', () =>
+        {
+            loadMocksBtn.textContent = 'Loading...'
+            loadMocksBtn.disabled = true
+
+            fetch( '/api/load-mocks', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify( {} )
+            } )
+                .then( res =>
+                {
+                    if ( !res.ok ) alert( 'Failed to load mocks. Check console for details.' )
+                    return res.json()
+                } )
+                .then( () =>
+                {
+                    checkMocks()
+                } )
+                .finally( () =>
+                {
+                    loadMocksBtn.textContent = 'Load Mock Data'
+                    loadMocksBtn.disabled = false
+                } )
+        } )
+
+        loadProfileSelect.addEventListener( 'change', ( e ) =>
+        {
+            document.getElementById( 'const-options' ).classList.add( 'hidden' )
+            document.getElementById( 'line-options' ).classList.add( 'hidden' )
+            document.getElementById( 'step-options' ).classList.add( 'hidden' )
+            document.getElementById( 'once-options' ).classList.add( 'hidden' )
+            document.getElementById( 'unlimited-options' ).classList.add( 'hidden' )
+
+            document.getElementById( e.target.value + '-options' ).classList.remove( 'hidden' )
+        } )
+
+
+        window.onload = () =>
+        {
+            rpsChart = createChart( document.getElementById( 'rpsChart' ).getContext( '2d' ), 'RPS', '#6366f1' )
+            latencyChart = createChart( document.getElementById( 'latencyChart' ).getContext( '2d' ), 'Latency', '#34d399' )
+            errorRateChart = createChart( document.getElementById( 'errorRateChart' ).getContext( '2d' ), 'Error Rate', '#f87171' )
+
+            setupWebSocket()
+            checkMocks()
+            loadProfileSelect.dispatchEvent( new Event( 'change' ) )
+        };
+    </script>
+</body>
+
+</html>
