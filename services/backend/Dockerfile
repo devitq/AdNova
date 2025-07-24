@@ -32,11 +32,12 @@ USER app
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PYTHONOPTIMIZE=2 \
-    PATH="/opt/venv/bin:$PATH"
+    PATH="/opt/venv/bin:$PATH" \
+    DJANGO_SETTINGS_MODULE=config.settings
 
 EXPOSE 8080
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --start-interval=2s --retries=3 \
     CMD wget --no-verbose --tries=1 --spider http://127.0.0.1:8080/health?format=json || exit 1
 
-CMD [ "gunicorn", "config.wsgi", "--workers=8", "-b", "0.0.0.0:8080", "--access-logfile", "-", "--error-logfile", "-" ]
+CMD [ "opentelemetry-instrument", "--service_name", "backend-django", "--traces_exporter", "zipkin_json", "gunicorn", "config.wsgi", "--workers=8", "-b", "0.0.0.0:8080", "--access-logfile", "-", "--error-logfile", "-" ]
