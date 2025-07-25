@@ -1,7 +1,7 @@
 # Global config
 global:
-  scrape_interval: 10s
-  scrape_timeout: 10s
+  scrape_interval: 5s
+  scrape_timeout: 5s
   evaluation_interval: 10m
   external_labels:
     environment: local
@@ -10,24 +10,26 @@ global:
 scrape_configs:
   # Prometheus
   - job_name: prometheus
-    scrape_interval: 5s
     static_configs:
       - targets: ["localhost:9090"]
 
   # Postgres
   - job_name: postgres
-    scrape_interval: 10s
     static_configs:
       - targets: ["postgres-exporter:9187"]
 
   # Redis
   - job_name: redis
-    scrape_interval: 10s
     static_configs:
       - targets: ["redis-exporter:9121"]
 
   # Celery
   - job_name: celery
-    scrape_interval: 30s
+    scrape_interval: 15s
     static_configs:
       - targets: ["celery-exporter:9808"]
+
+  # Backend
+  - job_name: backend
+    static_configs:
+      - targets: ["backend:8080"]
