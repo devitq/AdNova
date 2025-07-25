@@ -21,10 +21,6 @@ services:
         restart: false
         condition: service_healthy
         required: true
-      minio:
-        restart: false
-        condition: service_healthy
-        required: true
     env_file:
       - path: ./infrastructure/backend/.env.template
         required: true
@@ -54,10 +50,6 @@ services:
         condition: service_healthy
         required: true
       redis:
-        restart: false
-        condition: service_healthy
-        required: true
-      minio:
         restart: false
         condition: service_healthy
         required: true
@@ -226,7 +218,7 @@ services:
       - path: ./infrastructure/postgres/.env
         required: false
     healthcheck:
-      test: ["CMD", "pg_isready"]
+      test: ["CMD", "pg_isready", "-U", "postgres"]
       interval: 1m30s
       timeout: 5s
       start_period: 5s
@@ -393,6 +385,8 @@ services:
         host_ip: 127.0.0.1
         protocol: tcp
         app_protocol: http
+    profiles:
+      - minio
     restart: unless-stopped
     shm_size: 4mb
     volumes:
