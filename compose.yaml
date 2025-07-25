@@ -5,6 +5,9 @@ services:
     build:
       context: ./services/backend
       dockerfile: Dockerfile
+      tags:
+        - adnova-backend:latest
+      pull: true
     depends_on:
       backend-initdb:
         restart: false
@@ -30,16 +33,20 @@ services:
     ports:
       - name: web
         target: 8080
-        published: 8080
+        published: 13240
         host_ip: 127.0.0.1
         protocol: tcp
         app_protocol: http
     restart: unless-stopped
+    shm_size: 4mb
 
   backend-initdb:
     build:
       context: ./services/backend
       dockerfile: Dockerfile
+      tags:
+        - adnova-backend:latest
+      pull: true
     command: ./scripts/initdb
     depends_on:
       postgres:
@@ -59,18 +66,22 @@ services:
         required: true
       - path: ./infrastructure/backend/.env
         required: false
+    shm_size: 4mb
 
   backend-staticfiles:
     build:
       context: ./services/backend
       dockerfile: Dockerfile.staticfiles
+      tags:
+        - adnova-backend-staticfiles:latest
+      pull: true
     env_file:
       - path: ./infrastructure/backend/.env.template
         required: true
       - path: ./infrastructure/backend/.env
         required: false
     healthcheck:
-      test: ["CMD", "service", "nginx", "status", "||", " exit 1"]
+      test: ["CMD-SHELL", "nginx", "-t", "||", "exit 1"]
       interval: 1m30s
       timeout: 5s
       start_period: 5s
@@ -84,11 +95,15 @@ services:
         protocol: tcp
         app_protocol: http
     restart: unless-stopped
+    shm_size: 4mb
 
   backend-celery-worker:
     build:
       context: ./services/backend
       dockerfile: Dockerfile
+      tags:
+        - adnova-backend:latest
+      pull: true
     command: celery -A config worker -l INFO
     depends_on:
       redis:
@@ -108,6 +123,7 @@ services:
       start_period: 10s
       start_interval: 2s
     restart: unless-stopped
+    shm_size: 4mb
 
   celery-exporter:
     image: docker.io/danihodovic/celery-exporter:0.12.2
@@ -122,7 +138,10 @@ services:
         required: true
       - path: ./infrastructure/celery-exporter/.env
         required: false
+    profiles:
+      - observability
     restart: unless-stopped
+    shm_size: 4mb
 
   telegram_bot:
     build:
@@ -130,6 +149,7 @@ services:
       dockerfile: Dockerfile
       tags:
         - adnova-telegram_bot:latest
+      pull: true
     depends_on:
       backend:
         restart: false
@@ -148,7 +168,10 @@ services:
         required: true
       - path: ./infrastructure/telegram_bot/.env
         required: false
+    profiles:
+      - telegram_bot
     restart: unless-stopped
+    shm_size: 4mb
 
   redis:
     image: docker.io/redis:7-alpine3.21
@@ -187,6 +210,8 @@ services:
         required: true
       - path: ./infrastructure/redis-exporter/.env
         required: false
+    profiles:
+      - observability
     restart: unless-stopped
     shm_size: 4mb
 
@@ -230,6 +255,8 @@ services:
         required: true
       - path: ./infrastructure/postgres-exporter/.env
         required: false
+    profiles:
+      - observability
     restart: unless-stopped
     shm_size: 4mb
 
@@ -262,6 +289,8 @@ services:
         host_ip: 127.0.0.1
         protocol: tcp
         app_protocol: http
+    profiles:
+      - observability
     restart: unless-stopped
     secrets:
       - source: pgadmin_password
@@ -274,10 +303,10 @@ services:
 
   grafana:
     image: docker.io/grafana/grafana-oss:12.0.2
+    entrypoint: ["/etc/grafana/scripts/entrypoint.sh"]
     configs:
       - source: grafana_config
         target: /usr/share/grafana/conf/defaults.ini
-    entrypoint: ["/etc/grafana/scripts/entrypoint.sh"]
     healthcheck:
       test: ["CMD", "wget", "-O", "-", "http://localhost:3000/api/health"]
       interval: 1m30s
@@ -292,6 +321,8 @@ services:
         host_ip: 127.0.0.1
         protocol: tcp
         app_protocol: http
+    profiles:
+      - observability
     restart: unless-stopped
     shm_size: 4mb
     volumes:
@@ -325,6 +356,8 @@ services:
         host_ip: 127.0.0.1
         protocol: tcp
         app_protocol: http
+    profiles:
+      - observability
     restart: unless-stopped
     shm_size: 4mb
     volumes:
@@ -361,6 +394,7 @@ services:
         protocol: tcp
         app_protocol: http
     restart: unless-stopped
+    shm_size: 4mb
     volumes:
       - type: volume
         source: minio_data
@@ -382,18 +416,17 @@ services:
         host_ip: 127.0.0.1
         protocol: tcp
         app_protocol: http
-      - name: api
-        target: 9411
-        published: 13247
-        host_ip: 127.0.0.1
-        protocol: tcp
-        app_protocol: http
+    profiles:
+      - observability
     restart: unless-stopped
+    shm_size: 4mb
 
   loadtest:
     build:
       context: ./services/loadtest
       dockerfile: Dockerfile
+      tags:
+        - adnova-loadtest:latest
     depends_on:
       backend:
         restart: false
@@ -411,7 +444,10 @@ services:
         host_ip: 127.0.0.1
         protocol: tcp
         app_protocol: http
+    profiles:
+      - loadtest
     restart: unless-stopped
+    shm_size: 4mb
 
 volumes:
   redis_data:
