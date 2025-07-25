@@ -152,9 +152,13 @@ Link: [t.me/adnova_bot](https://t.me/adnova_bot)
 Basic commands:
 
 `/start` - Start the bot and authenticate as advertiser
+
 `/help` - Get list of all commands
+
 `/campaigns` - Manage advertiser campaigns (only after authentication)
+
 `/statistics` - See advertiser overall statistics (only after authentication)
+
 `/logout` - Logout of current advertiser account (only after authentication)
 
 See [this](#telegram-bot-1).
