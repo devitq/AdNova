@@ -15,11 +15,11 @@
             }
         ]
     },
-    "description": "Get daily and overall stats for your advertiser organization and your campaigns.",
+    "description": "Get daily and overall stats for advertiser organization and campaigns.",
     "editable": true,
     "fiscalYearStartMonth": 0,
     "graphTooltip": 0,
-    "id": 1,
+    "id": 9,
     "links": [],
     "liveNow": true,
     "panels": [
@@ -62,8 +62,7 @@
                         "mode": "percentage",
                         "steps": [
                             {
-                                "color": "green",
-                                "value": null
+                                "color": "green"
                             }
                         ]
                     }
@@ -88,7 +87,7 @@
                 "frameIndex": 1,
                 "showHeader": true
             },
-            "pluginVersion": "11.5.0",
+            "pluginVersion": "12.0.2",
             "targets": [
                 {
                     "columns": [
@@ -139,7 +138,7 @@
                     "source": "url",
                     "summarizeAlias": "",
                     "type": "json",
-                    "url": "http://backend:8080/stats/advertisers/$advertiser_id",
+                    "url": "/stats/advertisers/$advertiser_id",
                     "url_options": {
                         "data": "",
                         "method": "GET",
@@ -229,8 +228,7 @@
                         "mode": "absolute",
                         "steps": [
                             {
-                                "color": "green",
-                                "value": null
+                                "color": "green"
                             },
                             {
                                 "color": "red",
@@ -265,7 +263,7 @@
                 },
                 "xField": "Date"
             },
-            "pluginVersion": "11.5.0",
+            "pluginVersion": "12.0.2",
             "targets": [
                 {
                     "columns": [
@@ -296,7 +294,7 @@
                     "root_selector": "",
                     "source": "url",
                     "type": "json",
-                    "url": "http://backend:8080/stats/advertisers/$advertiser_id/campaigns/daily",
+                    "url": "/stats/advertisers/$advertiser_id/campaigns/daily",
                     "url_options": {
                         "data": "",
                         "method": "GET"
@@ -353,7 +351,7 @@
                     "sort": "none"
                 }
             },
-            "pluginVersion": "11.5.0",
+            "pluginVersion": "12.0.2",
             "targets": [
                 {
                     "columns": [
@@ -380,7 +378,7 @@
                     "root_selector": "",
                     "source": "url",
                     "type": "json",
-                    "url": "http://backend:8080/stats/advertisers/$advertiser_id",
+                    "url": "/stats/advertisers/$advertiser_id",
                     "url_options": {
                         "data": "",
                         "method": "GET"
@@ -442,8 +440,7 @@
                         "mode": "absolute",
                         "steps": [
                             {
-                                "color": "green",
-                                "value": null
+                                "color": "green"
                             },
                             {
                                 "color": "red",
@@ -478,7 +475,7 @@
                 },
                 "xField": "Date"
             },
-            "pluginVersion": "11.5.0",
+            "pluginVersion": "12.0.2",
             "targets": [
                 {
                     "columns": [
@@ -515,7 +512,7 @@
                     "root_selector": "",
                     "source": "url",
                     "type": "json",
-                    "url": "http://backend:8080/stats/advertisers/$advertiser_id/campaigns/daily",
+                    "url": "/stats/advertisers/$advertiser_id/campaigns/daily",
                     "url_options": {
                         "data": "",
                         "method": "GET"
@@ -578,8 +575,7 @@
                         "mode": "absolute",
                         "steps": [
                             {
-                                "color": "green",
-                                "value": null
+                                "color": "green"
                             }
                         ]
                     },
@@ -610,7 +606,7 @@
                 },
                 "xField": "Date"
             },
-            "pluginVersion": "11.5.0",
+            "pluginVersion": "12.0.2",
             "targets": [
                 {
                     "columns": [
@@ -637,7 +633,7 @@
                     "root_selector": "",
                     "source": "url",
                     "type": "json",
-                    "url": "http://backend:8080/stats/advertisers/$advertiser_id/campaigns/daily",
+                    "url": "/stats/advertisers/$advertiser_id/campaigns/daily",
                     "url_options": {
                         "data": "",
                         "method": "GET"
@@ -649,7 +645,7 @@
             "type": "trend"
         },
         {
-            "collapsed": true,
+            "collapsed": false,
             "gridPos": {
                 "h": 1,
                 "w": 24,
@@ -657,623 +653,622 @@
                 "y": 33
             },
             "id": 9,
-            "panels": [
-                {
-                    "datasource": {
-                        "type": "yesoreyeram-infinity-datasource",
-                        "uid": "infinity"
-                    },
-                    "description": "Statistics for all time",
-                    "fieldConfig": {
-                        "defaults": {
-                            "color": {
-                                "mode": "thresholds"
-                            },
-                            "custom": {
-                                "align": "center",
-                                "cellOptions": {
-                                    "type": "auto",
-                                    "wrapText": true
-                                },
-                                "filterable": false,
-                                "inspect": false
-                            },
-                            "mappings": [],
-                            "thresholds": {
-                                "mode": "percentage",
-                                "steps": [
-                                    {
-                                        "color": "green"
-                                    }
-                                ]
-                            }
-                        },
-                        "overrides": []
-                    },
-                    "gridPos": {
-                        "h": 12,
-                        "w": 7,
-                        "x": 0,
-                        "y": 34
-                    },
-                    "id": 11,
-                    "options": {
-                        "cellHeight": "md",
-                        "footer": {
-                            "countRows": false,
-                            "fields": "",
-                            "reducer": ["sum"],
-                            "show": false
-                        },
-                        "frameIndex": 1,
-                        "showHeader": true
-                    },
-                    "pluginVersion": "11.5.0",
-                    "targets": [
-                        {
-                            "columns": [
-                                {
-                                    "selector": "impressions_count",
-                                    "text": "Impressions count",
-                                    "type": "number"
-                                },
-                                {
-                                    "selector": "clicks_count",
-                                    "text": "Clicks count",
-                                    "type": "number"
-                                },
-                                {
-                                    "selector": "spent_impressions",
-                                    "text": "Spent on impressions",
-                                    "type": "number"
-                                },
-                                {
-                                    "selector": "spent_clicks",
-                                    "text": "Spent on clicks",
-                                    "type": "number"
-                                },
-                                {
-                                    "selector": "spent_total",
-                                    "text": "Spent total",
-                                    "type": "number"
-                                },
-                                {
-                                    "selector": "conversion",
-                                    "text": " ‎Conversion, %",
-                                    "type": "number"
-                                }
-                            ],
-                            "computed_columns": [],
-                            "datasource": {
-                                "type": "yesoreyeram-infinity-datasource",
-                                "uid": "infinity"
-                            },
-                            "filters": [],
-                            "format": "as-is",
-                            "global_query_id": "",
-                            "hide": false,
-                            "pagination_mode": "none",
-                            "parser": "backend",
-                            "refId": "Get stats",
-                            "root_selector": "",
-                            "source": "url",
-                            "summarizeAlias": "",
-                            "type": "json",
-                            "url": "http://backend:8080/stats/campaigns/$campaign_id",
-                            "url_options": {
-                                "data": "",
-                                "method": "GET",
-                                "params": []
-                            }
-                        }
-                    ],
-                    "title": "Overall campaign statistics",
-                    "transformations": [
-                        {
-                            "id": "transpose",
-                            "options": {
-                                "firstFieldName": "Metric"
-                            }
-                        },
-                        {
-                            "id": "sortBy",
-                            "options": {
-                                "fields": {},
-                                "sort": [
-                                    {
-                                        "desc": true,
-                                        "field": "Field"
-                                    }
-                                ]
-                            }
-                        },
-                        {
-                            "id": "renameByRegex",
-                            "options": {
-                                "regex": "1",
-                                "renamePattern": "Value"
-                            }
-                        }
-                    ],
-                    "transparent": true,
-                    "type": "table"
-                },
-                {
-                    "datasource": {
-                        "type": "yesoreyeram-infinity-datasource",
-                        "uid": "infinity"
-                    },
-                    "fieldConfig": {
-                        "defaults": {
-                            "color": {
-                                "mode": "palette-classic"
-                            },
-                            "custom": {
-                                "axisBorderShow": true,
-                                "axisCenteredZero": false,
-                                "axisColorMode": "text",
-                                "axisLabel": "Amount",
-                                "axisPlacement": "right",
-                                "barAlignment": 0,
-                                "barWidthFactor": 0.6,
-                                "drawStyle": "line",
-                                "fillOpacity": 8,
-                                "gradientMode": "opacity",
-                                "hideFrom": {
-                                    "legend": false,
-                                    "tooltip": false,
-                                    "viz": false
-                                },
-                                "insertNulls": false,
-                                "lineInterpolation": "smooth",
-                                "lineStyle": {
-                                    "fill": "solid"
-                                },
-                                "lineWidth": 3,
-                                "pointSize": 8,
-                                "scaleDistribution": {
-                                    "type": "linear"
-                                },
-                                "showPoints": "always",
-                                "spanNulls": true,
-                                "stacking": {
-                                    "group": "A",
-                                    "mode": "none"
-                                },
-                                "thresholdsStyle": {
-                                    "mode": "off"
-                                }
-                            },
-                            "mappings": [],
-                            "thresholds": {
-                                "mode": "absolute",
-                                "steps": [
-                                    {
-                                        "color": "green"
-                                    },
-                                    {
-                                        "color": "red",
-                                        "value": 80
-                                    }
-                                ]
-                            },
-                            "unit": "none"
-                        },
-                        "overrides": []
-                    },
-                    "gridPos": {
-                        "h": 12,
-                        "w": 17,
-                        "x": 7,
-                        "y": 34
-                    },
-                    "id": 12,
-                    "options": {
-                        "legend": {
-                            "calcs": [],
-                            "displayMode": "list",
-                            "placement": "bottom",
-                            "showLegend": true,
-                            "sortBy": "Name",
-                            "sortDesc": true
-                        },
-                        "tooltip": {
-                            "hideZeros": false,
-                            "mode": "multi",
-                            "sort": "none"
-                        },
-                        "xField": "Date"
-                    },
-                    "pluginVersion": "11.5.0",
-                    "targets": [
-                        {
-                            "columns": [
-                                {
-                                    "selector": "date",
-                                    "text": "Date",
-                                    "type": "number"
-                                },
-                                {
-                                    "selector": "impressions_count",
-                                    "text": "Impressions count",
-                                    "type": "number"
-                                },
-                                {
-                                    "selector": "clicks_count",
-                                    "text": "Clicks count",
-                                    "type": "number"
-                                }
-                            ],
-                            "datasource": {
-                                "type": "yesoreyeram-infinity-datasource",
-                                "uid": "infinity"
-                            },
-                            "filters": [],
-                            "format": "table",
-                            "global_query_id": "",
-                            "refId": "A",
-                            "root_selector": "",
-                            "source": "url",
-                            "type": "json",
-                            "url": "http://backend:8080/stats/campaigns/$campaign_id/daily",
-                            "url_options": {
-                                "data": "",
-                                "method": "GET"
-                            }
-                        }
-                    ],
-                    "title": "Daily clicks and impressions statistics",
-                    "transparent": true,
-                    "type": "trend"
-                },
-                {
-                    "datasource": {
-                        "type": "yesoreyeram-infinity-datasource",
-                        "uid": "infinity"
-                    },
-                    "fieldConfig": {
-                        "defaults": {
-                            "color": {
-                                "mode": "palette-classic"
-                            },
-                            "custom": {
-                                "hideFrom": {
-                                    "legend": false,
-                                    "tooltip": false,
-                                    "viz": false
-                                }
-                            },
-                            "mappings": []
-                        },
-                        "overrides": []
-                    },
-                    "gridPos": {
-                        "h": 12,
-                        "w": 7,
-                        "x": 0,
-                        "y": 46
-                    },
-                    "id": 13,
-                    "options": {
-                        "legend": {
-                            "displayMode": "list",
-                            "placement": "bottom",
-                            "showLegend": true
-                        },
-                        "pieType": "pie",
-                        "reduceOptions": {
-                            "calcs": ["lastNotNull"],
-                            "fields": "",
-                            "values": false
-                        },
-                        "tooltip": {
-                            "hideZeros": false,
-                            "mode": "single",
-                            "sort": "none"
-                        }
-                    },
-                    "pluginVersion": "11.5.0",
-                    "targets": [
-                        {
-                            "columns": [
-                                {
-                                    "selector": "spent_clicks",
-                                    "text": "Spent on clicks",
-                                    "type": "number"
-                                },
-                                {
-                                    "selector": "spent_impressions",
-                                    "text": "Spent on impressions",
-                                    "type": "number"
-                                }
-                            ],
-                            "datasource": {
-                                "type": "yesoreyeram-infinity-datasource",
-                                "uid": "infinity"
-                            },
-                            "filters": [],
-                            "format": "table",
-                            "global_query_id": "",
-                            "parser": "backend",
-                            "refId": "A",
-                            "root_selector": "",
-                            "source": "url",
-                            "type": "json",
-                            "url": "http://backend:8080/stats/campaigns/$campaign_id",
-                            "url_options": {
-                                "data": "",
-                                "method": "GET"
-                            }
-                        }
-                    ],
-                    "title": "Allocation of expenses",
-                    "transparent": true,
-                    "type": "piechart"
-                },
-                {
-                    "datasource": {
-                        "type": "yesoreyeram-infinity-datasource",
-                        "uid": "infinity"
-                    },
-                    "fieldConfig": {
-                        "defaults": {
-                            "color": {
-                                "mode": "palette-classic"
-                            },
-                            "custom": {
-                                "axisBorderShow": true,
-                                "axisCenteredZero": false,
-                                "axisColorMode": "text",
-                                "axisLabel": "",
-                                "axisPlacement": "right",
-                                "barAlignment": 0,
-                                "barWidthFactor": 0.6,
-                                "drawStyle": "line",
-                                "fillOpacity": 6,
-                                "gradientMode": "none",
-                                "hideFrom": {
-                                    "legend": false,
-                                    "tooltip": false,
-                                    "viz": false
-                                },
-                                "insertNulls": false,
-                                "lineInterpolation": "smooth",
-                                "lineStyle": {
-                                    "fill": "solid"
-                                },
-                                "lineWidth": 2,
-                                "pointSize": 7,
-                                "scaleDistribution": {
-                                    "type": "linear"
-                                },
-                                "showPoints": "always",
-                                "spanNulls": true,
-                                "stacking": {
-                                    "group": "A",
-                                    "mode": "none"
-                                },
-                                "thresholdsStyle": {
-                                    "mode": "off"
-                                }
-                            },
-                            "mappings": [],
-                            "thresholds": {
-                                "mode": "absolute",
-                                "steps": [
-                                    {
-                                        "color": "green"
-                                    },
-                                    {
-                                        "color": "red",
-                                        "value": 80
-                                    }
-                                ]
-                            },
-                            "unit": "none"
-                        },
-                        "overrides": []
-                    },
-                    "gridPos": {
-                        "h": 12,
-                        "w": 17,
-                        "x": 7,
-                        "y": 46
-                    },
-                    "id": 14,
-                    "options": {
-                        "legend": {
-                            "calcs": [],
-                            "displayMode": "list",
-                            "placement": "bottom",
-                            "showLegend": false,
-                            "sortBy": "Name",
-                            "sortDesc": false
-                        },
-                        "tooltip": {
-                            "hideZeros": false,
-                            "mode": "multi",
-                            "sort": "none"
-                        },
-                        "xField": "Date"
-                    },
-                    "pluginVersion": "11.5.0",
-                    "targets": [
-                        {
-                            "columns": [
-                                {
-                                    "selector": "date",
-                                    "text": "Date",
-                                    "type": "number"
-                                },
-                                {
-                                    "selector": "spent_clicks",
-                                    "text": "Spent on clicks",
-                                    "type": "number"
-                                },
-                                {
-                                    "selector": "spent_impressions",
-                                    "text": "Spent on impressions",
-                                    "type": "number"
-                                },
-                                {
-                                    "selector": "spent_total",
-                                    "text": "Spent total",
-                                    "type": "number"
-                                }
-                            ],
-                            "datasource": {
-                                "type": "yesoreyeram-infinity-datasource",
-                                "uid": "infinity"
-                            },
-                            "filters": [],
-                            "format": "table",
-                            "global_query_id": "",
-                            "parser": "backend",
-                            "refId": "A",
-                            "root_selector": "",
-                            "source": "url",
-                            "type": "json",
-                            "url": "http://backend:8080/stats/campaigns/$campaign_id/daily",
-                            "url_options": {
-                                "data": "",
-                                "method": "GET"
-                            }
-                        }
-                    ],
-                    "title": "Daily expense statistics",
-                    "transparent": true,
-                    "type": "trend"
-                },
-                {
-                    "datasource": {
-                        "type": "yesoreyeram-infinity-datasource",
-                        "uid": "infinity"
-                    },
-                    "fieldConfig": {
-                        "defaults": {
-                            "color": {
-                                "mode": "palette-classic"
-                            },
-                            "custom": {
-                                "axisBorderShow": true,
-                                "axisCenteredZero": false,
-                                "axisColorMode": "text",
-                                "axisLabel": "",
-                                "axisPlacement": "right",
-                                "axisSoftMax": 100,
-                                "barAlignment": 0,
-                                "barWidthFactor": 0.6,
-                                "drawStyle": "line",
-                                "fillOpacity": 6,
-                                "gradientMode": "none",
-                                "hideFrom": {
-                                    "legend": false,
-                                    "tooltip": false,
-                                    "viz": false
-                                },
-                                "insertNulls": false,
-                                "lineInterpolation": "smooth",
-                                "lineStyle": {
-                                    "fill": "solid"
-                                },
-                                "lineWidth": 3,
-                                "pointSize": 8,
-                                "scaleDistribution": {
-                                    "type": "linear"
-                                },
-                                "showPoints": "always",
-                                "spanNulls": true,
-                                "stacking": {
-                                    "group": "A",
-                                    "mode": "none"
-                                },
-                                "thresholdsStyle": {
-                                    "mode": "off"
-                                }
-                            },
-                            "mappings": [],
-                            "thresholds": {
-                                "mode": "absolute",
-                                "steps": [
-                                    {
-                                        "color": "green"
-                                    }
-                                ]
-                            },
-                            "unit": "none"
-                        },
-                        "overrides": []
-                    },
-                    "gridPos": {
-                        "h": 8,
-                        "w": 24,
-                        "x": 0,
-                        "y": 58
-                    },
-                    "id": 15,
-                    "options": {
-                        "legend": {
-                            "calcs": [],
-                            "displayMode": "list",
-                            "placement": "bottom",
-                            "showLegend": true,
-                            "sortBy": "Name",
-                            "sortDesc": false
-                        },
-                        "tooltip": {
-                            "hideZeros": false,
-                            "mode": "multi",
-                            "sort": "none"
-                        },
-                        "xField": "Date"
-                    },
-                    "pluginVersion": "11.5.0",
-                    "targets": [
-                        {
-                            "columns": [
-                                {
-                                    "selector": "date",
-                                    "text": "Date",
-                                    "type": "number"
-                                },
-                                {
-                                    "selector": "conversion",
-                                    "text": "Conversion, %",
-                                    "type": "number"
-                                }
-                            ],
-                            "datasource": {
-                                "type": "yesoreyeram-infinity-datasource",
-                                "uid": "infinity"
-                            },
-                            "filters": [],
-                            "format": "table",
-                            "global_query_id": "",
-                            "parser": "backend",
-                            "refId": "A",
-                            "root_selector": "",
-                            "source": "url",
-                            "type": "json",
-                            "url": "http://backend:8080/stats/campaigns/$campaign_id/daily",
-                            "url_options": {
-                                "data": "",
-                                "method": "GET"
-                            }
-                        }
-                    ],
-                    "title": "Daily conversion statistics",
-                    "transparent": true,
-                    "type": "trend"
-                }
-            ],
+            "panels": [],
             "repeat": "campaign_id",
             "title": "Campaign: $campaign_id",
             "type": "row"
+        },
+        {
+            "datasource": {
+                "type": "yesoreyeram-infinity-datasource",
+                "uid": "infinity"
+            },
+            "description": "Statistics for all time",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "thresholds"
+                    },
+                    "custom": {
+                        "align": "center",
+                        "cellOptions": {
+                            "type": "auto",
+                            "wrapText": true
+                        },
+                        "filterable": false,
+                        "inspect": false
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "percentage",
+                        "steps": [
+                            {
+                                "color": "green"
+                            }
+                        ]
+                    }
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 12,
+                "w": 7,
+                "x": 0,
+                "y": 34
+            },
+            "id": 11,
+            "options": {
+                "cellHeight": "md",
+                "footer": {
+                    "countRows": false,
+                    "fields": "",
+                    "reducer": ["sum"],
+                    "show": false
+                },
+                "frameIndex": 1,
+                "showHeader": true
+            },
+            "pluginVersion": "12.0.2",
+            "targets": [
+                {
+                    "columns": [
+                        {
+                            "selector": "impressions_count",
+                            "text": "Impressions count",
+                            "type": "number"
+                        },
+                        {
+                            "selector": "clicks_count",
+                            "text": "Clicks count",
+                            "type": "number"
+                        },
+                        {
+                            "selector": "spent_impressions",
+                            "text": "Spent on impressions",
+                            "type": "number"
+                        },
+                        {
+                            "selector": "spent_clicks",
+                            "text": "Spent on clicks",
+                            "type": "number"
+                        },
+                        {
+                            "selector": "spent_total",
+                            "text": "Spent total",
+                            "type": "number"
+                        },
+                        {
+                            "selector": "conversion",
+                            "text": " ‎Conversion, %",
+                            "type": "number"
+                        }
+                    ],
+                    "computed_columns": [],
+                    "datasource": {
+                        "type": "yesoreyeram-infinity-datasource",
+                        "uid": "infinity"
+                    },
+                    "filters": [],
+                    "format": "as-is",
+                    "global_query_id": "",
+                    "hide": false,
+                    "pagination_mode": "none",
+                    "parser": "backend",
+                    "refId": "Get stats",
+                    "root_selector": "",
+                    "source": "url",
+                    "summarizeAlias": "",
+                    "type": "json",
+                    "url": "/stats/campaigns/$campaign_id",
+                    "url_options": {
+                        "data": "",
+                        "method": "GET",
+                        "params": []
+                    }
+                }
+            ],
+            "title": "Overall campaign statistics",
+            "transformations": [
+                {
+                    "id": "transpose",
+                    "options": {
+                        "firstFieldName": "Metric"
+                    }
+                },
+                {
+                    "id": "sortBy",
+                    "options": {
+                        "fields": {},
+                        "sort": [
+                            {
+                                "desc": true,
+                                "field": "Field"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "id": "renameByRegex",
+                    "options": {
+                        "regex": "1",
+                        "renamePattern": "Value"
+                    }
+                }
+            ],
+            "transparent": true,
+            "type": "table"
+        },
+        {
+            "datasource": {
+                "type": "yesoreyeram-infinity-datasource",
+                "uid": "infinity"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "axisBorderShow": true,
+                        "axisCenteredZero": false,
+                        "axisColorMode": "text",
+                        "axisLabel": "Amount",
+                        "axisPlacement": "right",
+                        "barAlignment": 0,
+                        "barWidthFactor": 0.6,
+                        "drawStyle": "line",
+                        "fillOpacity": 8,
+                        "gradientMode": "opacity",
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        },
+                        "insertNulls": false,
+                        "lineInterpolation": "smooth",
+                        "lineStyle": {
+                            "fill": "solid"
+                        },
+                        "lineWidth": 3,
+                        "pointSize": 8,
+                        "scaleDistribution": {
+                            "type": "linear"
+                        },
+                        "showPoints": "always",
+                        "spanNulls": true,
+                        "stacking": {
+                            "group": "A",
+                            "mode": "none"
+                        },
+                        "thresholdsStyle": {
+                            "mode": "off"
+                        }
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green"
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    },
+                    "unit": "none"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 12,
+                "w": 17,
+                "x": 7,
+                "y": 34
+            },
+            "id": 12,
+            "options": {
+                "legend": {
+                    "calcs": [],
+                    "displayMode": "list",
+                    "placement": "bottom",
+                    "showLegend": true,
+                    "sortBy": "Name",
+                    "sortDesc": true
+                },
+                "tooltip": {
+                    "hideZeros": false,
+                    "mode": "multi",
+                    "sort": "none"
+                },
+                "xField": "Date"
+            },
+            "pluginVersion": "12.0.2",
+            "targets": [
+                {
+                    "columns": [
+                        {
+                            "selector": "date",
+                            "text": "Date",
+                            "type": "number"
+                        },
+                        {
+                            "selector": "impressions_count",
+                            "text": "Impressions count",
+                            "type": "number"
+                        },
+                        {
+                            "selector": "clicks_count",
+                            "text": "Clicks count",
+                            "type": "number"
+                        }
+                    ],
+                    "datasource": {
+                        "type": "yesoreyeram-infinity-datasource",
+                        "uid": "infinity"
+                    },
+                    "filters": [],
+                    "format": "table",
+                    "global_query_id": "",
+                    "refId": "A",
+                    "root_selector": "",
+                    "source": "url",
+                    "type": "json",
+                    "url": "/stats/campaigns/$campaign_id/daily",
+                    "url_options": {
+                        "data": "",
+                        "method": "GET"
+                    }
+                }
+            ],
+            "title": "Daily clicks and impressions statistics",
+            "transparent": true,
+            "type": "trend"
+        },
+        {
+            "datasource": {
+                "type": "yesoreyeram-infinity-datasource",
+                "uid": "infinity"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        }
+                    },
+                    "mappings": []
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 12,
+                "w": 7,
+                "x": 0,
+                "y": 46
+            },
+            "id": 13,
+            "options": {
+                "legend": {
+                    "displayMode": "list",
+                    "placement": "bottom",
+                    "showLegend": true
+                },
+                "pieType": "pie",
+                "reduceOptions": {
+                    "calcs": ["lastNotNull"],
+                    "fields": "",
+                    "values": false
+                },
+                "tooltip": {
+                    "hideZeros": false,
+                    "mode": "single",
+                    "sort": "none"
+                }
+            },
+            "pluginVersion": "12.0.2",
+            "targets": [
+                {
+                    "columns": [
+                        {
+                            "selector": "spent_clicks",
+                            "text": "Spent on clicks",
+                            "type": "number"
+                        },
+                        {
+                            "selector": "spent_impressions",
+                            "text": "Spent on impressions",
+                            "type": "number"
+                        }
+                    ],
+                    "datasource": {
+                        "type": "yesoreyeram-infinity-datasource",
+                        "uid": "infinity"
+                    },
+                    "filters": [],
+                    "format": "table",
+                    "global_query_id": "",
+                    "parser": "backend",
+                    "refId": "A",
+                    "root_selector": "",
+                    "source": "url",
+                    "type": "json",
+                    "url": "/stats/campaigns/$campaign_id",
+                    "url_options": {
+                        "data": "",
+                        "method": "GET"
+                    }
+                }
+            ],
+            "title": "Allocation of expenses",
+            "transparent": true,
+            "type": "piechart"
+        },
+        {
+            "datasource": {
+                "type": "yesoreyeram-infinity-datasource",
+                "uid": "infinity"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "axisBorderShow": true,
+                        "axisCenteredZero": false,
+                        "axisColorMode": "text",
+                        "axisLabel": "",
+                        "axisPlacement": "right",
+                        "barAlignment": 0,
+                        "barWidthFactor": 0.6,
+                        "drawStyle": "line",
+                        "fillOpacity": 6,
+                        "gradientMode": "none",
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        },
+                        "insertNulls": false,
+                        "lineInterpolation": "smooth",
+                        "lineStyle": {
+                            "fill": "solid"
+                        },
+                        "lineWidth": 2,
+                        "pointSize": 7,
+                        "scaleDistribution": {
+                            "type": "linear"
+                        },
+                        "showPoints": "always",
+                        "spanNulls": true,
+                        "stacking": {
+                            "group": "A",
+                            "mode": "none"
+                        },
+                        "thresholdsStyle": {
+                            "mode": "off"
+                        }
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green"
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    },
+                    "unit": "none"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 12,
+                "w": 17,
+                "x": 7,
+                "y": 46
+            },
+            "id": 14,
+            "options": {
+                "legend": {
+                    "calcs": [],
+                    "displayMode": "list",
+                    "placement": "bottom",
+                    "showLegend": false,
+                    "sortBy": "Name",
+                    "sortDesc": false
+                },
+                "tooltip": {
+                    "hideZeros": false,
+                    "mode": "multi",
+                    "sort": "none"
+                },
+                "xField": "Date"
+            },
+            "pluginVersion": "12.0.2",
+            "targets": [
+                {
+                    "columns": [
+                        {
+                            "selector": "date",
+                            "text": "Date",
+                            "type": "number"
+                        },
+                        {
+                            "selector": "spent_clicks",
+                            "text": "Spent on clicks",
+                            "type": "number"
+                        },
+                        {
+                            "selector": "spent_impressions",
+                            "text": "Spent on impressions",
+                            "type": "number"
+                        },
+                        {
+                            "selector": "spent_total",
+                            "text": "Spent total",
+                            "type": "number"
+                        }
+                    ],
+                    "datasource": {
+                        "type": "yesoreyeram-infinity-datasource",
+                        "uid": "infinity"
+                    },
+                    "filters": [],
+                    "format": "table",
+                    "global_query_id": "",
+                    "parser": "backend",
+                    "refId": "A",
+                    "root_selector": "",
+                    "source": "url",
+                    "type": "json",
+                    "url": "/stats/campaigns/$campaign_id/daily",
+                    "url_options": {
+                        "data": "",
+                        "method": "GET"
+                    }
+                }
+            ],
+            "title": "Daily expense statistics",
+            "transparent": true,
+            "type": "trend"
+        },
+        {
+            "datasource": {
+                "type": "yesoreyeram-infinity-datasource",
+                "uid": "infinity"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "axisBorderShow": true,
+                        "axisCenteredZero": false,
+                        "axisColorMode": "text",
+                        "axisLabel": "",
+                        "axisPlacement": "right",
+                        "axisSoftMax": 100,
+                        "barAlignment": 0,
+                        "barWidthFactor": 0.6,
+                        "drawStyle": "line",
+                        "fillOpacity": 6,
+                        "gradientMode": "none",
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        },
+                        "insertNulls": false,
+                        "lineInterpolation": "smooth",
+                        "lineStyle": {
+                            "fill": "solid"
+                        },
+                        "lineWidth": 3,
+                        "pointSize": 8,
+                        "scaleDistribution": {
+                            "type": "linear"
+                        },
+                        "showPoints": "always",
+                        "spanNulls": true,
+                        "stacking": {
+                            "group": "A",
+                            "mode": "none"
+                        },
+                        "thresholdsStyle": {
+                            "mode": "off"
+                        }
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green"
+                            }
+                        ]
+                    },
+                    "unit": "none"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 8,
+                "w": 24,
+                "x": 0,
+                "y": 58
+            },
+            "id": 15,
+            "options": {
+                "legend": {
+                    "calcs": [],
+                    "displayMode": "list",
+                    "placement": "bottom",
+                    "showLegend": true,
+                    "sortBy": "Name",
+                    "sortDesc": false
+                },
+                "tooltip": {
+                    "hideZeros": false,
+                    "mode": "multi",
+                    "sort": "none"
+                },
+                "xField": "Date"
+            },
+            "pluginVersion": "12.0.2",
+            "targets": [
+                {
+                    "columns": [
+                        {
+                            "selector": "date",
+                            "text": "Date",
+                            "type": "number"
+                        },
+                        {
+                            "selector": "conversion",
+                            "text": "Conversion, %",
+                            "type": "number"
+                        }
+                    ],
+                    "datasource": {
+                        "type": "yesoreyeram-infinity-datasource",
+                        "uid": "infinity"
+                    },
+                    "filters": [],
+                    "format": "table",
+                    "global_query_id": "",
+                    "parser": "backend",
+                    "refId": "A",
+                    "root_selector": "",
+                    "source": "url",
+                    "type": "json",
+                    "url": "/stats/campaigns/$campaign_id/daily",
+                    "url_options": {
+                        "data": "",
+                        "method": "GET"
+                    }
+                }
+            ],
+            "title": "Daily conversion statistics",
+            "transparent": true,
+            "type": "trend"
         }
     ],
     "preload": false,
-    "refresh": "",
-    "schemaVersion": 40,
+    "refresh": "5s",
+    "schemaVersion": 41,
     "tags": ["adnova"],
     "templating": {
         "list": [
@@ -1282,7 +1277,7 @@
                     "text": "",
                     "value": ""
                 },
-                "description": "Enter your advertiser UUID",
+                "description": "Enter advertiser UUID",
                 "label": "Advertiser UUID",
                 "name": "advertiser_id",
                 "options": [
@@ -1329,7 +1324,7 @@
                         "root_selector": "",
                         "source": "url",
                         "type": "json",
-                        "url": "http://backend:8080/advertisers/$advertiser_id/campaigns",
+                        "url": "/advertisers/$advertiser_id/campaigns",
                         "url_options": {
                             "data": "",
                             "method": "GET"
@@ -1349,11 +1344,12 @@
         "to": "now"
     },
     "timepicker": {
+        "hidden": true,
         "refresh_intervals": ["5s"]
     },
-    "timezone": "utc",
-    "title": "Statistics",
-    "uid": "adnova-statisticss",
-    "version": 16,
+    "timezone": "browser",
+    "title": "Advertiser Statistics",
+    "uid": "adnova-advertiser-statistics",
+    "version": 2,
     "weekStart": "monday"
 }
