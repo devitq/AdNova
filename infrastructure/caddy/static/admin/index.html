@@ -34,36 +34,19 @@
                     {
                         name: "Gitea Repository",
                         link: "https://git.itqdev.xyz/PROD.2025/AdNova",
-                        description: "Main monorepo."
+                        description: "Main monorepo on Gitea."
                     },
                     {
-                        name: "Jira Project Board",
-                        link: "https://jira.example.com/project",
-                        description: "Task tracking and project management."
+                        name: "Rest API Docs",
+                        link: "https://adnova.itqdev.xyz/docs",
+                        description: "Rest API Docs on Swagger."
                     },
                     {
-                        name: "Jenkins CI/CD",
-                        link: "https://jenkins.example.com",
-                        username: "ci_admin",
-                        password: "jenkins_pass",
-                        description: "Continuous Integration and Deployment pipelines."
-                    }
-                ]
-            },
-            {
-                category: "Cloud Platforms",
-                items: [
-                    {
-                        name: "AWS Console",
-                        link: "https://console.aws.amazon.com",
-                        username: "aws_root",
-                        password: "aws_super_secret",
-                        description: "Access to AWS cloud services."
-                    },
-                    {
-                        name: "Google Cloud Console",
-                        link: "https://console.cloud.google.com",
-                        description: "Access to Google Cloud Platform services."
+                        name: "Django Admin",
+                        link: "https://adnova.itqdev.xyz/admin/",
+                        username: "admin",
+                        password: "admin",
+                        description: "Django Admin panel."
                     }
                 ]
             },
@@ -72,20 +55,48 @@
                 items: [
                     {
                         name: "Grafana",
-                        link: "https://grafana.example.com",
+                        link: "https://grafana.adnova.itqdev.xyz",
                         username: "admin",
                         password: "proooooood",
                         description: "Real-time system metrics and dashboards."
                     },
                     {
-                        name: "Kibana Logs",
-                        link: "https://kibana.example.com",
-                        description: "Centralized log management and analysis."
+                        name: "Prometheus",
+                        link: "https://prometheus.adnova.itqdev.xyz",
+                        username: "admin",
+                        password: "kit2025_observability",
+                        description: "Real-time system metrics and scrape targets."
+                    },
+                    {
+                        name: "Zipkin",
+                        link: "https://zipkin.adnova.itqdev.xyz",
+                        username: "admin",
+                        password: "kit2025_observability",
+                        description: "Latest traces from production."
+                    },
+                    {
+                        name: "Django Silk",
+                        link: "https://adnova.itqdev.xyz/silk/",
+                        username: "admin",
+                        password: "admin",
+                        description: "App profiles and performance info in production, need to authenticate first as staff in Django Admin."
                     },
                     {
                         name: "Adnova Alerts",
                         link: "https://t.me/adnova_alerts",
                         description: "Telegram channel where alerts are posted."
+                    },
+                    {
+                        name: "Healthcheck",
+                        link: "https://adnova.itqdev.xyz/health",
+                        username: "admin",
+                        password: "kit2025_observability",
+                        description: "Summary of integration status between services."
+                    },
+                    {
+                        name: "Uptime-Kuma Dashboard",
+                        link: "https://status.adnova.itqdev.xyz",
+                        description: "External monitoring of AdNova."
                     }
                 ]
             },
@@ -93,18 +104,11 @@
                 category: "Databases",
                 items: [
                     {
-                        name: "Production DB Admin",
-                        link: "https://dbadmin.example.com/prod",
-                        username: "db_prod_admin",
-                        password: "db_prod_secure_pass",
-                        description: "Direct access to production database."
-                    },
-                    {
-                        name: "Staging DB Admin",
-                        link: "https://dbadmin.example.com/staging",
-                        username: "db_stage_user",
-                        password: "db_stage_pass",
-                        description: "Access to staging database for testing."
+                        name: "Pgadmin",
+                        link: "https://pgadmin.adnova.itqdev.xyz",
+                        username: "admin@mail.com",
+                        password: "password",
+                        description: "Access to production database."
                     }
                 ]
             }
