@@ -32,7 +32,7 @@ Table Report:
 
 #### Warning
 
-Please note that containers will use ports from 13241 to 13245 and 8080, so there is must be no listeners on this ports range.
+Please note that containers will use ports from 13240 to 13248, so there is must be no listeners on this ports range.
 
 #### Configure
 
@@ -66,7 +66,7 @@ docker compose up -d --build
 
 #### Structure
 
-- **backend**: [127.0.0.1:8080](http://127.0.0.1:8080) -> `8080`
+- **backend**: [127.0.0.1:13240](http://127.0.0.1:13240) -> `8080`
   - Depends on: `postgres`, `redis`, `minio`, `backend-initdb`
 - **backend-initdb**
   - Depends on: `postgres`, `redis`, `minio`
@@ -139,7 +139,7 @@ You may say: "For what we need a lot of complex technologies for now". I have an
 
 ### Restful API
 
-API Base endpoint when deployed with default docker compose: [127.0.0.1:8080](http://127.0.0.1:8080), also see [docs](#openapi-docs).
+API Base endpoint when deployed with default docker compose: [127.0.0.1:13240](http://127.0.0.1:13240), also see [docs](#openapi-docs).
 
 ### Admin panel
 
@@ -234,9 +234,9 @@ Moderation implemented via report system. Client goes to `/report` ([see OpenAPI
 Also admin user (whose credentials specified lower) can add new staff members and even create a specified group for them (this is built-in django capabilities).
 Report has four states: Sent, Under review, Took action and Skipped. Admin panel has filtration by states and by flagged by llm status.
 
-Admin panel when deployed with docker compose (by default): [localhost:8080/admin/](http://localhost:8080/admin/)
+Admin panel when deployed with docker compose (by default): [localhost:13240/admin/](http://localhost:13240/admin/)
 
-Reports list when deployed with docker compose (requires authentication): [localhost:8080/admin/campaign/campaignreport/](http://localhost:8080/admin/campaign/campaignreport/)
+Reports list when deployed with docker compose (requires authentication): [localhost:13240/admin/campaign/campaignreport/](http://localhost:13240/admin/campaign/campaignreport/)
 
 Default username: `admin`
 
@@ -276,11 +276,11 @@ Demonstration:
 
 ### OpenAPI docs
 
-When deployed with default docker compose: [localhost:8080/docs](http://localhost:8080/docs)
+When deployed with default docker compose: [localhost:13240/docs](http://localhost:13240/docs)
 
 ### Healthcheck endpoint
 
-When deployed with default docker compose: [localhost:8080/health](http://localhost:8080/health)
+When deployed with default docker compose: [localhost:13240/health](http://localhost:13240/health)
 
 Lets developers easily understand and identify problem and users check services health.
 
