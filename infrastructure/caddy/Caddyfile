@@ -5,8 +5,14 @@
 }
 
 adnova.itqdev.xyz {
-	handle_path /health/* {
+	@healthPath path /health /health/*
+    handle @healthPath {
         import basic-auth
+        reverse_proxy http://backend:8080
+    }
+
+    handle_path /static/* {
+        reverse_proxy http://backend-staticfiles:80
     }
 
 	reverse_proxy http://backend:8080
@@ -16,6 +22,7 @@ admin.adnova.itqdev.xyz {
     import basic-auth
 
 	root * /var/www/admin
+	file_server
 }
 
 loadtest.adnova.itqdev.xyz {
@@ -26,4 +33,24 @@ loadtest.adnova.itqdev.xyz {
 
 grafana.adnova.itqdev.xyz {
 	reverse_proxy http://grafana:3000
+}
+
+pgadmin.adnova.itqdev.xyz {
+	reverse_proxy http://pgadmin:80
+}
+
+zipkin.adnova.itqdev.xyz {
+	import basic-auth
+
+	reverse_proxy http://zipkin:9411
+}
+
+prometheus.adnova.itqdev.xyz {
+	import basic-auth
+
+	reverse_proxy http://prometheus:9090
+}
+
+minio.adnova.itqdev.xyz {
+	reverse_proxy http://minio:9000
 }
