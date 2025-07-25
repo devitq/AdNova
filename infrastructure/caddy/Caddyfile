@@ -1,0 +1,29 @@
+(basic-auth) {
+	basic_auth {
+		admin $2a$14$2zQilpLka2h8Sn1mmOLAAezwDN8Zy8Ta36WECk4qt5MTn3CWksR0m
+	}
+}
+
+adnova.itqdev.xyz {
+	handle_path /health/* {
+        import basic-auth
+    }
+
+	reverse_proxy http://backend:8080
+}
+
+admin.adnova.itqdev.xyz {
+    import basic-auth
+
+	root * /var/www/admin
+}
+
+loadtest.adnova.itqdev.xyz {
+    import basic-auth
+
+    reverse_proxy http://loadtest:5001
+}
+
+grafana.adnova.itqdev.xyz {
+	reverse_proxy http://grafana:3000
+}

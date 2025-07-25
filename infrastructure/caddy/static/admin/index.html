@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdNova Admin Resources</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    </style>
+</head>
+
+<body class="bg-slate-900 text-gray-300">
+    <div class="container mx-auto p-4 md:p-8">
+        <header class="mb-8">
+            <h1 class="text-4xl font-bold text-white tracking-tight">AdNova Admin Resources Dashboard</h1>
+            <p class="text-indigo-400">Quick access to essential tools and credentials.</p>
+        </header>
+
+        <div id="resources-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        </div>
+    </div>
+
+    <script>
+        const resources = [
+            {
+                category: "Development Tools",
+                items: [
+                    {
+                        name: "Gitea Repository",
+                        link: "https://git.itqdev.xyz/PROD.2025/AdNova",
+                        description: "Main monorepo."
+                    },
+                    {
+                        name: "Jira Project Board",
+                        link: "https://jira.example.com/project",
+                        description: "Task tracking and project management."
+                    },
+                    {
+                        name: "Jenkins CI/CD",
+                        link: "https://jenkins.example.com",
+                        username: "ci_admin",
+                        password: "jenkins_pass",
+                        description: "Continuous Integration and Deployment pipelines."
+                    }
+                ]
+            },
+            {
+                category: "Cloud Platforms",
+                items: [
+                    {
+                        name: "AWS Console",
+                        link: "https://console.aws.amazon.com",
+                        username: "aws_root",
+                        password: "aws_super_secret",
+                        description: "Access to AWS cloud services."
+                    },
+                    {
+                        name: "Google Cloud Console",
+                        link: "https://console.cloud.google.com",
+                        description: "Access to Google Cloud Platform services."
+                    }
+                ]
+            },
+            {
+                category: "Monitoring",
+                items: [
+                    {
+                        name: "Grafana",
+                        link: "https://grafana.example.com",
+                        username: "admin",
+                        password: "proooooood",
+                        description: "Real-time system metrics and dashboards."
+                    },
+                    {
+                        name: "Kibana Logs",
+                        link: "https://kibana.example.com",
+                        description: "Centralized log management and analysis."
+                    },
+                    {
+                        name: "Adnova Alerts",
+                        link: "https://t.me/adnova_alerts",
+                        description: "Telegram channel where alerts are posted."
+                    }
+                ]
+            },
+            {
+                category: "Databases",
+                items: [
+                    {
+                        name: "Production DB Admin",
+                        link: "https://dbadmin.example.com/prod",
+                        username: "db_prod_admin",
+                        password: "db_prod_secure_pass",
+                        description: "Direct access to production database."
+                    },
+                    {
+                        name: "Staging DB Admin",
+                        link: "https://dbadmin.example.com/staging",
+                        username: "db_stage_user",
+                        password: "db_stage_pass",
+                        description: "Access to staging database for testing."
+                    }
+                ]
+            }
+        ]
+
+        function copyToClipboard ( text )
+        {
+            const textarea = document.createElement( 'textarea' )
+            textarea.value = text
+            document.body.appendChild( textarea )
+            textarea.select()
+            document.execCommand( 'copy' )
+            document.body.removeChild( textarea )
+            alert( 'Copied to clipboard!' )
+        }
+
+        function renderResources ()
+        {
+            const container = document.getElementById( 'resources-container' )
+            container.innerHTML = ''
+
+            resources.forEach( categoryData =>
+            {
+                const categorySection = document.createElement( 'div' )
+                categorySection.className = 'col-span-full mb-4'
+                categorySection.innerHTML = `
+                    <h2 class="text-2xl font-semibold text-white mb-4 border-b border-slate-700 pb-2">
+                        ${ categoryData.category }
+                    </h2>
+                `
+                container.appendChild( categorySection )
+
+                categoryData.items.forEach( resource =>
+                {
+                    const resourceCard = document.createElement( 'div' )
+                    resourceCard.className = 'bg-slate-800 rounded-lg p-6 shadow-lg flex flex-col justify-between'
+
+                    let credentialsHtml = ''
+                    if ( resource.username || resource.password )
+                    {
+                        credentialsHtml = `
+                            <div class="mt-4 pt-4 border-t border-slate-700">
+                                <h4 class="text-sm font-medium text-slate-400 mb-2">Credentials:</h4>
+                                ${ resource.username ? `
+                                    <div class="flex items-center text-sm mb-2">
+                                        <span class="font-semibold text-slate-300 w-24">Username:</span>
+                                        <span id="user-${ resource.name.replace( /\s/g, '' ) }" class="flex-grow text-white font-mono mr-2">${ resource.username }</span>
+                                        <button class="copy-btn bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs px-2 py-1 rounded-md" data-text="${ resource.username }">Copy</button>
+                                    </div>` : '' }
+                                ${ resource.password ? `
+                                    <div class="flex items-center text-sm">
+                                        <span class="font-semibold text-slate-300 w-24">Password:</span>
+                                        <span id="pass-${ resource.name.replace( /\s/g, '' ) }" class="flex-grow text-white font-mono mr-2">${ resource.password }</span>
+                                        <button class="copy-btn bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs px-2 py-1 rounded-md" data-text="${ resource.password }">Copy</button>
+                                    </div>` : '' }
+                            </div>
+                        `
+                    }
+
+                    resourceCard.innerHTML = `
+                        <div>
+                            <h3 class="text-xl font-semibold text-white mb-2">${ resource.name }</h3>
+                            <p class="text-sm text-slate-400 mb-4">${ resource.description || 'No description provided.' }</p>
+                        </div>
+                        <div class="mt-auto">
+                            <a href="${ resource.link }" target="_blank" class="inline-flex items-center justify-center bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-300 text-sm">
+                                Go to Resource
+                                <svg class="ml-2 -mr-1 w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"></path><path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z"></path></svg>
+                            </a>
+                            ${ credentialsHtml }
+                        </div>
+                    `
+                    container.appendChild( resourceCard )
+                } )
+            } )
+
+            document.querySelectorAll( '.copy-btn' ).forEach( button =>
+            {
+                button.addEventListener( 'click', ( event ) =>
+                {
+                    const textToCopy = event.target.dataset.text
+                    copyToClipboard( textToCopy )
+                } )
+            } )
+        }
+
+        window.onload = renderResources;
+    </script>
+</body>
+
+</html>

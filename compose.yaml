@@ -189,6 +189,7 @@ services:
       - type: volume
         source: redis_data
         target: /data
+        read_only: false
 
   redis-exporter:
     image: docker.io/oliver006/redis_exporter:v1.74.0-alpine
@@ -226,14 +227,12 @@ services:
       retries: 5
     oom_kill_disable: true
     restart: unless-stopped
-    secrets:
-      - source: postgres_password
-        target: /run/secrets/postgres_password
     shm_size: 128mb
     volumes:
       - type: volume
         source: postgres_data
         target: /var/lib/postgresql/data
+        read_only: false
 
   postgres-exporter:
     image: quay.io/prometheuscommunity/postgres-exporter:v0.17.1
@@ -253,7 +252,7 @@ services:
     shm_size: 4mb
 
   pgadmin:
-    image: docker.io/dpage/pgadmin4:9.5
+    image: docker.io/dpage/pgadmin4:9.6
     configs:
       - source: pgadmin_servers_config
         target: /pgadmin4/servers.json
@@ -284,14 +283,12 @@ services:
     profiles:
       - observability
     restart: unless-stopped
-    secrets:
-      - source: pgadmin_password
-        target: /run/secrets/pgadmin_password
     shm_size: 4mb
     volumes:
       - type: volume
         source: pgadmin_data
         target: /var/lib/pgadmin
+        read_only: false
 
   grafana:
     image: docker.io/grafana/grafana-oss:12.0.2
@@ -321,12 +318,15 @@ services:
       - type: volume
         source: grafana_data
         target: /var/lib/grafana
+        read_only: false
       - type: bind
         source: ./infrastructure/grafana/provisioning
         target: /etc/grafana/provisioning
+        read_only: true
       - type: bind
         source: ./infrastructure/grafana/scripts
         target: /etc/grafana/scripts
+        read_only: true
 
   prometheus:
     image: docker.io/prom/prometheus:v3.5.0
@@ -356,6 +356,7 @@ services:
       - type: volume
         source: prometheus_data
         target: /prometheus
+        read_only: false
 
   minio:
     image: docker.io/minio/minio:RELEASE.2025-07-18T21-56-31Z
@@ -393,6 +394,7 @@ services:
       - type: volume
         source: minio_data
         target: /data
+        read_only: false
 
   zipkin:
     image: docker.io/openzipkin/zipkin:3
@@ -443,6 +445,48 @@ services:
     restart: unless-stopped
     shm_size: 4mb
 
+  proxy:
+    image: docker.io/caddy:2-alpine
+    configs:
+      - source: caddy_config
+        target: /etc/caddy/Caddyfile
+    ports:
+      - name: http
+        target: 80
+        published: 80
+        host_ip: 0.0.0.0
+        protocol: tcp
+        app_protocol: http
+      - name: https
+        target: 443
+        published: 443
+        host_ip: 0.0.0.0
+        protocol: tcp
+        app_protocol: http
+      - name: http3
+        target: 443
+        published: 443
+        host_ip: 0.0.0.0
+        protocol: udp
+        app_protocol: http
+    profiles:
+      - proxy
+    restart: unless-stopped
+    shm_size: 4mb
+    volumes:
+      - type: volume
+        source: caddy_data
+        target: /data
+        read_only: false
+      - type: volume
+        source: caddy_config
+        target: /config
+        read_only: false
+      - type: bind
+        source: ./infrastructure/caddy/static
+        target: /var/www
+        read_only: true
+
 volumes:
   redis_data:
   postgres_data:
@@ -450,6 +494,8 @@ volumes:
   grafana_data:
   prometheus_data:
   minio_data:
+  caddy_data:
+  caddy_config:
 
 configs:
   redis_config:
@@ -462,9 +508,5 @@ configs:
     file: ./infrastructure/grafana/grafana.ini
   prometheus_config:
     file: ./infrastructure/prometheus/prometheus.yaml
-
-secrets:
-  postgres_password:
-    file: ./infrastructure/postgres/password
-  pgadmin_password:
-    file: ./infrastructure/pgadmin/password
+  caddy_config:
+    file: ./infrastructure/caddy/Caddyfile
