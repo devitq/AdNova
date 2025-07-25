@@ -1,3 +1,7 @@
+{
+	metrics
+}
+
 (basic-auth) {
 	basic_auth {
 		admin $2a$14$2zQilpLka2h8Sn1mmOLAAezwDN8Zy8Ta36WECk4qt5MTn3CWksR0m
@@ -6,29 +10,29 @@
 
 adnova.itqdev.xyz {
 	@healthPath path /health /health/*
-    handle @healthPath {
-        import basic-auth
-        reverse_proxy http://backend:8080
-    }
+	handle @healthPath {
+		import basic-auth
+		reverse_proxy http://backend:8080
+	}
 
-    handle_path /static/* {
-        reverse_proxy http://backend-staticfiles:80
-    }
+	handle_path /static/* {
+		reverse_proxy http://backend-staticfiles:80
+	}
 
 	reverse_proxy http://backend:8080
 }
 
 admin.adnova.itqdev.xyz {
-    import basic-auth
+	import basic-auth
 
 	root * /var/www/admin
 	file_server
 }
 
 loadtest.adnova.itqdev.xyz {
-    import basic-auth
+	import basic-auth
 
-    reverse_proxy http://loadtest:5001
+	reverse_proxy http://loadtest:5001
 }
 
 grafana.adnova.itqdev.xyz {
