@@ -1,0 +1,768 @@
+{
+    "annotations": {
+        "list": [
+            {
+                "builtIn": 1,
+                "datasource": {
+                    "type": "grafana",
+                    "uid": "-- Grafana --"
+                },
+                "enable": true,
+                "hide": true,
+                "iconColor": "rgba(0, 211, 255, 1)",
+                "name": "Annotations & Alerts",
+                "type": "dashboard"
+            }
+        ]
+    },
+    "description": "A dashboard that monitors Celery.",
+    "editable": true,
+    "fiscalYearStartMonth": 0,
+    "graphTooltip": 0,
+    "id": 2,
+    "links": [
+        {
+            "tags": ["celery"],
+            "targetBlank": true,
+            "title": "Celery Dashboards",
+            "type": "dashboards"
+        }
+    ],
+    "liveNow": true,
+    "panels": [
+        {
+            "collapsed": false,
+            "gridPos": {
+                "h": 1,
+                "w": 24,
+                "x": 0,
+                "y": 0
+            },
+            "id": 1,
+            "panels": [],
+            "title": "Tasks",
+            "type": "row"
+        },
+        {
+            "datasource": {
+                "type": "datasource",
+                "uid": "-- Mixed --"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "custom": {
+                        "align": "auto",
+                        "cellOptions": {
+                            "type": "auto"
+                        },
+                        "inspect": false
+                    },
+                    "mappings": [],
+                    "noValue": 0,
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green"
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    },
+                    "unit": "short"
+                },
+                "overrides": [
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "Success Rate"
+                        },
+                        "properties": [
+                            {
+                                "id": "unit",
+                                "value": "percentunit"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "gridPos": {
+                "h": 8,
+                "w": 16,
+                "x": 0,
+                "y": 1
+            },
+            "id": 2,
+            "options": {
+                "cellHeight": "sm",
+                "footer": {
+                    "countRows": false,
+                    "enablePagination": true,
+                    "fields": "",
+                    "reducer": ["sum"],
+                    "show": false
+                },
+                "showHeader": true,
+                "sortBy": [
+                    {
+                        "desc": true,
+                        "displayName": "Succeeded"
+                    }
+                ]
+            },
+            "pluginVersion": "12.0.2",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "$datasource"
+                    },
+                    "expr": "sum (\n  round(\n    increase(\n      celery_task_succeeded_total{\n        job=\"$job\",\n        name=~\"$task\",\n        queue_name=~\"$queue_name\"\n      }[$__range]\n    )\n  )\n) by (name)\n/(sum (\n  round(\n    increase(\n      celery_task_succeeded_total{\n        job=\"$job\",\n        name=~\"$task\",\n        queue_name=~\"$queue_name\"\n      }[$__range]\n    )\n  )\n) by (name)\n+sum (\n  round(\n    increase(\n      celery_task_failed_total{\n        job=\"$job\",\n        name=~\"$task\",\n        queue_name=~\"$queue_name\"\n      }[$__range]\n    )\n  )\n) by (name)\n) > -1\n",
+                    "format": "table",
+                    "instant": true,
+                    "refId": "A"
+                },
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "$datasource"
+                    },
+                    "expr": "sum (\n  round(\n    increase(\n      celery_task_succeeded_total{\n        job=\"$job\",\n        name=~\"$task\",\n        queue_name=~\"$queue_name\"\n      }[$__range]\n    )\n  )\n) by (name) > 0\n",
+                    "format": "table",
+                    "instant": true,
+                    "refId": "B"
+                },
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "$datasource"
+                    },
+                    "expr": "sum (\n  round(\n    increase(\n      celery_task_failed_total{\n        job=\"$job\",\n        name=~\"$task\",\n        queue_name=~\"$queue_name\"\n      }[$__range]\n    )\n  )\n) by (name) > 0\n",
+                    "format": "table",
+                    "instant": true,
+                    "refId": "C"
+                },
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "$datasource"
+                    },
+                    "expr": "sum (\n  round(\n    increase(\n      celery_task_sent_total{\n        job=\"$job\",\n        name=~\"$task\",\n        queue_name=~\"$queue_name\"\n      }[$__range]\n    )\n  )\n) by (name) > 0\n",
+                    "format": "table",
+                    "instant": true,
+                    "refId": "D"
+                },
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "$datasource"
+                    },
+                    "expr": "sum (\n  round(\n    increase(\n      celery_task_received_total{\n        job=\"$job\",\n        name=~\"$task\",\n        queue_name=~\"$queue_name\"\n      }[$__range]\n    )\n  )\n) by (name) > 0\n",
+                    "format": "table",
+                    "instant": true,
+                    "refId": "E"
+                },
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "$datasource"
+                    },
+                    "expr": "sum (\n  round(\n    increase(\n      celery_task_rejected_total{\n        job=\"$job\",\n        name=~\"$task\",\n        queue_name=~\"$queue_name\"\n      }[$__range]\n    )\n  )\n) by (name) > 0\n",
+                    "format": "table",
+                    "instant": true,
+                    "refId": "F"
+                },
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "$datasource"
+                    },
+                    "expr": "sum (\n  round(\n    increase(\n      celery_task_retried_total{\n        job=\"$job\",\n        name=~\"$task\",\n        queue_name=~\"$queue_name\"\n      }[$__range]\n    )\n  )\n) by (name) > 0\n",
+                    "format": "table",
+                    "instant": true,
+                    "refId": "G"
+                },
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "$datasource"
+                    },
+                    "expr": "sum (\n  round(\n    increase(\n      celery_task_revoked_total{\n        job=\"$job\",\n        name=~\"$task\",\n        queue_name=~\"$queue_name\"\n      }[$__range]\n    )\n  )\n) by (name) > 0\n",
+                    "format": "table",
+                    "instant": true,
+                    "refId": "H"
+                }
+            ],
+            "title": "Task Stats",
+            "transformations": [
+                {
+                    "id": "merge"
+                },
+                {
+                    "id": "organize",
+                    "options": {
+                        "excludeByName": {
+                            "Time": true
+                        },
+                        "indexByName": {
+                            "Value #A": 1,
+                            "Value #B": 2,
+                            "Value #C": 3,
+                            "Value #D": 4,
+                            "Value #E": 5,
+                            "Value #F": 6,
+                            "Value #G": 7,
+                            "Value #H": 8,
+                            "name": 0
+                        },
+                        "renameByName": {
+                            "Value #A": "Success Rate",
+                            "Value #B": "Succeeded",
+                            "Value #C": "Failed",
+                            "Value #D": "Sent",
+                            "Value #E": "Received",
+                            "Value #F": "Rejected",
+                            "Value #G": "Retried",
+                            "Value #H": "Revoked",
+                            "name": "Name"
+                        }
+                    }
+                }
+            ],
+            "type": "table"
+        },
+        {
+            "datasource": {
+                "type": "datasource",
+                "uid": "-- Mixed --"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "custom": {
+                        "align": "auto",
+                        "cellOptions": {
+                            "type": "auto"
+                        },
+                        "inspect": false
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green"
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    },
+                    "unit": "short"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 8,
+                "w": 8,
+                "x": 16,
+                "y": 1
+            },
+            "id": 3,
+            "options": {
+                "cellHeight": "sm",
+                "footer": {
+                    "countRows": false,
+                    "enablePagination": true,
+                    "fields": "",
+                    "reducer": ["sum"],
+                    "show": false
+                },
+                "showHeader": true,
+                "sortBy": [
+                    {
+                        "desc": true,
+                        "displayName": "Value"
+                    }
+                ]
+            },
+            "pluginVersion": "12.0.2",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "$datasource"
+                    },
+                    "expr": "round(\n  sum (\n    increase(\n      celery_task_failed_total{\n        job=\"$job\",\n        name=~\"$task\",\n        queue_name=~\"$queue_name\"\n      }[$__range]\n    )\n  ) by (name, exception) > 0\n)\n",
+                    "format": "table",
+                    "instant": true,
+                    "refId": "A"
+                }
+            ],
+            "title": "Task Exceptions",
+            "transformations": [
+                {
+                    "id": "organize",
+                    "options": {
+                        "excludeByName": {
+                            "Time": true,
+                            "job": true
+                        },
+                        "indexByName": {
+                            "Value": 2,
+                            "exception": 1,
+                            "name": 0
+                        },
+                        "renameByName": {
+                            "exception": "Exception",
+                            "name": "Task"
+                        }
+                    }
+                }
+            ],
+            "type": "table"
+        },
+        {
+            "datasource": {
+                "type": "datasource",
+                "uid": "-- Mixed --"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "axisBorderShow": false,
+                        "axisCenteredZero": false,
+                        "axisColorMode": "text",
+                        "axisLabel": "",
+                        "axisPlacement": "auto",
+                        "barAlignment": 0,
+                        "barWidthFactor": 0.6,
+                        "drawStyle": "line",
+                        "fillOpacity": 0,
+                        "gradientMode": "none",
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        },
+                        "insertNulls": false,
+                        "lineInterpolation": "linear",
+                        "lineWidth": 1,
+                        "pointSize": 5,
+                        "scaleDistribution": {
+                            "type": "linear"
+                        },
+                        "showPoints": "auto",
+                        "spanNulls": false,
+                        "stacking": {
+                            "group": "A",
+                            "mode": "none"
+                        },
+                        "thresholdsStyle": {
+                            "mode": "off"
+                        }
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green"
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    },
+                    "unit": "short"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 8,
+                "w": 24,
+                "x": 0,
+                "y": 9
+            },
+            "id": 4,
+            "options": {
+                "legend": {
+                    "calcs": ["mean", "max"],
+                    "displayMode": "table",
+                    "placement": "right",
+                    "showLegend": true,
+                    "sortBy": "Mean",
+                    "sortDesc": true
+                },
+                "tooltip": {
+                    "hideZeros": false,
+                    "mode": "multi",
+                    "sort": "desc"
+                }
+            },
+            "pluginVersion": "12.0.2",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "$datasource"
+                    },
+                    "expr": "sum (\n  round(\n    increase(\n      celery_task_succeeded_total{\n        job=\"$job\",\n        name=~\"$task\",\n        queue_name=~\"$queue_name\"\n      }[$__rate_interval]\n    )\n  )\n) by (name) > 0\n",
+                    "legendFormat": "Succeeded - {{ name }}",
+                    "refId": "A"
+                },
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "$datasource"
+                    },
+                    "expr": "sum (\n  round(\n    increase(\n      celery_task_failed_total{\n        job=\"$job\",\n        name=~\"$task\",\n        queue_name=~\"$queue_name\"\n      }[$__rate_interval]\n    )\n  )\n) by (name) > 0\n",
+                    "legendFormat": "Failed - {{ name }}",
+                    "refId": "B"
+                },
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "$datasource"
+                    },
+                    "expr": "sum (\n  round(\n    increase(\n      celery_task_sent_total{\n        job=\"$job\",\n        name=~\"$task\",\n        queue_name=~\"$queue_name\"\n      }[$__rate_interval]\n    )\n  )\n) by (name) > 0\n",
+                    "legendFormat": "Sent - {{ name }}",
+                    "refId": "C"
+                },
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "$datasource"
+                    },
+                    "expr": "sum (\n  round(\n    increase(\n      celery_task_received_total{\n        job=\"$job\",\n        name=~\"$task\",\n        queue_name=~\"$queue_name\"\n      }[$__rate_interval]\n    )\n  )\n) by (name) > 0\n",
+                    "legendFormat": "Received - {{ name }}",
+                    "refId": "D"
+                },
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "$datasource"
+                    },
+                    "expr": "sum (\n  round(\n    increase(\n      celery_task_retried_total{\n        job=\"$job\",\n        name=~\"$task\",\n        queue_name=~\"$queue_name\"\n      }[$__rate_interval]\n    )\n  )\n) by (name) > 0\n",
+                    "legendFormat": "Retried - {{ name }}",
+                    "refId": "E"
+                },
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "$datasource"
+                    },
+                    "expr": "sum (\n  round(\n    increase(\n      celery_task_revoked_total{\n        job=\"$job\",\n        name=~\"$task\",\n        queue_name=~\"$queue_name\"\n      }[$__rate_interval]\n    )\n  )\n) by (name) > 0\n",
+                    "legendFormat": "Revoked - {{ name }}",
+                    "refId": "F"
+                },
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "$datasource"
+                    },
+                    "expr": "sum (\n  round(\n    increase(\n      celery_task_rejected_total{\n        job=\"$job\",\n        name=~\"$task\",\n        queue_name=~\"$queue_name\"\n      }[$__rate_interval]\n    )\n  )\n) by (name) > 0\n",
+                    "legendFormat": "Rejected - {{ name }}",
+                    "refId": "G"
+                }
+            ],
+            "title": "Tasks Completed",
+            "type": "timeseries"
+        },
+        {
+            "datasource": {
+                "type": "datasource",
+                "uid": "-- Mixed --"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "axisBorderShow": false,
+                        "axisCenteredZero": false,
+                        "axisColorMode": "text",
+                        "axisLabel": "",
+                        "axisPlacement": "auto",
+                        "barAlignment": 0,
+                        "barWidthFactor": 0.6,
+                        "drawStyle": "line",
+                        "fillOpacity": 0,
+                        "gradientMode": "none",
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        },
+                        "insertNulls": false,
+                        "lineInterpolation": "linear",
+                        "lineWidth": 1,
+                        "pointSize": 5,
+                        "scaleDistribution": {
+                            "type": "linear"
+                        },
+                        "showPoints": "auto",
+                        "spanNulls": false,
+                        "stacking": {
+                            "group": "A",
+                            "mode": "none"
+                        },
+                        "thresholdsStyle": {
+                            "mode": "off"
+                        }
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green"
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    },
+                    "unit": "short"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 8,
+                "w": 24,
+                "x": 0,
+                "y": 17
+            },
+            "id": 5,
+            "options": {
+                "legend": {
+                    "calcs": ["mean", "max"],
+                    "displayMode": "table",
+                    "placement": "right",
+                    "showLegend": true,
+                    "sortBy": "Mean",
+                    "sortDesc": true
+                },
+                "tooltip": {
+                    "hideZeros": false,
+                    "mode": "multi",
+                    "sort": "desc"
+                }
+            },
+            "pluginVersion": "12.0.2",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "$datasource"
+                    },
+                    "expr": "sum (\n  round(\n    increase(\n      celery_task_failed_total{\n        job=\"$job\",\n        name=~\"$task\",\n        queue_name=~\"$queue_name\"\n      }[$__rate_interval]\n    )\n  )\n) by (name, exception) > 0\n",
+                    "legendFormat": "{{ name }}/{{ exception }}",
+                    "refId": "A"
+                }
+            ],
+            "title": "Task Exceptions",
+            "type": "timeseries"
+        },
+        {
+            "datasource": {
+                "type": "datasource",
+                "uid": "-- Mixed --"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "custom": {
+                        "spanNulls": false
+                    },
+                    "unit": "s"
+                },
+                "overrides": [
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "P50"
+                        },
+                        "properties": [
+                            {
+                                "id": "color",
+                                "value": {
+                                    "fixedColor": "green",
+                                    "mode": "fixed"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "P95"
+                        },
+                        "properties": [
+                            {
+                                "id": "color",
+                                "value": {
+                                    "fixedColor": "yellow",
+                                    "mode": "fixed"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "P99"
+                        },
+                        "properties": [
+                            {
+                                "id": "color",
+                                "value": {
+                                    "fixedColor": "red",
+                                    "mode": "fixed"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "gridPos": {
+                "h": 8,
+                "w": 24,
+                "x": 0,
+                "y": 25
+            },
+            "id": 6,
+            "options": {
+                "legend": {
+                    "calcs": ["mean", "max"],
+                    "displayMode": "table",
+                    "placement": "right",
+                    "showLegend": true,
+                    "sortBy": "Mean",
+                    "sortDesc": true
+                },
+                "tooltip": {
+                    "mode": "multi",
+                    "sort": "desc"
+                }
+            },
+            "pluginVersion": "v11.1.0",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "$datasource"
+                    },
+                    "expr": "histogram_quantile(0.50,\n  sum(\n    irate(\n      celery_task_runtime_bucket{\n        job=\"$job\",\n        name=~\"$task\",\n        queue_name=~\"$queue_name\"\n      }[$__rate_interval]\n    ) > 0\n  ) by (name, job, le)\n)\n",
+                    "legendFormat": "P50 - {{ name }}",
+                    "refId": "A"
+                },
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "$datasource"
+                    },
+                    "expr": "histogram_quantile(0.95,\n  sum(\n    irate(\n      celery_task_runtime_bucket{\n        job=\"$job\",\n        name=~\"$task\",\n        queue_name=~\"$queue_name\"\n      }[$__rate_interval]\n    ) > 0\n  ) by (name, job, le)\n)\n",
+                    "legendFormat": "P95 - {{ name }}",
+                    "refId": "B"
+                },
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "$datasource"
+                    },
+                    "expr": "histogram_quantile(0.99,\n  sum(\n    irate(\n      celery_task_runtime_bucket{\n        job=\"$job\",\n        name=~\"$task\",\n        queue_name=~\"$queue_name\"\n      }[$__rate_interval]\n    ) > 0\n  ) by (name, job, le)\n)\n",
+                    "legendFormat": "P99 - {{ name }}",
+                    "refId": "C"
+                }
+            ],
+            "title": "Tasks Runtime",
+            "type": "timeseries"
+        }
+    ],
+    "preload": false,
+    "refresh": "10s",
+    "schemaVersion": 41,
+    "tags": ["celery"],
+    "templating": {
+        "list": [
+            {
+                "label": "Data source",
+                "name": "datasource",
+                "query": "prometheus",
+                "refresh": 1,
+                "type": "datasource"
+            },
+            {
+                "datasource": {
+                    "type": "prometheus",
+                    "uid": "${datasource}"
+                },
+                "includeAll": false,
+                "label": "Namespace",
+                "name": "namespace",
+                "query": "label_values(celery_worker_up{}, namespace)",
+                "refresh": 2,
+                "sort": 1,
+                "type": "query"
+            },
+            {
+                "datasource": {
+                    "type": "prometheus",
+                    "uid": "${datasource}"
+                },
+                "includeAll": false,
+                "label": "Job",
+                "name": "job",
+                "query": "label_values(celery_worker_up{namespace=\"$namespace\"}, job)",
+                "refresh": 2,
+                "sort": 1,
+                "type": "query"
+            },
+            {
+                "datasource": {
+                    "type": "prometheus",
+                    "uid": "${datasource}"
+                },
+                "includeAll": false,
+                "label": "Queue Name",
+                "name": "queue_name",
+                "query": "label_values(celery_task_received_total{namespace=\"$namespace\", job=\"$job\", name!~\"None\"}, queue_name)",
+                "refresh": 2,
+                "sort": 1,
+                "type": "query"
+            },
+            {
+                "datasource": {
+                    "type": "prometheus",
+                    "uid": "${datasource}"
+                },
+                "includeAll": false,
+                "label": "Task",
+                "multi": true,
+                "name": "task",
+                "query": "label_values(celery_task_received_total{namespace=\"$namespace\", job=\"$job\", queue_name=~\"$queue_name\", name!~\"None\"}, name)",
+                "refresh": 2,
+                "sort": 1,
+                "type": "query"
+            }
+        ]
+    },
+    "time": {
+        "from": "now-24h",
+        "to": "now"
+    },
+    "timepicker": {},
+    "timezone": "browser",
+    "title": "By Task",
+    "uid": "celery-tasks-by-task",
+    "version": 1,
+    "weekStart": "monday"
+}
