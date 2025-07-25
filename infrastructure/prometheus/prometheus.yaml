@@ -37,4 +37,4 @@ scrape_configs:
   # Caddy
   - job_name: caddy
     static_configs:
-      - targets: ["caddy:8080"]
+      - targets: ["caddy:2019"]

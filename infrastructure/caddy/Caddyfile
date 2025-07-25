@@ -1,5 +1,7 @@
 {
-	metrics
+	metrics {
+		per_host
+	}
 }
 
 (basic-auth) {
