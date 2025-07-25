@@ -263,47 +263,61 @@
 
         function setupWebSocket ()
         {
-            const wsUrl = 'ws://' + window.location.host + '/ws'
-            ws = new WebSocket( wsUrl )
+            let wsUrl = 'ws://' + window.location.host + '/ws'
+            let triedSecure = false
 
-            ws.onopen = () => console.log( 'WebSocket connected' )
-            ws.onclose = () => console.log( 'WebSocket disconnected' )
-            ws.onerror = ( error ) => console.error( 'WebSocket error:', error )
-
-            ws.onmessage = ( event ) =>
+            function connect ( url )
             {
-                const data = JSON.parse( event.data )
-
-                if ( typeof data.isRunning !== 'undefined' )
+                ws = new WebSocket( url )
+                ws.onopen = () => console.log( 'WebSocket connected' )
+                ws.onclose = () => console.log( 'WebSocket disconnected' )
+                ws.onerror = ( error ) =>
                 {
-                    if ( data.isRunning )
+                    console.error( 'WebSocket error:', error )
+                    if ( !triedSecure )
                     {
-                        isRunning = true
-                        startStopBtn.textContent = 'Stop Test'
-                        startStopBtn.classList.remove( 'bg-green-600', 'hover:bg-green-500' )
-                        startStopBtn.classList.add( 'bg-red-600', 'hover:bg-red-500' )
-                        configPanel.querySelectorAll( 'input, select' ).forEach( el => el.disabled = true )
+                        triedSecure = true
+                        wsUrl = 'wss://' + window.location.host + '/ws'
+                        connect( wsUrl )
                     }
                 }
-
-                if ( data.isRunning )
+                ws.onmessage = ( event ) =>
                 {
-                    const now = new Date().toLocaleTimeString()
-                    rpsStat.textContent = data.rps
-                    latencyStat.textContent = data.latency.toFixed( 2 )
-                    errorRateStat.textContent = data.errorRate.toFixed( 2 ) + '%'
-                    totalReqsStat.textContent = data.totalReqs
-                    totalErrorsStat.textContent = data.totalErrors
+                    const data = JSON.parse( event.data )
 
-                    updateChart( rpsChart, now, data.rps )
-                    updateChart( latencyChart, now, data.latency )
-                    updateChart( errorRateChart, now, data.errorRate )
-                } else
-                {
-                    totalReqsStat.textContent = data.totalReqs
-                    totalErrorsStat.textContent = data.totalErrors
+                    if ( typeof data.isRunning !== 'undefined' )
+                    {
+                        if ( data.isRunning )
+                        {
+                            isRunning = true
+                            startStopBtn.textContent = 'Stop Test'
+                            startStopBtn.classList.remove( 'bg-green-600', 'hover:bg-green-500' )
+                            startStopBtn.classList.add( 'bg-red-600', 'hover:bg-red-500' )
+                            configPanel.querySelectorAll( 'input, select' ).forEach( el => el.disabled = true )
+                        }
+                    }
+
+                    if ( data.isRunning )
+                    {
+                        const now = new Date().toLocaleTimeString()
+                        rpsStat.textContent = data.rps
+                        latencyStat.textContent = data.latency.toFixed( 2 )
+                        errorRateStat.textContent = data.errorRate.toFixed( 2 ) + '%'
+                        totalReqsStat.textContent = data.totalReqs
+                        totalErrorsStat.textContent = data.totalErrors
+
+                        updateChart( rpsChart, now, data.rps )
+                        updateChart( latencyChart, now, data.latency )
+                        updateChart( errorRateChart, now, data.errorRate )
+                    } else
+                    {
+                        totalReqsStat.textContent = data.totalReqs
+                        totalErrorsStat.textContent = data.totalErrors
+                    }
                 }
             }
+
+            connect( wsUrl )
         }
 
         function setRunningState ()
