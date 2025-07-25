@@ -1,10 +1,29 @@
 apiVersion: 1
 
 datasources:
-  - name: Infinity
+  - name: Backend | Infinity
     type: yesoreyeram-infinity-datasource
     access: proxy
     orgId: 1
     uid: infinity
+    url: http://backend:8080
+    basicAuth: false
+    basicAuthUser: ""
+    withCredentials: false
     isDefault: false
     editable: false
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    orgId: 1
+    uid: prometheus
+    url: http://prometheus:9090
+    basicAuth: false
+    basicAuthUser: ""
+    withCredentials: false
+    isDefault: true
+    editable: false
+    jsonData:
+      httpMethod: POST
+      queryTimeout: 10s
+      timeInterval": 10s
