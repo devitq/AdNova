@@ -26,6 +26,10 @@ adnova.itqdev.xyz {
 	reverse_proxy http://backend:8080
 }
 
+:8080 {
+	reverse_proxy http://backend:8080
+}
+
 admin.adnova.itqdev.xyz {
 	import basic-auth
 
