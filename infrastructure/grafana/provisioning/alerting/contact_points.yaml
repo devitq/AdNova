@@ -1,0 +1,17 @@
+apiVersion: 1
+
+contactPoints:
+  - orgId: 1
+    name: Telegram
+    receivers:
+      - uid: aet1srtyc40lca
+        type: telegram
+        settings:
+          bottoken: 7797967907:AAGZuUzzuS4LLb525rDNY52Awc2tvpsLjd4
+          chatid: "-1002555823797"
+          disable_notification: false
+          disable_web_page_preview: false
+          message: '{{ template "telegram.default.message" . }}'
+          parse_mode: Markdown
+          protect_content: false
+        disableResolveMessage: false

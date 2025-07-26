@@ -1,0 +1,141 @@
+apiVersion: 1
+
+groups:
+  - orgId: 1
+    name: Default
+    folder: Backend
+    interval: 10s
+    rules:
+      - uid: aet1xbx1yaupsb
+        title: Backend p99 > 500 ms
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 600
+              to: 0
+            datasourceUid: prometheus
+            model:
+              editorMode: code
+              expr: |
+                histogram_quantile(
+                  0.99,
+                  sum(
+                    rate(
+                      caddy_http_request_duration_seconds_bucket{instance="proxy:2019",handler="reverse_proxy",host="proxy:8080",job="caddy"}[$__rate_interval]
+                    )
+                  ) by (le)
+                )
+              instant: true
+              intervalMs: 1000
+              legendFormat: __auto
+              maxDataPoints: 43200
+              range: false
+              refId: A
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 0.5
+                    type: gte
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - C
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: C
+              type: threshold
+        dashboardUid: e3a78c36-2f34-4ad6-81d5-284002896829
+        panelId: 32
+        noDataState: NoData
+        execErrState: Error
+        for: 10s
+        keepFiringFor: 10s
+        annotations:
+          __dashboardUid__: e3a78c36-2f34-4ad6-81d5-284002896829
+          __panelId__: "32"
+          runbook_url: https://admin.adnova.itqdev.xyz
+          summary: p99 > 500 ms
+        isPaused: false
+        notification_settings:
+          receiver: Telegram
+  - orgId: 1
+    name: Default
+    folder: Postgres
+    interval: 10s
+    rules:
+      - uid: fet1txr4slywwe
+        title: "> 100 QPS on Postgresql"
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 600
+              to: 0
+            datasourceUid: prometheus
+            model:
+              editorMode: code
+              expr: |
+                sum(
+                  irate(pg_stat_database_xact_commit{datname="postgres",instance="postgres-exporter:9187",job="postgres"}[5m])
+                )
+                + sum(
+                  irate(pg_stat_database_xact_rollback{datname="postgres",instance="postgres-exporter:9187",job="postgres"}[5m])
+                )
+              instant: true
+              intervalMs: 1000
+              legendFormat: __auto
+              maxDataPoints: 43200
+              range: false
+              refId: A
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 100
+                    type: gte
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - C
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: C
+              type: threshold
+        dashboardUid: postgres-overview
+        panelId: 14
+        noDataState: NoData
+        execErrState: Error
+        for: 10s
+        keepFiringFor: 1m
+        annotations:
+          __dashboardUid__: postgres-overview
+          __panelId__: "14"
+          runbook_url: https://admin.adnova.itqdev.xyz
+          summary: Postgresql QPS exceeded 100
+        isPaused: false
+        notification_settings:
+          receiver: Telegram

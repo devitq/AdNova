@@ -1,0 +1,54 @@
+apiVersion: 1
+
+templates:
+  - orgId: 1
+    name: Telegram
+    template: |
+      {{ define "telegram.default.message" }} {{ if gt (len .Alerts.Firing) 0 }}
+      🔥🚨 *FIRE IN THE HOLE!* 🚨🔥
+      We've got *{{ len .Alerts.Firing }} firing alert(s)* that need your immediate attention!
+      {{ range .Alerts.Firing }}
+      ---
+      *Alert:* `{{ .Labels.alertname }}`
+      {{ if .Labels.instance }}*Instance:* `{{ .Labels.instance }}`{{ end }}
+      *Status:* 🔴 *FIRING* since {{ .StartsAt.Format "2006-01-02 15:04:05 MST" }}
+
+      {{ if .Annotations.summary }}*Summary:* {{ .Annotations.summary }}{{ end }}
+      {{ if .Annotations.description }}*Description:* {{ .Annotations.description }}{{ end }}
+      *Labels:*
+      {{ range .Labels.SortedPairs }}  • `{{ .Name }}` = `{{ .Value }}`
+      {{ end }}
+      {{ if gt (len .Annotations) 0 }}*Annotations:*
+      {{ range .Annotations.SortedPairs }}  • `{{ .Name }}` = `{{ .Value }}`
+      {{ end }}{{ end }}
+
+      {{ if .DashboardURL }}📊 [View Dashboard]({{ .DashboardURL }})
+      {{ end }}{{ if .PanelURL }}📈 [View Panel]({{ .PanelURL }})
+      {{ end }}{{ if .GeneratorURL }}🔗 [Alert Source]({{ .GeneratorURL }})
+      {{ end }}{{ if .SilenceURL }}🤫 [Silence Alert]({{ .SilenceURL }})
+      {{ end }}--- {{ end }} {{ end }}
+      {{ if gt (len .Alerts.Resolved) 0 }}
+      ✅🟢 *ALL CLEAR!* 🟢✅
+      Great news! *{{ len .Alerts.Resolved }} alert(s)* have been resolved.
+      {{ range .Alerts.Resolved }}
+      ---
+      *Alert:* `{{ .Labels.alertname }}`
+      {{ if .Labels.instance }}*Instance:* `{{ .Labels.instance }}`{{ end }}
+      *Status:* ✅ *RESOLVED* at {{ .EndsAt.Format "2006-01-02 15:04:05 MST" }} (was active since {{ .StartsAt.Format "2006-01-02 15:04:05 MST" }})
+
+      {{ if .Annotations.summary }}*Summary:* {{ .Annotations.summary }}{{ end }}
+      {{ if .Annotations.description }}*Description:* {{ .Annotations.description }}{{ end }}
+      *Labels:*
+      {{ range .Labels.SortedPairs }}  • `{{ .Name }}` = `{{ .Value }}`
+      {{ end }}
+      {{ if gt (len .Annotations) 0 }}*Annotations:*
+      {{ range .Annotations.SortedPairs }}  • `{{ .Name }}` = `{{ .Value }}`
+      {{ end }}{{ end }}
+
+      {{ if .DashboardURL }}📊 [View Dashboard]({{ .DashboardURL }})
+      {{ end }}{{ if .PanelURL }}📈 [View Panel]({{ .PanelURL }})
+      {{ end }}{{ if .GeneratorURL }}🔗 [Alert Source]({{ .GeneratorURL }}) {{ end }} {{ end }} {{ end }}
+      {{ if or (gt (len .Alerts.Firing) 0) (gt (len .Alerts.Resolved) 0) }}
+      🔔 *Grafana Alertmanager:* [View All Alerts]({{ template "__alertmanagerURL" . }}) 🔔
+      {{ end }}
+      {{ end }}
