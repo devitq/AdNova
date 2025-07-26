@@ -59,7 +59,7 @@ groups:
               type: threshold
         dashboardUid: e3a78c36-2f34-4ad6-81d5-284002896829
         panelId: 32
-        noDataState: NoData
+        noDataState: OK
         execErrState: Error
         for: 10s
         keepFiringFor: 10s
